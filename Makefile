@@ -15,14 +15,11 @@ clean:
 test-code:
 	py.test strlearn
 
-test-doc:
-	py.test doc/*.rst
-
 test-coverage:
 	rm -rf coverage .coverage
 	py.test --cov=strlearn strlearn
 
-test: test-coverage test-doc
+test: test-coverage
 
 html:
 	export SPHINXOPTS=-W; make -C doc html
