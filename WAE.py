@@ -8,7 +8,6 @@ import pruning
 import line_profiler
 reload(pruning)
 
-
 class WeightCalculationMethod(Enum):
     SAME_FOR_EACH = 1
     PROPORTIONAL_TO_ACCURACY = 2
