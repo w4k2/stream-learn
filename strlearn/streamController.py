@@ -15,10 +15,10 @@ class StreamController(object):
     def get_measures(self):
         return 0
 
-    def should_include(self, X, x, label):
+    def should_include(self, _X, _x, _label):
         return True
 
-    def should_break_chunk(self, X):
+    def should_break_chunk(self, _X):
         return False
 
     def __str__(self):
@@ -44,7 +44,7 @@ class BudgetController(object):
         self.used_pools.append(self.used_pool)
         self.used_pool = 0
 
-    def should_include(self, X, x, label):
+    def should_include(self, _X, _x, _label):
         # Analyse
         if self.used_pool > self.pool:
             decision = False
@@ -54,7 +54,7 @@ class BudgetController(object):
 
         return decision
 
-    def should_break_chunk(self, X):
+    def should_break_chunk(self, _X):
         return False
 
     def __str__(self):
