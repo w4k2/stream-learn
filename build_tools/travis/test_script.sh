@@ -22,6 +22,9 @@ run_tests(){
     python -c "import multiprocessing as mp; print('%d CPUs' % mp.cpu_count())"
 
     py.test --cov=$MODULE -r sx --pyargs $MODULE
+
+    # Test doc
+    cd $OLDPWD
 }
 
 if [[ "$SKIP_TESTS" != "true" ]]; then
