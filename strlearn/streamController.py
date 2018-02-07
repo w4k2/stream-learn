@@ -2,7 +2,7 @@ from sklearn.exceptions import NotFittedError
 from sklearn import preprocessing
 import numpy as np
 
-class StreamController:
+class StreamController(object):
     def __init__(self):
         self.learner = None
 
@@ -25,7 +25,7 @@ class StreamController:
         return 'bare'
 
 
-class BudgetController:
+class BudgetController(object):
     def __init__(self, budget = .5):
         self.learner = None
         self.budget = budget

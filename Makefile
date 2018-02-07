@@ -30,3 +30,6 @@ html:
 code-analysis:
 	flake8 strlearn | grep -v __init__
 	pylint -E strlearn/ -d E1103,E0611,E1101
+
+upload:
+	python setup.py sdist upload -r pypi

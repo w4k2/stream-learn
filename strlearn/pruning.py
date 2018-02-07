@@ -1,13 +1,12 @@
 from enum import Enum
 import numpy as np
-import line_profiler
 
 class PruningCriterion(Enum):
     DIVERSITY = 1
     ENSEMBLE_ACCURACY = 2
     WEIGHTED_COMBINATION = 3
 
-class Pruner():
+class Pruner(object):
     def __init__(self, pruning_criterion, testing_set_size = 30, pruning_permutations = 4, ensemble_size = 20):
         self.pruning_permutations = pruning_permutations
         self.testing_set_size = testing_set_size
