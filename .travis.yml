@@ -1,15 +1,40 @@
+# make it explicit that we favor the new container-based travis workers
+dist: trusty
 sudo: false
 
 language: python
 
-python:
-  - 2.7
+# Pre-install packages for the ubuntu distribution
+cache:
+  apt: true
+  # We use three different cache directory
+  # to work around a Travis bug with multi-platform cache
+  directories:
+  - $HOME/.cache/pip
+  - $HOME/.cache/pip
+  - $HOME/download
+addons:
+  apt:
+    packages:
+      - python-numpy
+      - python-scipy
+env:
+  global:
+    # Directory where tests are run from
+    - TEST_DIR=/tmp/test_dir
+    - MODULE=strlearn
+    - OMP_NUM_THREADS=4
+    - OPENBLAS_NUM_THREADS=4
 
-install:
-  - pip install codecov
+matrix:
+  include:
+    # This environment tests the using anaconda
+    # Ubuntu 14.04 environment
+    - env: DISTRIB="ubuntu"
+    # Latest release
+    - env: DISTRIB="conda" PYTHON_VERSION="2.7"
+           NUMPY_VERSION="1.13.1" SCIPY_VERSION="0.19.1" SKLEARN_VERSION="0.19.0"
 
-script:
-  - coverage run tests.py
-
-after_success:
-  - codecov
+install: source build_tools/travis/install.sh
+script: bash build_tools/travis/test_script.sh
+after_success: source build_tools/travis/after_success.sh
