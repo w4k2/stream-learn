@@ -29,7 +29,7 @@ deactivate
 virtualenv --system-site-packages testvenv
 source testvenv/bin/activate
 pip install scikit-learn pandas nose nose-timer pytest pytest-cov codecov \
-    sphinx numpydoc enum liac-arff
+    sphinx numpydoc enum liac-arff tqdm
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
