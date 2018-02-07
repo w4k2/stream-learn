@@ -1,6 +1,9 @@
 .. -*- mode: rst -*-
 
-|Travis|_ |AppVeyor|_ |Codecov|_ |PythonVersion|_ |Pypi|
+|Landscape|_ |Travis|_ |AppVeyor|_ |Codecov|_ |PythonVersion|_ |Pypi|
+
+.. |Landscape| image:: https://landscape.io/github/w4k2/stream-learn/master/landscape.svg?style=flat
+.. _Landscape: https://landscape.io/github/w4k2/stream-learn/master
 
 .. |Travis| image:: https://travis-ci.org/w4k2/stream-learn.svg?branch=master
 .. _Travis: https://travis-ci.org/w4k2/stream-learn
