@@ -49,7 +49,7 @@ if [[ "$DISTRIB" == "conda" ]]; then
 
     conda install --yes nose pytest pytest-cov
     # Install nose-timer via pip
-    pip install nose-timer codecov
+    pip install nose-timer codecov enum liac-arff
 
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
     # At the time of writing numpy 1.9.1 is included in the travis

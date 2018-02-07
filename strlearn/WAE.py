@@ -5,9 +5,6 @@ from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
 import pruning
-import line_profiler
-reload(pruning)
-
 
 class WeightCalculationMethod(Enum):
     SAME_FOR_EACH = 1

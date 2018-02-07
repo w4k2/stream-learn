@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*-
-#from scipy.io import arff
 import arff
-import line_profiler
 from sklearn import preprocessing, base
 import streamController as sc
 import numpy as np

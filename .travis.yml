@@ -18,7 +18,6 @@ addons:
     packages:
       - python-numpy
       - python-scipy
-      - python-enum
 env:
   global:
     # Directory where tests are run from
