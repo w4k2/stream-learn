@@ -1,15 +1,12 @@
 .. -*- mode: rst -*-
 
-|Landscape|_ |Travis|_ |AppVeyor|_ |Codecov|_ |PythonVersion|_ |Pypi|
+|Landscape|_ |Travis|_ |Codecov|_ |PythonVersion|_ |Pypi|
 
 .. |Landscape| image:: https://landscape.io/github/w4k2/stream-learn/master/landscape.svg?style=flat
 .. _Landscape: https://landscape.io/github/w4k2/stream-learn/master
 
 .. |Travis| image:: https://travis-ci.org/w4k2/stream-learn.svg?branch=master
 .. _Travis: https://travis-ci.org/w4k2/stream-learn
-
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/nk745os6sta6bilt/branch/master?svg=true
-.. _AppVeyor: https://ci.appveyor.com/project/xehivs/stream-learn/history
 
 .. |Codecov| image:: https://codecov.io/gh/w4k2/stream-learn/branch/master/graph/badge.svg
 .. _Codecov: https://codecov.io/gh/w4k2/stream-learn
