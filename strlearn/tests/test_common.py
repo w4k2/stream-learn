@@ -11,3 +11,5 @@ def test_WAE():
     clf = WAE.WAE(base_classifier = base_clf)
     stream = open('datasets/%s.arff' % dbname, 'r')
     learner = streamLearner.StreamLearner(stream, clf, verbose=False)
+    learner.run()
+    learner.serialize('result.csv')
