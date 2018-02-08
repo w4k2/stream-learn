@@ -11,7 +11,6 @@ clean:
 	rm -rf doc/generated
 	rm -rf doc/modules
 	rm -rf examples/.ipynb_checkpoints
-	rm -rf docs/
 
 test-code:
 	py.test strlearn
@@ -20,9 +19,10 @@ test-coverage:
 	rm -rf coverage .coverage
 	py.test --cov=strlearn strlearn
 
-test: test-coverage
+test: clean test-coverage
 
 html: clean install
+	rm -rf docs/
 	export SPHINXOPTS=-W; make -C doc html
 	mv doc/_build/html ./docs
 
