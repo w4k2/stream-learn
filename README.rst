@@ -1,6 +1,6 @@
 .. -*- mode: rst -*-
 
-|CodeClimate|_ |Travis|_ |Codecov|_ |PythonVersion|_ |Pypi|
+|CodeClimate|_ |Travis|_ |Codecov|_ |Pypi|_ |PythonVersion|
 
 .. |Landscape| image:: https://landscape.io/github/w4k2/stream-learn/master/landscape.svg?style=flat
 .. _Landscape: https://landscape.io/github/w4k2/stream-learn/master
