@@ -45,3 +45,4 @@ def test_pp_WAE():
     clf = strlearn.ensembles.WAE(base_classifier = dt_clf, is_post_pruning=True)
     learner = strlearn.Learner(toystream, clf, verbose=False)
     learner.run()
+    learner.serialize('ppWAE.csv')
