@@ -14,7 +14,6 @@
 .. |Codecov| image:: https://codecov.io/gh/w4k2/stream-learn/branch/master/graph/badge.svg
 .. _Codecov: https://codecov.io/gh/w4k2/stream-learn
 
-
 .. |PythonVersion| image:: https://img.shields.io/pypi/pyversions/stream-learn.svg
 .. _PythonVersion: https://img.shields.io/pypi/pyversions/stream-learn.svg
 
