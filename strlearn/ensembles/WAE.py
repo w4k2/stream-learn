@@ -15,12 +15,10 @@ class WeightCalculationMethod(Enum):
     PROPORTIONAL_TO_ACCURACY_RELATED_TO_WHOLE_ENSEMBLE = 5
     PROPORTIONAL_TO_ACCURACY_RELATED_TO_WHOLE_ENSEMBLE_USING_BELL_CURVE = 6
 
-
 class AgingMethod(Enum):
     WEIGHTS_PROPORTIONAL = 1
     CONSTANT = 2
     GAUSSIAN = 3
-
 
 class WAE(BaseEstimator):
     '''
