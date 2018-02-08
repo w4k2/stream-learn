@@ -26,7 +26,6 @@ class WAE(BaseEstimator):
     '''
     Modified Weighted Aged Ensemble applied to the data stream classification as proposed by M. Wozniak, 2014
     '''
-
     def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion=pruning.PruningCriterion.DIVERSITY, weight_calculation_method=WeightCalculationMethod.KUNCHEVA, aging_method=AgingMethod.WEIGHTS_PROPORTIONAL, is_rejuvenating=False, rejuvenation_power=.5):
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
