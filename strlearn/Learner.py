@@ -1,13 +1,14 @@
 # -*- encoding: utf-8 -*-
 import arff
 from sklearn import preprocessing, base
-import streamController as sc
 import numpy as np
 import time
 import csv
 from tqdm import tqdm
 
-class StreamLearner:
+import controllers
+
+class Learner(object):
     '''
     Inicjalizator przyjmuje:
     - `stream` - strumień danych jako binarny plik arff,
@@ -17,7 +18,7 @@ class StreamLearner:
     - `controller` - delegat kontrolujący przetwarzanie, domyślnie pusty StreamController
     - `verbose` - flaga określająca czy learner ma raportować kolejne ewaluacje do stdout
     '''
-    def __init__(self, stream, base_classifier, chunk_size=200, evaluate_interval=1000, controller=sc.StreamController(), verbose=True):
+    def __init__(self, stream, base_classifier, chunk_size=200, evaluate_interval=1000, controller=controllers.Bare(), verbose=True):
         # Assigning parameters
         self.base_classifier = base_classifier
         self.chunk_size = chunk_size

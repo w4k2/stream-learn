@@ -113,7 +113,8 @@ class WAE(BaseEstimator):
             elif self.weight_calculation_method == WeightCalculationMethod.AGED_PROPORTIONAL_TO_ACCURACY:
                 self.weights = self.accuracies / np.sqrt(self.iterations)
             elif self.weight_calculation_method == WeightCalculationMethod.KUNCHEVA:
-                self.weights = self.accuracies / (1 - self.accuracies)
+                print self.accuracies
+                self.weights = self.accuracies / (1.0000001 - self.accuracies)
             elif self.weight_calculation_method == WeightCalculationMethod.PROPORTIONAL_TO_ACCURACY_RELATED_TO_WHOLE_ENSEMBLE:
                 self.weights = self.accuracies / self.overall_accuracy
             elif self.weight_calculation_method == WeightCalculationMethod.PROPORTIONAL_TO_ACCURACY_RELATED_TO_WHOLE_ENSEMBLE_USING_BELL_CURVE:
