@@ -13,6 +13,7 @@ def test_bare_controller():
     ctrl = strlearn.controllers.Bare()
     learner = strlearn.Learner(stream = toystream, base_classifier = mlp_clf, controller = ctrl)
     learner.run()
+    print ctrl
 
 def test_budget_controller():
     mlp_clf = neural_network.MLPClassifier()
@@ -20,6 +21,7 @@ def test_budget_controller():
     ctrl = strlearn.controllers.Budget()
     learner = strlearn.Learner(stream = toystream, base_classifier = mlp_clf, controller = ctrl)
     learner.run()
+    print ctrl
 
 def test_BLALC_controller():
     mlp_clf = neural_network.MLPClassifier()
@@ -27,6 +29,7 @@ def test_BLALC_controller():
     ctrl = strlearn.controllers.BLALC()
     learner = strlearn.Learner(stream = toystream, base_classifier = mlp_clf, controller = ctrl)
     learner.run()
+    print ctrl
 
 def test_WAE():
     dt_clf = tree.DecisionTreeClassifier()
