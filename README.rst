@@ -1,9 +1,12 @@
 .. -*- mode: rst -*-
 
-|Landscape|_ |Travis|_ |Codecov|_ |PythonVersion|_ |Pypi|
+|CodeClimate|_ |Travis|_ |Codecov|_ |PythonVersion|_ |Pypi|
 
 .. |Landscape| image:: https://landscape.io/github/w4k2/stream-learn/master/landscape.svg?style=flat
 .. _Landscape: https://landscape.io/github/w4k2/stream-learn/master
+
+.. |CodeClimate| image:: https://api.codeclimate.com/v1/badges/ac48e158cfd60ac881cc/test_coverage
+.. https://codeclimate.com/github/w4k2/stream-learn/test_coverage
 
 .. |Travis| image:: https://travis-ci.org/w4k2/stream-learn.svg?branch=master
 .. _Travis: https://travis-ci.org/w4k2/stream-learn
