@@ -34,3 +34,11 @@ def test_WAE():
     clf = strlearn.ensembles.WAE(base_classifier = dt_clf)
     learner = strlearn.Learner(toystream, clf, verbose=False)
     learner.run()
+
+
+def test_pp_WAE():
+    dt_clf = tree.DecisionTreeClassifier()
+    toystream = open('datasets/toyset.arff', 'r')
+    clf = strlearn.ensembles.WAE(base_classifier = dt_clf, is_post_pruning=True)
+    learner = strlearn.Learner(toystream, clf, verbose=False)
+    learner.run()
