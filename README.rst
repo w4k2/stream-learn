@@ -21,10 +21,3 @@
 
 stream-learn
 ================
-
-Testing
-~~~~~~~
-
-After installation, you can use `nose` to run the test suite::
-
-  make test-coverage

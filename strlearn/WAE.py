@@ -1,3 +1,4 @@
+"""Modified Weighted Aged Ensemble applied to the data stream classification as proposed by M. Wozniak, 2014."""
 from sklearn.base import BaseEstimator
 from sklearn import neural_network, base
 from enum import Enum
@@ -52,16 +53,6 @@ class WAE(BaseEstimator):
         self.classes = None
 
     def prune(self):
-        """This function does something.
-
-        :param name: The name to use.
-        :type name: str.
-        :param state: Current state to be in.
-        :type state: bool.
-        :returns: int -- the return code.
-        :raises: AttributeError, KeyError
-
-        """
         # TODO: Poprawienie tablic z wiekiem
         best_permutation = self.pruner.prune(
             self.ensemble, self.previous_training_set)

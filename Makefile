@@ -11,6 +11,7 @@ clean:
 	rm -rf doc/generated
 	rm -rf doc/modules
 	rm -rf examples/.ipynb_checkpoints
+	rm -rf docs/
 
 test-code:
 	py.test strlearn
@@ -21,7 +22,7 @@ test-coverage:
 
 test: test-coverage
 
-html: clean
+html: clean install
 	export SPHINXOPTS=-W; make -C doc html
 	mv doc/_build/html ./docs
 
@@ -31,3 +32,8 @@ code-analysis:
 
 upload:
 	python setup.py sdist upload -r pypi
+	pip install --upgrade stream-learn
+
+install:
+	pip uninstall stream-learn
+	python setup.py install

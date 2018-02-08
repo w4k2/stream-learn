@@ -40,11 +40,10 @@ class StreamLearner:
         # Prepare to classification
         self.reset()
 
-
-    def reset(self):
     '''
     Przygotowanie do procesu klasyfikacji. Zerowanie modelu klasyfikatora, liczników i list zbierających wyniki. Dodatkowo, przygotowanie kontrolera przetwarzania.
     '''
+    def reset(self):
         self.clf = base.clone(self.base_classifier)
         self.evaluations = 0
         self.processed_chunks = 0
