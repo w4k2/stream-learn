@@ -20,7 +20,11 @@ class BLALC(object):
         return np.sum(accumulator)
 
     def next_chunk(self):
-        np.random.shuffle(self.learner.chunk)
+        #print "UWAGA CHUNK"
+        #print self.learner
+        #print self.learner.chunk
+        #np.random.shuffle(self.learner.chunk)
+        #TODO: Popraw przemieszanie
         self.used_pools.append(self.used_pool)
         self.used_pool = 0
 
