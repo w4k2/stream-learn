@@ -49,6 +49,18 @@ class WAE(BaseEstimator):
         self.previous_training_set = None
         self.classes = None
 
+    def __str__(self):
+        return "WAE_wcm_%i_am_%i_j_%i_jp_%s_t_%s_pp_%i_n_%i_pc_%i" % (
+            self.weight_calculation_method.value,
+            self.aging_method.value,
+            self.is_rejuvenating,
+            ("%.3f" % self.rejuvenation_power)[2:],
+            ("%.3f" % self.theta)[2:],
+            self.is_post_pruning,
+            self.ensemble_size,
+            self.pruning_criterion.value
+        )
+
     def prune(self):
         # TODO: Poprawienie tablic z wiekiem
         best_permutation = self.pruner.prune(
@@ -81,6 +93,8 @@ class WAE(BaseEstimator):
         # Zabijamy wszystkie o ujemnej wadze
         self.extinction()
 
+        self.weights *= self.ages
+
         # Wagi musza sumowac sie do jedynki, ale dopiero po wymieraniu
         self.weights /= np.sum(self.weights)
 
@@ -110,7 +124,7 @@ class WAE(BaseEstimator):
             elif self.weight_calculation_method == WeightCalculationMethod.AGED_PROPORTIONAL_TO_ACCURACY:
                 self.weights = self.accuracies / np.sqrt(self.iterations)
             elif self.weight_calculation_method == WeightCalculationMethod.KUNCHEVA:
-                print self.accuracies
+                #print self.accuracies
                 self.weights = self.accuracies / (1.0000001 - self.accuracies)
             elif self.weight_calculation_method == WeightCalculationMethod.PROPORTIONAL_TO_ACCURACY_RELATED_TO_WHOLE_ENSEMBLE:
                 self.weights = self.accuracies / self.overall_accuracy

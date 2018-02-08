@@ -34,6 +34,5 @@ upload:
 	python setup.py sdist upload -r pypi
 	pip install --upgrade stream-learn
 
-install:
-	pip uninstall stream-learn
-	python setup.py install
+install: clean
+	python setup.py install --force

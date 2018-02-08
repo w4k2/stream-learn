@@ -41,6 +41,14 @@ class Learner(object):
         # Prepare to classification
         self.reset()
 
+    def __str__(self):
+        return "stream_learner_c_%i_e_%i_clf_%s_ctrl_%s" % (
+            self.chunk_size,
+            self.evaluate_interval,
+            self.base_classifier,
+            self.controller
+        )
+
     '''
     Przygotowanie do procesu klasyfikacji. Zerowanie modelu klasyfikatora, liczników i list zbierających wyniki. Dodatkowo, przygotowanie kontrolera przetwarzania.
     '''
