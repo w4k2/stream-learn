@@ -23,6 +23,7 @@ test: test-coverage
 
 html: clean
 	export SPHINXOPTS=-W; make -C doc html
+	mv doc/_build/html ./docs
 
 code-analysis:
 	flake8 strlearn | grep -v __init__
