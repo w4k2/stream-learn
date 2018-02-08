@@ -21,6 +21,5 @@
 .. |Pypi| image:: https://badge.fury.io/py/stream-learn.svg
 .. _Pypi: https://badge.fury.io/py/stream-learn
 
-
 stream-learn
 ================
