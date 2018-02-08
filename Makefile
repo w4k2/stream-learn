@@ -21,7 +21,7 @@ test-coverage:
 
 test: test-coverage
 
-html:
+html: clean
 	export SPHINXOPTS=-W; make -C doc html
 
 code-analysis:
