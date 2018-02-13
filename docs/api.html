@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>imbalanced-learn API &mdash; stream-learn 0.0.7 documentation</title>
+  <title>stream-learn API &mdash; stream-learn 0.1.0 documentation</title>
   
 
   
@@ -34,12 +34,14 @@
   
 
   
+        <link rel="author" title="About these documents"
+              href="about.html"/>
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="stream-learn 0.0.7 documentation" href="index.html"/>
-        <link rel="next" title="strlearn.learner" href="generated/strlearn.learner.html"/>
-        <link rel="prev" title="Welcome to stream-learn documentation!" href="index.html"/> 
+    <link rel="top" title="stream-learn 0.1.0 documentation" href="index.html"/>
+        <link rel="next" title="strlearn.Learner" href="generated/strlearn.Learner.html"/>
+        <link rel="prev" title="Instalation" href="install.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.0.7
+                0.1.0
               </div>
             
           
@@ -92,16 +94,38 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">imbalanced-learn API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="generated/strlearn.learner.html"><code class="docutils literal"><span class="pre">strlearn</span></code>.learner</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">stream-learn API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#strlearn-learner"><code class="docutils literal"><span class="pre">strlearn</span></code>: Learner</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.Learner.html"><code class="docutils literal"><span class="pre">strlearn</span></code>.Learner</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#strlearn-controllers-controllers"><code class="docutils literal"><span class="pre">strlearn.controllers</span></code>: Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.controllers.Bare.html"><code class="docutils literal"><span class="pre">strlearn.controllers</span></code>.Bare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.controllers.Budget.html"><code class="docutils literal"><span class="pre">strlearn.controllers</span></code>.Budget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.controllers.BLALC.html"><code class="docutils literal"><span class="pre">strlearn.controllers</span></code>.BLALC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#strlearn-ensembles-ensembles"><code class="docutils literal"><span class="pre">strlearn.ensembles</span></code>: Ensembles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.ensembles.WAE.html"><code class="docutils literal"><span class="pre">strlearn.ensembles</span></code>.WAE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/strlearn.ensembles.Pruner.html"><code class="docutils literal"><span class="pre">strlearn.ensembles</span></code>.Pruner</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorial - Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Addtional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About stream-learn</a></li>
 </ul>
 
             
@@ -146,7 +170,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>imbalanced-learn API</li>
+      <li>stream-learn API</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -165,20 +189,60 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="imbalanced-learn-api">
-<h1>imbalanced-learn API<a class="headerlink" href="#imbalanced-learn-api" title="Permalink to this headline">¶</a></h1>
-<p>This is the full API documentation of the <cite>imbalanced-learn</cite> toolbox.</p>
+  <div class="section" id="stream-learn-api">
+<h1>stream-learn API<a class="headerlink" href="#stream-learn-api" title="Permalink to this headline">¶</a></h1>
+<p>This is the full API documentation of the <cite>stream-learn</cite> toolbox.</p>
+<div class="section" id="strlearn-learner">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">strlearn</span></code>: Learner<a class="headerlink" href="#strlearn-learner" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/strlearn.learner.html#strlearn.learner" title="strlearn.learner"><code class="xref py py-obj docutils literal"><span class="pre">learner</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/strlearn.Learner.html#strlearn.Learner" title="strlearn.Learner"><code class="xref py py-obj docutils literal"><span class="pre">Learner</span></code></a>(stream,&nbsp;base_classifier[,&nbsp;…])</td>
+<td>Perform learning procedure on stream.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="strlearn-controllers-controllers">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">strlearn.controllers</span></code>: Controllers<a class="headerlink" href="#strlearn-controllers-controllers" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/strlearn.controllers.Bare.html#strlearn.controllers.Bare" title="strlearn.controllers.Bare"><code class="xref py py-obj docutils literal"><span class="pre">controllers.Bare</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/strlearn.controllers.Budget.html#strlearn.controllers.Budget" title="strlearn.controllers.Budget"><code class="xref py py-obj docutils literal"><span class="pre">controllers.Budget</span></code></a>([budget])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/strlearn.controllers.BLALC.html#strlearn.controllers.BLALC" title="strlearn.controllers.BLALC"><code class="xref py py-obj docutils literal"><span class="pre">controllers.BLALC</span></code></a>([budget,&nbsp;treshold])</td>
 <td></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="strlearn-ensembles-ensembles">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">strlearn.ensembles</span></code>: Ensembles<a class="headerlink" href="#strlearn-ensembles-ensembles" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/strlearn.ensembles.WAE.html#strlearn.ensembles.WAE" title="strlearn.ensembles.WAE"><code class="xref py py-obj docutils literal"><span class="pre">ensembles.WAE</span></code></a>([base_classifier,&nbsp;leaf_size,&nbsp;…])</td>
+<td>Weighted Aging Ensemble</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner" title="strlearn.ensembles.Pruner"><code class="xref py py-obj docutils literal"><span class="pre">ensembles.Pruner</span></code></a>([pruning_criterion,&nbsp;…])</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -191,10 +255,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="generated/strlearn.learner.html" class="btn btn-neutral float-right" title="strlearn.learner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="generated/strlearn.Learner.html" class="btn btn-neutral float-right" title="strlearn.Learner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to stream-learn documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral" title="Instalation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -225,7 +289,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.0.7',
+            VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

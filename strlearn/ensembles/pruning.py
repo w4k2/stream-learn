@@ -1,13 +1,10 @@
 from enum import Enum
 import numpy as np
 
-class PruningCriterion(Enum):
-    DIVERSITY = 1
-    ENSEMBLE_ACCURACY = 2
-    WEIGHTED_COMBINATION = 3
+PRUNING_CRITERION = ('accuracy', 'diversity', 'weighted')
 
 class Pruner(object):
-    def __init__(self, pruning_criterion, testing_set_size = 30, pruning_permutations = 4, ensemble_size = 20):
+    def __init__(self, pruning_criterion='diversity', testing_set_size = 30, pruning_permutations = 4, ensemble_size = 20):
         self.pruning_permutations = pruning_permutations
         self.testing_set_size = testing_set_size
         self.pruning_criterion = pruning_criterion
@@ -28,9 +25,9 @@ class Pruner(object):
         if len(self.ensemble) > self.ensemble_size:
             if testing_set is not None:
                 self.prepare_testing_set(testing_set)
-                if self.pruning_criterion is PruningCriterion.DIVERSITY:
+                if self.pruning_criterion == 'diversity':
                     best_permutation = self.diversity()
-                elif self.pruning_criterion == PruningCriterion.ENSEMBLE_ACCURACY:
+                elif self.pruning_criterion == 'accuracy':
                     pass
                 else:
                     pass

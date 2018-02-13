@@ -1,15 +1,15 @@
-:mod:`strlearn`.learner
+:mod:`strlearn`.Learner
 ==============================
 
 .. currentmodule:: strlearn
 
-.. autoclass:: learner
+.. autoclass:: Learner
 
    
    .. automethod:: __init__
    
 
-.. include:: strlearn.learner.examples
+.. include:: strlearn.Learner.examples
 
 .. raw:: html
 

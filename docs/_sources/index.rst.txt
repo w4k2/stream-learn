@@ -14,7 +14,6 @@ Welcome to stream-learn documentation!
    :hidden:
    :caption: Documentation
 
-   user_guide
    api
 
 .. toctree::
@@ -34,13 +33,7 @@ Welcome to stream-learn documentation!
 `Getting started <install.html>`_
 ---------------------------------
 
-Information to install, test, and contribute to the package.
-
-`User Guide <user_guide.html>`_
--------------------------------
-
-The main documentation. This contains an in-depth description of all
-algorithms and how to apply them.
+Information to install and usage of the package.
 
 `API Documentation <api.html>`_
 -------------------------------
@@ -52,8 +45,7 @@ all functions, and all parameters available for the algorithms.
 `Examples <auto_examples/index.html>`_
 --------------------------------------
 
-A set of examples illustrating the use of the different algorithms. It
-complements the `User Guide <user_guide.html>`_.
+A set of examples illustrating the use of the different algorithms.
 
 `About stream-learn <about.html>`_
 --------------------------------------

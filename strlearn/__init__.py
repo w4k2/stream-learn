@@ -6,5 +6,5 @@ import controllers
 import ensembles
 
 __all__ = [
-    'learner', 'ensembles', 'controllers', '__version__'
+    'ensembles', 'controllers', '__version__'
 ]

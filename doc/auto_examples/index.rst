@@ -5,9 +5,29 @@
 General examples
 ----------------
 
-General-purpose and introductory examples for the `imbalanced-learn` toolbox.
+General-purpose and introductory examples for the `stream-learn` toolbox.
 
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_basic_learning_thumb.png
+
+        :ref:`sphx_glr_auto_examples_basic_learning.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/basic_learning
 .. raw:: html
 
     <div style='clear:both'></div>

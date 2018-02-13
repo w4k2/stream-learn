@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+"""Learner module"""
 import arff
 from sklearn import preprocessing, base
 import numpy as np
@@ -9,23 +9,37 @@ from tqdm import tqdm
 import controllers
 
 class Learner(object):
-    '''
-    Inicjalizator przyjmuje:
-    - `stream` - strumień danych jako binarny plik arff,
-    - `clf` - obiekt klasyfikatora z sklearn, który musi obsługiwać uczenie inkrementacyjne (metoda `partial_fit`),
-    - `chunk_size` - wielkość pojedynczej paczki z danymi,
-    - `evaluate_interval` - liczba wzorców po których przetworzeniu przeprowadzamy ewaluację, jako zbiór testowy przyjmując wszystkie próbki przetworzone od poprzedniej ewaluacji
-    - `controller` - delegat kontrolujący przetwarzanie, domyślnie pusty StreamController
-    - `verbose` - flaga określająca czy learner ma raportować kolejne ewaluacje do stdout
-    '''
-    def __init__(self, stream, base_classifier, chunk_size=200, evaluate_interval=1000, controller=controllers.Bare(), verbose=True):
-        # Assigning parameters
+    """Perform learning procedure on stream.
+
+    lorem ipsum of description
+
+    Parameters
+    ----------
+    stream : data stream as a binary arff file, loaded like ``toystream = open('datasets/toyset.arff', 'r')``
+    clf : sklearn estimator implementing a ``partial_fit()`` method
+    chunk_size : int, optional (default=200)
+        Number of samples included in each chunk.
+    evaluate_interval : int, optional (default=1000)
+        Interval of processed samples before every evaluation.
+    controller : processing controller delegate object (default= ``controllers.Bare``)
+
+    Examples
+    --------
+    >>> from strlearn import Learner, controllers
+    >>> from sklearn import naive_bayes
+    >>> base_classifier = naive_bayes.GaussianNB()
+    >>> stream = open('datasets/toyset.arff', 'r')
+    >>> controller = controllers.Bare()
+    >>> learner = Learner(stream = stream, base_classifier = base_classifier, controller = controller)
+    >>> learner.run()
+    """
+
+    def __init__(self, stream, base_classifier, chunk_size=200, evaluate_interval=1000, controller=controllers.Bare()):
         self.base_classifier = base_classifier
         self.chunk_size = chunk_size
         self.evaluate_interval = evaluate_interval
         self.controller = controller
         self.controller.learner = self
-        self.verbose = verbose
 
         # Loading dataset
         dataset = arff.load(stream)
@@ -39,7 +53,7 @@ class Learner(object):
         self.number_of_classes = len(self.classes)
 
         # Prepare to classification
-        self.reset()
+        self._reset()
 
     def __str__(self):
         return "stream_learner_c_%i_e_%i_clf_%s_ctrl_%s" % (
@@ -49,10 +63,7 @@ class Learner(object):
             self.controller
         )
 
-    '''
-    Przygotowanie do procesu klasyfikacji. Zerowanie modelu klasyfikatora, liczników i list zbierających wyniki. Dodatkowo, przygotowanie kontrolera przetwarzania.
-    '''
-    def reset(self):
+    def _reset(self):
         self.clf = base.clone(self.base_classifier)
         self.evaluations = 0
         self.processed_chunks = 0
@@ -69,59 +80,54 @@ class Learner(object):
 
         self.controller.prepare()
 
-    '''
-    Uruchomienie procesu uczenia. Zainicjalizowanie licznika i wyzwalanie przetwarzania chunka aż do chwili, w której wyczerpie się strumień.
-    '''
     def run(self):
+        '''
+        Start learning process.
+        '''
         self.training_time = time.time()
         for i in tqdm(xrange(self.number_of_samples / self.chunk_size), desc='CHN'):
-            self.process_chunk()
+            self._process_chunk()
 
-    '''
-    Przetwarzanie pojedynczego chunka.
-    '''
-    def process_chunk(self):
-        # Kopiujemy zużyty przy poprzednim powtórzeniu chunk do pamięci jako poprzedni i pobieramy nowy ze strumienia.
+    def _process_chunk(self):
+        # Copy the old chunk used in the previous repetition and take a new one from the stream.
         self.previous_chunk = self.chunk
         startpoint = self.processed_chunks * self.chunk_size
         self.chunk = (self.X[startpoint:startpoint + self.chunk_size], self.y[startpoint:startpoint + self.chunk_size])
 
-        # Poinformuj kontroler przetwarzania o przystąpieniu do analizy kolejnego chunka.
+        # Inform the processing controller about the analysis of the next chunk.
         self.controller.next_chunk()
 
-        # Inicjalizujemy zbiór do douczania.
+        # Initialize a training set.
         X, y = [], []
 
-        # Iterujemy próbki z chunka.
+        # Iterate samples from chunk.
         for sid, x in enumerate(self.chunk[0]):
-            # Sprawdzamy, czy według kontrolera wystąpił już warunek przerwania.
+            # Check if interruption case occured according to controller.
             if not self.controller.should_break_chunk(X):
-                # Pobieramy pojedynczy wzorzec, wraz z etykietą.
+                # Get single object wit a label.
                 label = self.chunk[1][sid]
 
-                # Sprawdzamy, czy według kontrolera, mamy włączyć aktualną próbkę do zbioru douczającego.
+                # Check if, according to controller, it is needed to include current sample in training set.
                 if self.controller.should_include(X, x, label):
                     X.append(x)
                     y.append(label)
 
-            # Weryfikujemy, czy należy rozpocząc ewaluację.
+            # Verify if evaluation is needed.
             self.processed_instances += 1
             if self.processed_instances % self.evaluate_interval == 0:
-                self.evaluate()
+                self._evaluate()
 
         X = np.array(X)
         y = np.array(y)
 
-        # Douczamy z aktualnym zbiorem douczającym.
-        self.fit_with_chunk(X, y)
+        # Fit model with current training set.
+        self._fit_with_chunk(X, y)
         self.processed_chunks += 1
 
-    def fit_with_chunk(self, X, y):
-        # Convert to numpy
-        if X.ndim == 2:
-            self.clf.partial_fit(X, y, self.classes)
+    def _fit_with_chunk(self, X, y):
+        self.clf.partial_fit(X, y, self.classes)
 
-    def evaluate(self):
+    def _evaluate(self):
         self.training_time = time.time() - self.training_time
         evaluation_time = time.time()
 
@@ -146,17 +152,18 @@ class Learner(object):
             self.training_times.append(self.training_time)
             self.controller_measures.append(controller_measure)
 
-            # Presenting results
-            if self.verbose:
-                print '%i, %.3f, %.3f, %.3f, %s' % (
-                    self.processed_instances, score, evaluation_time, self.training_time, controller_measure
-                )
-
         self.evaluations += 1
 
         self.training_time = time.time()
 
     def serialize(self, filename):
+        """
+        Save obtained metrics in CSV file.
+
+        Parameters
+        ----------
+        filename : name of resulting CSV file
+        """
         with open(filename, 'wb') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',')
             for idx, point in enumerate(self.score_points):

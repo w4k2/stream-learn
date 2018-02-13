@@ -3,4 +3,4 @@
 General examples
 ----------------
 
-General-purpose and introductory examples for the `imbalanced-learn` toolbox.
+General-purpose and introductory examples for the `stream-learn` toolbox.

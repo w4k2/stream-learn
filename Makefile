@@ -21,10 +21,11 @@ test-coverage:
 
 test: clean test-coverage
 
-html: clean install
+html: clean
 	rm -rf docs/
 	export SPHINXOPTS=-W; make -C doc html
 	mv doc/_build/html ./docs
+	open docs/index.html
 
 code-analysis:
 	flake8 strlearn | grep -v __init__

@@ -8,6 +8,7 @@ from sklearn.externals.six import u
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('sphinxext'))
+sys.path.insert(0, os.path.abspath('..'))
 from github_link import make_linkcode_resolve
 import sphinx_gallery
 
@@ -56,9 +57,6 @@ source_suffix = '.rst'
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
-
-# Generate the plot for the gallery
-plot_gallery = True
 
 # The master toctree document.
 master_doc = 'index'
