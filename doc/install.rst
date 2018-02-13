@@ -5,7 +5,7 @@ Instalation
 Prerequisites
 =============
 
-The imbalanced-learn package requires the following dependencies:
+The stream-learn package requires the following dependencies:
 
 * numpy
 * scipy
@@ -16,7 +16,7 @@ Install
 
 stream-learn is available on PyPi's reporitories, so you may install it using `pip`::
 
-  pip install -U imbalanced-learn
+  pip install -U stream-learn
 
 If you prefer, you can clone it and run the setup.py file. Use the following
 commands to get a copy from Github and install all dependencies::
