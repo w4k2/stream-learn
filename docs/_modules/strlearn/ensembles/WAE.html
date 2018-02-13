@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>strlearn.ensembles.WAE &mdash; stream-learn 0.1.0 documentation</title>
+  <title>strlearn.ensembles.WAE &mdash; stream-learn 0.1.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="stream-learn 0.1.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="stream-learn 0.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -179,6 +179,8 @@
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pruning</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
 
 <span class="n">WEIGHT_CALCULATION_METHOD</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;same_for_each&#39;</span><span class="p">,</span> <span class="s1">&#39;proportional_to_accuracy&#39;</span><span class="p">,</span><span class="s1">&#39;aged_proportional_to_accuracy&#39;</span><span class="p">,</span><span class="s1">&#39;kuncheva&#39;</span><span class="p">,</span><span class="s1">&#39;proportional_to_accuracy_related_to_whole_ensemble&#39;</span><span class="p">,</span><span class="s1">&#39;proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve&#39;</span><span class="p">)</span>
 
@@ -193,26 +195,23 @@
 <span class="sd">    .. [1] A. Kasprzeak, M. Wozniak, &quot;Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="WAE.__init__"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.WAE.html#strlearn.ensembles.WAE.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_classifier</span><span class="o">=</span><span class="n">neighbors</span><span class="o">.</span><span class="n">KNeighborsClassifier</span><span class="p">(),</span> <span class="n">ensemble_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">theta</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_post_pruning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pruning_criterion</span><span class="o">=</span><span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="n">weight_calculation_method</span><span class="o">=</span><span class="s1">&#39;kuncheva&#39;</span><span class="p">,</span> <span class="n">aging_method</span><span class="o">=</span><span class="s1">&#39;weights_proportional&#39;</span><span class="p">,</span> <span class="n">is_rejuvenating</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rejuvenation_power</span><span class="o">=.</span><span class="mi">5</span><span class="p">):</span>
+<div class="viewcode-block" id="WAE.__init__"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.WAE.html#strlearn.ensembles.WAE.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_classifier</span><span class="o">=</span><span class="n">neighbors</span><span class="o">.</span><span class="n">KNeighborsClassifier</span><span class="p">(),</span> <span class="n">ensemble_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">theta</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_post_pruning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pruning_criterion</span><span class="o">=</span><span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="n">weight_calculation_method</span><span class="o">=</span><span class="s1">&#39;kuncheva&#39;</span><span class="p">,</span> <span class="n">aging_method</span><span class="o">=</span><span class="s1">&#39;weights_proportional&#39;</span><span class="p">,</span> <span class="n">rejuvenation_power</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span> <span class="o">=</span> <span class="n">pruning_criterion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span> <span class="o">=</span> <span class="n">ensemble_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pruner</span> <span class="o">=</span> <span class="n">pruning</span><span class="o">.</span><span class="n">Pruner</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_classifier</span> <span class="o">=</span> <span class="n">base_classifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_post_pruning</span> <span class="o">=</span> <span class="n">is_post_pruning</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">=</span> <span class="n">weight_calculation_method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aging_method</span> <span class="o">=</span> <span class="n">aging_method</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_rejuvenating</span> <span class="o">=</span> <span class="n">is_rejuvenating</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rejuvenation_power</span> <span class="o">=</span> <span class="n">rejuvenation_power</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># wiek w iteracjach</span>
+        <span class="c1"># Ensemble and its parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>    <span class="c1"># wiek w iteracjach</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="p">[]</span>          <span class="c1"># wiek wedlug miary</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span> <span class="o">=</span> <span class="kc">None</span>
@@ -231,92 +230,121 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># TODO: Poprawienie tablic z wiekiem</span>
-        <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pruner</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">best_permutation</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span>
-                           <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">best_permutation</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">best_permutation</span>
+        <span class="c1">#warnings.warn(&quot;I want to prune&quot;)</span>
+        <span class="n">pruner</span> <span class="o">=</span> <span class="n">pruning</span><span class="o">.</span><span class="n">Pruner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pruner</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">,</span><span class="n">classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_filter_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">combination</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">combination</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="n">combination</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ages</span><span class="p">[</span><span class="n">combination</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">combination</span><span class="p">]</span>
 
 <div class="viewcode-block" id="WAE.partial_fit"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.WAE.html#strlearn.ensembles.WAE.partial_fit">[docs]</a>    <span class="k">def</span> <span class="nf">partial_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Partial fitting&quot;&quot;&quot;</span>
+        <span class="c1">#warnings.warn(&quot;Partial fit %i [size %i]&quot; % (self.age, len(self.ensemble)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="c1">#print &quot;\nPARTIAL FIT --- OA = %.3f&quot; % self.overall_accuracy</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span>
+
         <span class="c1"># Preparing and training new candidate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="n">classes</span>
         <span class="n">candidate_clf</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_classifier</span><span class="p">)</span>
         <span class="n">candidate_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">candidate_clf</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">best_permutation</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Pre-pruning</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_post_pruning</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prune</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rejuvenate</span><span class="p">()</span>
+            <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prune</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_accuracies</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_ages</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_weights</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_ages</span><span class="p">()</span>
 
-        <span class="c1"># Zabijamy wszystkie o ujemnej wadze</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_extinction</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">best_permutation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ensemble</span><span class="p">(</span><span class="n">best_permutation</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ages</span>
-
-        <span class="c1"># Wagi musza sumowac sie do jedynki, ale dopiero po wymieraniu</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extinct</span><span class="p">()</span>
 
         <span class="c1"># Post-pruning</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_post_pruning</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rejuvenate</span><span class="p">()</span>
             <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prune</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ages</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">best_permutation</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">best_permutation</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">clf_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_id</span> <span class="ow">in</span> <span class="n">best_permutation</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ensemble</span><span class="p">(</span><span class="n">best_permutation</span><span class="p">)</span>
+
+        <span class="c1">#TODO Connect weights and ages?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ages</span>
+
+        <span class="c1"># Weights normalization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
 
         <span class="c1"># Ending procedure</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">+=</span> <span class="mi">1</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-    <span class="k">def</span> <span class="nf">_set_accuracies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">m_clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">m_clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">_accuracies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_training_set</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">m_clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">m_clf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;same_for_each&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">))</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;proportinal_to_accuracy&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;aged_proportional_to_accuracy&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">accuracies</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;kuncheva&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0000001</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span><span class="p">)</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">accuracies</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0000001</span> <span class="o">-</span> <span class="n">accuracies</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;proportional_to_accuracy_related_to_whole_ensemble&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">accuracies</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_calculation_method</span> <span class="o">==</span> <span class="s1">&#39;proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">overall_accuracy</span> <span class="o">-</span> <span class="n">accuracies</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_set_ages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aging_method</span> <span class="o">==</span> <span class="s1">&#39;weights_proportional&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracies</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+                <span class="n">accuracies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accuracies</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="n">accuracies</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aging_method</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aging_method</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> \
                     <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_rejuvenate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejuvenation_power</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">&gt;</span> <span class="n">w</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejuvenation_power</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_extinction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#TODO: Tu nalezy faktycznie usunac martwe</span>
-        <span class="n">still_alive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ages</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">_extinct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">combination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filter_ensemble</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WAE.predict_proba"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.WAE.html#strlearn.ensembles.WAE.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict proba&quot;&quot;&quot;</span>
@@ -340,6 +368,7 @@
         <span class="n">decisions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">supports</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">y</span><span class="p">])</span>
         <span class="n">accuracy</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">_y</span><span class="p">,</span> <span class="n">decisions</span><span class="p">)</span>
+        <span class="c1">#warnings.warn(&quot;Scored %.3f&quot; % accuracy)</span>
         <span class="k">return</span> <span class="n">accuracy</span></div></div>
 </pre></div>
 
@@ -377,7 +406,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

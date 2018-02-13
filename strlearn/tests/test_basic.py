@@ -26,20 +26,3 @@ def test_BLALC_controller():
     learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
     learner.run()
     print ctrl
-
-def test_WAE():
-    nb_clf = naive_bayes.GaussianNB()
-    toystream = open('datasets/toyset.arff', 'r')
-    clf = strlearn.ensembles.WAE(base_classifier = nb_clf)
-    learner = strlearn.Learner(toystream, clf)
-    learner.run()
-
-
-def test_pp_WAE():
-    nb_clf = naive_bayes.GaussianNB()
-    toystream = open('datasets/toyset.arff', 'r')
-    clf = strlearn.ensembles.WAE(base_classifier = nb_clf, is_post_pruning=True)
-    learner = strlearn.Learner(toystream, clf)
-    learner.run()
-    learner.serialize('ppWAE.csv')
-    os.remove('ppWAE.csv')

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>strlearn.ensembles.Pruner &mdash; stream-learn 0.1.0 documentation</title>
+  <title>strlearn.ensembles.Pruner &mdash; stream-learn 0.1.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="stream-learn 0.1.0 documentation" href="../index.html"/>
+    <link rel="top" title="stream-learn 0.1.1 documentation" href="../index.html"/>
         <link rel="up" title="stream-learn API" href="../api.html"/>
         <link rel="next" title="General examples" href="../auto_examples/index.html"/>
         <link rel="prev" title="strlearn.ensembles.WAE" href="strlearn.ensembles.WAE.html"/> 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -188,11 +188,23 @@
 <h1><code class="xref py py-mod docutils literal"><span class="pre">strlearn.ensembles</span></code>.Pruner<a class="headerlink" href="#strlearn-ensembles-pruner" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="strlearn.ensembles.Pruner">
-<em class="property">class </em><code class="descclassname">strlearn.ensembles.</code><code class="descname">Pruner</code><span class="sig-paren">(</span><em>pruning_criterion='diversity'</em>, <em>testing_set_size=30</em>, <em>pruning_permutations=4</em>, <em>ensemble_size=20</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/pruning.py#L6"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">strlearn.ensembles.</code><code class="descname">Pruner</code><span class="sig-paren">(</span><em>pruning_criterion='diversity'</em>, <em>testing_set_size=30</em>, <em>pruning_permutations=5</em>, <em>ensemble_size=20</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/pruning.py#L9"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="strlearn.ensembles.Pruner.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>pruning_criterion='diversity'</em>, <em>testing_set_size=30</em>, <em>pruning_permutations=4</em>, <em>ensemble_size=20</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/pruning.py#L7"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>pruning_criterion='diversity'</em>, <em>testing_set_size=30</em>, <em>pruning_permutations=5</em>, <em>ensemble_size=20</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/pruning.py#L10"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="strlearn.ensembles.Pruner.accuracy">
+<code class="descname">accuracy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/pruning.py#L42"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner.accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accuracy pruning.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="strlearn.ensembles.Pruner.diversity">
+<code class="descname">diversity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/pruning.py#L71"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/pruning.html#Pruner.diversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.Pruner.diversity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimization based pruning on Partridge Krzanowski metric.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -242,7 +254,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

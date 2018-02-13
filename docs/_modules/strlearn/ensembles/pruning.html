@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>strlearn.ensembles.pruning &mdash; stream-learn 0.1.0 documentation</title>
+  <title>strlearn.ensembles.pruning &mdash; stream-learn 0.1.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="stream-learn 0.1.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="stream-learn 0.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -174,18 +174,22 @@
   <h1>Source code for strlearn.ensembles.pruning</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
 
 <span class="n">PRUNING_CRITERION</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="s1">&#39;weighted&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Pruner"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner">[docs]</a><span class="k">class</span> <span class="nc">Pruner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<div class="viewcode-block" id="Pruner.__init__"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pruning_criterion</span><span class="o">=</span><span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="n">testing_set_size</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">pruning_permutations</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ensemble_size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="Pruner.__init__"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pruning_criterion</span><span class="o">=</span><span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="n">testing_set_size</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">pruning_permutations</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ensemble_size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pruning_permutations</span> <span class="o">=</span> <span class="n">pruning_permutations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">testing_set_size</span> <span class="o">=</span> <span class="n">testing_set_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span> <span class="o">=</span> <span class="n">pruning_criterion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span> <span class="o">=</span> <span class="n">ensemble_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">prepare_testing_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testing_set</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">testing_set</span>
@@ -193,8 +197,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,:]</span>
 
-    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">testing_set</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">testing_set</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="n">ensemble</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="n">classes</span>
         <span class="n">best_permutation</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">testing_set</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -202,14 +207,45 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span> <span class="o">==</span> <span class="s1">&#39;diversity&#39;</span><span class="p">:</span>
                     <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diversity</span><span class="p">()</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span> <span class="o">==</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span>
-                    <span class="k">pass</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">pass</span>
+                    <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pruning_criterion</span> <span class="o">==</span> <span class="s1">&#39;weighted&#39;</span><span class="p">:</span>
+                    <span class="n">best_permutation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diversity</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">best_permutation</span>
 
-    <span class="k">def</span> <span class="nf">diversity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Partridge Krzanowski</span>
+<div class="viewcode-block" id="Pruner.accuracy"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner.accuracy">[docs]</a>    <span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accuracy pruning.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">best_measure</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">best_permutation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pruning_permutations</span><span class="p">):</span>
+            <span class="n">permutation</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">))[:</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_size</span><span class="p">]</span>
+
+            <span class="n">current_measure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_measure</span> <span class="o">&gt;</span> <span class="n">best_measure</span><span class="p">:</span>
+                <span class="n">best_measure</span> <span class="o">=</span> <span class="n">current_measure</span>
+                <span class="n">best_permutation</span> <span class="o">=</span> <span class="n">permutation</span>
+        <span class="k">return</span> <span class="n">best_permutation</span></div>
+
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permutation</span><span class="p">):</span>
+        <span class="n">supports</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">permutation</span><span class="p">:</span>
+            <span class="n">member_clf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">[</span><span class="n">cid</span><span class="p">]</span>
+            <span class="n">support</span> <span class="o">=</span> <span class="n">member_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">supports</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">supports</span> <span class="o">=</span> <span class="n">support</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">supports</span> <span class="o">+=</span> <span class="n">support</span>
+        <span class="n">decisions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">supports</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">])</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">_y</span><span class="p">,</span> <span class="n">decisions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">accuracy</span>
+
+<div class="viewcode-block" id="Pruner.diversity"><a class="viewcode-back" href="../../../generated/strlearn.ensembles.Pruner.html#strlearn.ensembles.Pruner.diversity">[docs]</a>    <span class="k">def</span> <span class="nf">diversity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimization based pruning on Partridge Krzanowski metric.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">best_measure</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">best_permutation</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pruning_permutations</span><span class="p">):</span>
@@ -235,7 +271,7 @@
             <span class="k">if</span> <span class="n">current_measure</span> <span class="o">&gt;</span> <span class="n">best_measure</span><span class="p">:</span>
                 <span class="n">best_measure</span> <span class="o">=</span> <span class="n">current_measure</span>
                 <span class="n">best_permutation</span> <span class="o">=</span> <span class="n">permutation</span>
-        <span class="k">return</span> <span class="n">best_permutation</span></div>
+        <span class="k">return</span> <span class="n">best_permutation</span></div></div>
 </pre></div>
 
            </div>
@@ -272,7 +308,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

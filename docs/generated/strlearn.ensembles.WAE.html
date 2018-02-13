@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>strlearn.ensembles.WAE &mdash; stream-learn 0.1.0 documentation</title>
+  <title>strlearn.ensembles.WAE &mdash; stream-learn 0.1.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="stream-learn 0.1.0 documentation" href="../index.html"/>
+    <link rel="top" title="stream-learn 0.1.1 documentation" href="../index.html"/>
         <link rel="up" title="stream-learn API" href="../api.html"/>
         <link rel="next" title="strlearn.ensembles.Pruner" href="strlearn.ensembles.Pruner.html"/>
         <link rel="prev" title="strlearn.controllers.BLALC" href="strlearn.controllers.BLALC.html"/> 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.1
               </div>
             
           
@@ -188,7 +188,7 @@
 <h1><code class="xref py py-mod docutils literal"><span class="pre">strlearn.ensembles</span></code>.WAE<a class="headerlink" href="#strlearn-ensembles-wae" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="strlearn.ensembles.WAE">
-<em class="property">class </em><code class="descclassname">strlearn.ensembles.</code><code class="descname">WAE</code><span class="sig-paren">(</span><em>base_classifier=KNeighborsClassifier(algorithm='auto'</em>, <em>leaf_size=30</em>, <em>metric='minkowski'</em>, <em>metric_params=None</em>, <em>n_jobs=1</em>, <em>n_neighbors=5</em>, <em>p=2</em>, <em>weights='uniform')</em>, <em>ensemble_size=20</em>, <em>theta=0.1</em>, <em>is_post_pruning=False</em>, <em>pruning_criterion='diversity'</em>, <em>weight_calculation_method='kuncheva'</em>, <em>aging_method='weights_proportional'</em>, <em>is_rejuvenating=False</em>, <em>rejuvenation_power=0.5</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/WAE.py#L13"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">strlearn.ensembles.</code><code class="descname">WAE</code><span class="sig-paren">(</span><em>base_classifier=KNeighborsClassifier(algorithm='auto'</em>, <em>leaf_size=30</em>, <em>metric='minkowski'</em>, <em>metric_params=None</em>, <em>n_jobs=1</em>, <em>n_neighbors=5</em>, <em>p=2</em>, <em>weights='uniform')</em>, <em>ensemble_size=20</em>, <em>theta=0.1</em>, <em>is_post_pruning=False</em>, <em>pruning_criterion='diversity'</em>, <em>weight_calculation_method='kuncheva'</em>, <em>aging_method='weights_proportional'</em>, <em>rejuvenation_power=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/WAE.py#L15"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Weighted Aging Ensemble
 lorem ipsum</p>
 <p class="rubric">References</p>
@@ -203,12 +203,12 @@ lorem ipsum</p>
 </table>
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_classifier=KNeighborsClassifier(algorithm='auto'</em>, <em>leaf_size=30</em>, <em>metric='minkowski'</em>, <em>metric_params=None</em>, <em>n_jobs=1</em>, <em>n_neighbors=5</em>, <em>p=2</em>, <em>weights='uniform')</em>, <em>ensemble_size=20</em>, <em>theta=0.1</em>, <em>is_post_pruning=False</em>, <em>pruning_criterion='diversity'</em>, <em>weight_calculation_method='kuncheva'</em>, <em>aging_method='weights_proportional'</em>, <em>is_rejuvenating=False</em>, <em>rejuvenation_power=0.5</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/WAE.py#L22"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_classifier=KNeighborsClassifier(algorithm='auto'</em>, <em>leaf_size=30</em>, <em>metric='minkowski'</em>, <em>metric_params=None</em>, <em>n_jobs=1</em>, <em>n_neighbors=5</em>, <em>p=2</em>, <em>weights='uniform')</em>, <em>ensemble_size=20</em>, <em>theta=0.1</em>, <em>is_post_pruning=False</em>, <em>pruning_criterion='diversity'</em>, <em>weight_calculation_method='kuncheva'</em>, <em>aging_method='weights_proportional'</em>, <em>rejuvenation_power=0.0</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/WAE.py#L24"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.get_params">
-<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/../../../../.pyenv/versions/2.7.13/lib/python2.7/site-packages/sklearn/base.py#L213"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/../../../../.pyenv/versions/2.7.13/lib/python2.7/site-packages/sklearn/base.py#L213"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -233,25 +233,25 @@ contained subobjects that are estimators.</p>
 
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.partial_fit">
-<code class="descname">partial_fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>classes</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/WAE.py#L68"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.partial_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.partial_fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">partial_fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>classes</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/WAE.py#L69"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.partial_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.partial_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partial fitting</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.predict_proba">
-<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/WAE.py#L147"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.predict_proba" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_proba</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/WAE.py#L175"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.predict_proba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict proba</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.score">
-<code class="descname">score</code><span class="sig-paren">(</span><em>X</em>, <em>y</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/ensembles/WAE.py#L163"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.score" title="Permalink to this definition">¶</a></dt>
+<code class="descname">score</code><span class="sig-paren">(</span><em>X</em>, <em>y</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/ensembles/WAE.py#L191"><span class="viewcode-link">[source]</span></a><a class="reference internal" href="../_modules/strlearn/ensembles/WAE.html#WAE.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accuracy score</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="strlearn.ensembles.WAE.set_params">
-<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/c0f01f2/strlearn/../../../../.pyenv/versions/2.7.13/lib/python2.7/site-packages/sklearn/base.py#L250"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/w4k2/stream-learn/blob/6ee11a1/strlearn/../../../../.pyenv/versions/2.7.13/lib/python2.7/site-packages/sklearn/base.py#L250"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#strlearn.ensembles.WAE.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as pipelines). The latter have parameters of the form
@@ -315,7 +315,7 @@ component of a nested object.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.0',
+            VERSION:'0.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

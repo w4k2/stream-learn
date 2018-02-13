@@ -22,3 +22,16 @@
 
 stream-learn
 ================
+
+
+- Wiek musi rozpoczynać się od 1.
+- Kiedy właściwie ma następować odmładzanie? Ustawiłem wprost przed pruningiem.
+- Najwięcej czasu schodzi na pruning.
+  - A więc kluczowym celem badań mogłaby być minimalizacja konieczności pruningu.
+- W accuracy pruningu nie mamy ważenia?
+- Waga Kunchevej dzieli przez zero przy dokładności 100%
+- Gdzie łączą się wagi i starości?
+- Zerowe odmładzanie to brak odmładzania.
+- W odmładzaniu większy od średniej, a nie od sumy?
+- I ile właściwie odejmujemy od iteracji?
+- Ile permutacji w pruningu?

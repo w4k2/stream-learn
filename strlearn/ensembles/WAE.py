@@ -5,6 +5,8 @@ from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
 import pruning
+import warnings
+warnings.simplefilter('always')
 
 WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy','aged_proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
 
@@ -19,26 +21,23 @@ class WAE(BaseEstimator):
     .. [1] A. Kasprzeak, M. Wozniak, "Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics"
     """
 
-    def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='diversity', weight_calculation_method='kuncheva', aging_method='weights_proportional', is_rejuvenating=False, rejuvenation_power=.5):
+    def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='diversity', weight_calculation_method='kuncheva', aging_method='weights_proportional', rejuvenation_power=0.):
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
-        self.pruner = pruning.Pruner(
-            self.pruning_criterion, ensemble_size=self.ensemble_size)
         self.base_classifier = base_classifier
         self.theta = theta
         self.is_post_pruning = is_post_pruning
         self.weight_calculation_method = weight_calculation_method
         self.aging_method = aging_method
-        self.is_rejuvenating = is_rejuvenating
         self.rejuvenation_power = rejuvenation_power
 
         self.age = 0
         self.overall_accuracy = 0
-        self.ensemble = []
 
-        self.iterations = []    # wiek w iteracjach
+        # Ensemble and its parameters
+        self.ensemble = []
+        self.iterations = np.array([])    # wiek w iteracjach
         self.ages = []          # wiek wedlug miary
-        self.accuracies = []
         self.weights = []
 
         self.previous_training_set = None
@@ -57,92 +56,121 @@ class WAE(BaseEstimator):
         )
 
     def _prune(self):
-        # TODO: Poprawienie tablic z wiekiem
-        best_permutation = self.pruner.prune(
-            self.ensemble, self.previous_training_set)
-        self.ensemble = [self.ensemble[clf_id] for clf_id in best_permutation]
-        self.iterations = [self.iterations[clf_id]
-                           for clf_id in best_permutation]
-        return best_permutation
+        #warnings.warn("I want to prune")
+        pruner = pruning.Pruner(self.pruning_criterion, ensemble_size=self.ensemble_size)
+        return pruner.prune(self.ensemble, self.previous_training_set,classes=self.classes)
+
+    def _filter_ensemble(self, combination):
+        self.ensemble = [self.ensemble[clf_id] for clf_id in combination]
+        self.iterations = self.iterations[combination]
+        self.ages = self.ages[combination]
+        self.weights = self.weights[combination]
 
     def partial_fit(self, X, y, classes):
         """Partial fitting"""
+        #warnings.warn("Partial fit %i [size %i]" % (self.age, len(self.ensemble)))
         if self.age > 0:
             self.overall_accuracy = self.score(
-                self.previous_training_set[0], self.previous_training_set[1])
-        #print "\nPARTIAL FIT --- OA = %.3f" % self.overall_accuracy
+                self.previous_training_set[0],
+                self.previous_training_set[1]
+            )
+
         # Preparing and training new candidate
         self.classes = classes
         candidate_clf = base.clone(self.base_classifier)
         candidate_clf.fit(X, y)
         self.ensemble.append(candidate_clf)
-        self.iterations.append(0)
+        self.iterations = np.append(self.iterations, [1])
+
+        best_permutation = None
 
         # Pre-pruning
         if len(self.ensemble) > self.ensemble_size and not self.is_post_pruning:
-            self._prune()
+            self._rejuvenate()
+            best_permutation = self._prune()
 
-        self._set_accuracies()
-        self._set_ages()
         self._set_weights()
+        self._set_ages()
 
-        # Zabijamy wszystkie o ujemnej wadze
-        self._extinction()
+        if best_permutation is not None:
+            self._filter_ensemble(best_permutation)
 
-        self.weights *= self.ages
-
-        # Wagi musza sumowac sie do jedynki, ale dopiero po wymieraniu
-        self.weights /= np.sum(self.weights)
+        self._extinct()
 
         # Post-pruning
         if len(self.ensemble) > self.ensemble_size and self.is_post_pruning:
+            self._rejuvenate()
             best_permutation = self._prune()
-            self.ages = [self.ages[clf_id] for clf_id in best_permutation]
-            self.accuracies = [self.accuracies[clf_id] for clf_id in best_permutation]
-            self.weights = [self.weights[clf_id] for clf_id in best_permutation]
+            self._filter_ensemble(best_permutation)
+
+        #TODO Connect weights and ages?
+        self.weights *= self.ages
+
+        # Weights normalization
+        self.weights /= np.sum(self.weights)
 
         # Ending procedure
         self.previous_training_set = (X, y)
         self.age += 1
+        self.iterations += 1
 
-    def _set_accuracies(self):
-        if self.age > 0:
-            X, y = self.previous_training_set
-            self.accuracies = np.array(
-                [m_clf.score(X, y) for m_clf in self.ensemble])
+    def _accuracies(self):
+        X, y = self.previous_training_set
+        return np.array(
+            [m_clf.score(X, y) for m_clf in self.ensemble])
 
     def _set_weights(self):
         if self.age > 0:
             if self.weight_calculation_method == 'same_for_each':
                 self.weights = np.ones(len(self.ensemble))
+
             elif self.weight_calculation_method == 'proportinal_to_accuracy':
-                self.weights = np.copy(self.accuracies)
+                self.weights = self._accuracies()
+
             elif self.weight_calculation_method == 'aged_proportional_to_accuracy':
-                self.weights = self.accuracies / np.sqrt(self.iterations)
+                accuracies = self._accuracies()
+                self.weights = accuracies / np.sqrt(self.iterations)
+
             elif self.weight_calculation_method == 'kuncheva':
-                self.weights = self.accuracies / (1.0000001 - self.accuracies)
+                accuracies = self._accuracies()
+                self.weights = accuracies / (1.0000001 - accuracies)
+
             elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble':
-                self.weights = self.accuracies / self.overall_accuracy
+                accuracies = self._accuracies()
+                self.weights = accuracies / self.overall_accuracy
+                self.weights[self.weights < self.theta] = 0
+
             elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve':
-                self.weights = 1./(2. * np.pi) * np.exp((self.overall_accuracy - self.accuracies)/2.)
+                accuracies = self._accuracies()
+                self.weights = 1./(2. * np.pi) * np.exp((self.overall_accuracy - accuracies)/2.)
+                self.weights[self.weights < self.theta] = 0
+
         self.weights = np.nan_to_num(self.weights)
 
     def _set_ages(self):
-        self.iterations = np.array(self.iterations) + 1
         if self.age > 0:
             if self.aging_method == 'weights_proportional':
-                self.ages = self.accuracies / np.sqrt(self.iterations)
+                accuracies = self._accuracies()
+                self.ages = accuracies / np.sqrt(self.iterations)
+
             elif self.aging_method == 'constant':
-                self.ages = 1 - (self.iterations * self.theta)
+                self.ages = self.weights - self.theta
+                self.ages[self.ages < self.theta] = 0
+
             elif self.aging_method == 'gaussian':
                 self.ages = 1. / (2. * np.pi) * \
                     np.exp((self.iterations * self.theta) / 2.)
 
-        self.iterations = list(self.iterations)
+    def _rejuvenate(self):
+        if self.rejuvenation_power > 0:
+            w = np.sum(self.weights) / len(self.weights)
+            mask = self.weights > w
+            self.iterations[mask] -= self.rejuvenation_power * (self.weights[mask] - w)
 
-    def _extinction(self):
-        #TODO: Tu nalezy faktycznie usunac martwe
-        still_alive = self.ages > 0
+    def _extinct(self):
+        combination = np.array(np.where(self.weights > 0))[0]
+        if len(combination) > 0:
+            self._filter_ensemble(combination)
 
     def predict_proba(self, X):
         """Predict proba"""
@@ -166,4 +194,5 @@ class WAE(BaseEstimator):
         decisions = np.argmax(supports, axis=1)
         _y = np.array([self.classes.index(a) for a in y])
         accuracy = metrics.accuracy_score(_y, decisions)
+        #warnings.warn("Scored %.3f" % accuracy)
         return accuracy
