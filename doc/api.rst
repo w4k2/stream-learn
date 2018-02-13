@@ -10,7 +10,4 @@ This is the full API documentation of the `imbalanced-learn` toolbox.
    :toctree: generated/
    :template: class.rst
 
-   streamController
-   streamLearner
-   pruning
-   WAE
+   learner
