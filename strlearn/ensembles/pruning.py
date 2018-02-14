@@ -5,9 +5,9 @@ from sklearn import metrics
 warnings.simplefilter('always')
 
 PRUNING_CRITERION = ('accuracy', 'diversity', 'weighted')
-
+#TODO Liczba kombinacji jest opcjonalna. Przy jej braku dokonujemy przegladu zupelnego.
 class Pruner(object):
-    def __init__(self, pruning_criterion='diversity', testing_set_size = 30, pruning_permutations = 5, ensemble_size = 20):
+    def __init__(self, pruning_criterion='accuracy', testing_set_size = 30, pruning_permutations = 5, ensemble_size = 20):
         self.pruning_permutations = pruning_permutations
         self.testing_set_size = testing_set_size
         self.pruning_criterion = pruning_criterion
@@ -71,6 +71,7 @@ class Pruner(object):
     def diversity(self):
         """
         Optimization based pruning on Partridge Krzanowski metric.
+        W eksperymencie tylko na accuracy.
         """
         best_measure = 0
         best_permutation = None

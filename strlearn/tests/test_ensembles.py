@@ -26,7 +26,7 @@ def test_pp_WAE():
     os.remove('ppWAE.csv')
 
 def test_WAE_wcm():
-    methods = ('same_for_each', 'proportional_to_accuracy','aged_proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+    methods = ('same_for_each', 'proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
     for method in methods:
         nb_clf = naive_bayes.GaussianNB()
         toystream = open('datasets/toyset.arff', 'r')

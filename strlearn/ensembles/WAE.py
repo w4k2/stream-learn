@@ -8,7 +8,7 @@ import pruning
 import warnings
 warnings.simplefilter('always')
 
-WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy','aged_proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
 
 AGING_METHOD = ('weights_proportional', 'constant', 'gaussian')
 
@@ -21,7 +21,7 @@ class WAE(BaseEstimator):
     .. [1] A. Kasprzeak, M. Wozniak, "Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics"
     """
 
-    def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='diversity', weight_calculation_method='kuncheva', aging_method='weights_proportional', rejuvenation_power=0.):
+    def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='accuracy', weight_calculation_method='kuncheva', aging_method='weights_proportional', rejuvenation_power=0.):
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
         self.base_classifier = base_classifier
@@ -36,8 +36,7 @@ class WAE(BaseEstimator):
 
         # Ensemble and its parameters
         self.ensemble = []
-        self.iterations = np.array([])    # wiek w iteracjach
-        self.ages = []          # wiek wedlug miary
+        self.iterations = np.array([])
         self.weights = []
 
         self.previous_training_set = None
@@ -56,19 +55,16 @@ class WAE(BaseEstimator):
         )
 
     def _prune(self):
-        #warnings.warn("I want to prune")
         pruner = pruning.Pruner(self.pruning_criterion, ensemble_size=self.ensemble_size)
         return pruner.prune(self.ensemble, self.previous_training_set,classes=self.classes)
 
     def _filter_ensemble(self, combination):
         self.ensemble = [self.ensemble[clf_id] for clf_id in combination]
         self.iterations = self.iterations[combination]
-        self.ages = self.ages[combination]
         self.weights = self.weights[combination]
 
     def partial_fit(self, X, y, classes):
         """Partial fitting"""
-        #warnings.warn("Partial fit %i [size %i]" % (self.age, len(self.ensemble)))
         if self.age > 0:
             self.overall_accuracy = self.score(
                 self.previous_training_set[0],
@@ -77,8 +73,8 @@ class WAE(BaseEstimator):
 
         # Pre-pruning
         if len(self.ensemble) > self.ensemble_size and not self.is_post_pruning:
-            self._rejuvenate()
             best_permutation = self._prune()
+            self._filter_ensemble(best_permutation)
 
         # Preparing and training new candidate
         self.classes = classes
@@ -87,24 +83,15 @@ class WAE(BaseEstimator):
         self.ensemble.append(candidate_clf)
         self.iterations = np.append(self.iterations, [1])
 
-        best_permutation = None
-
         self._set_weights()
-        self._set_ages()
-
-        if best_permutation is not None:
-            self._filter_ensemble(best_permutation)
-
+        self._aging()
+        self._rejuvenate()
         self._extinct()
 
         # Post-pruning
         if len(self.ensemble) > self.ensemble_size and self.is_post_pruning:
-            self._rejuvenate()
             best_permutation = self._prune()
             self._filter_ensemble(best_permutation)
-
-        #TODO Connect weights and ages?
-        self.weights *= self.ages
 
         # Weights normalization
         self.weights /= np.sum(self.weights)
@@ -127,10 +114,6 @@ class WAE(BaseEstimator):
             elif self.weight_calculation_method == 'proportional_to_accuracy':
                 self.weights = self._accuracies()
 
-            elif self.weight_calculation_method == 'aged_proportional_to_accuracy':
-                accuracies = self._accuracies()
-                self.weights = accuracies / np.sqrt(self.iterations)
-
             elif self.weight_calculation_method == 'kuncheva':
                 accuracies = self._accuracies()
                 self.weights = accuracies / (1.0000001 - accuracies)
@@ -147,25 +130,26 @@ class WAE(BaseEstimator):
 
         self.weights = np.nan_to_num(self.weights)
 
-    def _set_ages(self):
+    def _aging(self):
         if self.age > 0:
             if self.aging_method == 'weights_proportional':
                 accuracies = self._accuracies()
-                self.ages = accuracies / np.sqrt(self.iterations)
+                self.weights = accuracies / np.sqrt(self.iterations)
 
             elif self.aging_method == 'constant':
-                self.ages = self.weights - self.theta
-                self.ages[self.ages < self.theta] = 0
+                self.weights -= self.theta * self.iterations
+                self.weights[self.weights < self.theta] = 0
 
             elif self.aging_method == 'gaussian':
-                self.ages = 1. / (2. * np.pi) * \
-                    np.exp((self.iterations * self.theta) / 2.)
+                self.weights = 1. / (2. * np.pi) * \
+                    np.exp((self.iterations * self.weights) / 2.)
 
     def _rejuvenate(self):
-        if self.rejuvenation_power > 0:
+        if self.rejuvenation_power > 0 and len(self.weights) > 0:
             w = np.sum(self.weights) / len(self.weights)
             mask = self.weights > w
             self.iterations[mask] -= self.rejuvenation_power * (self.weights[mask] - w)
+            #TODO do przemyslenia
 
     def _extinct(self):
         combination = np.array(np.where(self.weights > 0))[0]
@@ -194,5 +178,4 @@ class WAE(BaseEstimator):
         decisions = np.argmax(supports, axis=1)
         _y = np.array([self.classes.index(a) for a in y])
         accuracy = metrics.accuracy_score(_y, decisions)
-        #warnings.warn("Scored %.3f" % accuracy)
         return accuracy
