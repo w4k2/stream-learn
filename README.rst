@@ -36,3 +36,4 @@ stream-learn
 - I ile właściwie odejmujemy od iteracji?
 - Ile permutacji w pruningu?
 - A może pre-pruning przed dodaniem klasyfikatora? Inaczej nie mamy metryk do odmładzania.
+- Zrobiłem błąd łącząc odmładzanie z pruningiem.
