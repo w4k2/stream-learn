@@ -75,6 +75,11 @@ class WAE(BaseEstimator):
                 self.previous_training_set[1]
             )
 
+        # Pre-pruning
+        if len(self.ensemble) > self.ensemble_size and not self.is_post_pruning:
+            self._rejuvenate()
+            best_permutation = self._prune()
+
         # Preparing and training new candidate
         self.classes = classes
         candidate_clf = base.clone(self.base_classifier)
@@ -83,11 +88,6 @@ class WAE(BaseEstimator):
         self.iterations = np.append(self.iterations, [1])
 
         best_permutation = None
-
-        # Pre-pruning
-        if len(self.ensemble) > self.ensemble_size and not self.is_post_pruning:
-            self._rejuvenate()
-            best_permutation = self._prune()
 
         self._set_weights()
         self._set_ages()
@@ -124,7 +124,7 @@ class WAE(BaseEstimator):
             if self.weight_calculation_method == 'same_for_each':
                 self.weights = np.ones(len(self.ensemble))
 
-            elif self.weight_calculation_method == 'proportinal_to_accuracy':
+            elif self.weight_calculation_method == 'proportional_to_accuracy':
                 self.weights = self._accuracies()
 
             elif self.weight_calculation_method == 'aged_proportional_to_accuracy':

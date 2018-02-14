@@ -7,6 +7,7 @@ def test_bare_controller():
     nb_clf = naive_bayes.GaussianNB()
     toystream = open('datasets/toyset.arff', 'r')
     ctrl = strlearn.controllers.Bare()
+    print ctrl
     learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
     learner.run()
     print ctrl
@@ -15,6 +16,7 @@ def test_budget_controller():
     nb_clf = naive_bayes.GaussianNB()
     toystream = open('datasets/toyset.arff', 'r')
     ctrl = strlearn.controllers.Budget()
+    print ctrl
     learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
     learner.run()
     print ctrl
@@ -23,6 +25,7 @@ def test_BLALC_controller():
     nb_clf = naive_bayes.GaussianNB()
     toystream = open('datasets/toyset.arff', 'r')
     ctrl = strlearn.controllers.BLALC()
-    learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
-    learner.run()
     print ctrl
+    learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
+    print learner
+    learner.run()
