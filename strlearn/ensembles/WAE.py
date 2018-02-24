@@ -18,7 +18,7 @@ class WAE(BaseEstimator):
 
     References
     ----------
-    .. [1] A. Kasprzeak, M. Wozniak, "Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics"
+    .. [1] A. Kasprzak, M. Wozniak, "Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics"
     """
 
     def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='accuracy', weight_calculation_method='kuncheva', aging_method='weights_proportional', rejuvenation_power=0.):
@@ -37,7 +37,9 @@ class WAE(BaseEstimator):
         # Ensemble and its parameters
         self.ensemble = []
         self.iterations = np.array([])
-        self.weights = []
+        self.weights = [1]
+
+        self.ensemble_support_matrix = None
 
         self.previous_training_set = None
         self.classes = None
@@ -55,8 +57,10 @@ class WAE(BaseEstimator):
         )
 
     def _prune(self):
-        pruner = pruning.Pruner(self.pruning_criterion, ensemble_size=self.ensemble_size)
-        return pruner.prune(self.ensemble, self.previous_training_set,classes=self.classes)
+        y = self.previous_training_set[1]
+        _y = np.array([self.classes.index(a) for a in y])
+        pruner = pruning.OneOffPruner(self.ensemble_support_matrix, _y, self.pruning_criterion)
+        return pruner.best_permutation
 
     def _filter_ensemble(self, combination):
         self.ensemble = [self.ensemble[clf_id] for clf_id in combination]
@@ -84,8 +88,8 @@ class WAE(BaseEstimator):
         self.iterations = np.append(self.iterations, [1])
 
         self._set_weights()
-        self._aging()
         self._rejuvenate()
+        self._aging()
         self._extinct()
 
         # Post-pruning
@@ -111,12 +115,10 @@ class WAE(BaseEstimator):
             if self.weight_calculation_method == 'same_for_each':
                 self.weights = np.ones(len(self.ensemble))
 
-            elif self.weight_calculation_method == 'proportional_to_accuracy':
-                self.weights = self._accuracies()
-
             elif self.weight_calculation_method == 'kuncheva':
                 accuracies = self._accuracies()
-                self.weights = accuracies / (1.0000001 - accuracies)
+                self.weights = np.log(accuracies / (1.0000001 - accuracies))
+                self.weights[self.weights < 0] = 0
 
             elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble':
                 accuracies = self._accuracies()
@@ -158,22 +160,20 @@ class WAE(BaseEstimator):
 
     def predict_proba(self, X):
         """Predict proba"""
-        supports = None
-        for cid, member_clf in enumerate(self.ensemble):
-            weight = 1.
-            if self.age > 1:
-                weight = self.weights[cid]
-            support = member_clf.predict_proba(X) * weight
+        # Establish support matrix for ensemble
+        self.ensemble_support_matrix = np.array([member_clf.predict_proba(X) for member_clf in self.ensemble])
 
-            if supports is None:
-                supports = support
-            else:
-                supports += support
+        # Weight support before acumulation
+        weighted_support = self.ensemble_support_matrix * self.weights[:, np.newaxis, np.newaxis]
 
-        return supports
+        # Acumulate supports
+        acumulated_weighted_support = np.sum(weighted_support, axis=0)
+        return acumulated_weighted_support
 
     def score(self, X, y):
         """Accuracy score"""
+        #print "Scoring, ESM:"
+        #print self.ensemble_support_matrix
         supports = self.predict_proba(X)
         decisions = np.argmax(supports, axis=1)
         _y = np.array([self.classes.index(a) for a in y])

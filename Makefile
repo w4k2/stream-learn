@@ -21,6 +21,9 @@ test-coverage:
 
 test: clean test-coverage
 
+run: clean
+	python workspace.py
+
 html: clean
 	rm -rf docs/
 	export SPHINXOPTS=-W; make -C doc html

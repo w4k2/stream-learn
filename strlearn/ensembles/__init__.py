@@ -1,2 +1,2 @@
 from WAE import WAE
-from pruning import Pruner
+from pruning import OneOffPruner

@@ -26,7 +26,7 @@ def test_pp_WAE():
     os.remove('ppWAE.csv')
 
 def test_WAE_wcm():
-    methods = ('same_for_each', 'proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+    methods = ('same_for_each', 'kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
     for method in methods:
         nb_clf = naive_bayes.GaussianNB()
         toystream = open('datasets/toyset.arff', 'r')
@@ -60,15 +60,3 @@ def test_WAE_rejuvenation():
     learner.run()
     learner.serialize('ppWAE.csv')
     os.remove('ppWAE.csv')
-
-def test_WAE_pruning():
-    methods = ('accuracy', 'diversity')
-    for method in methods:
-        nb_clf = naive_bayes.GaussianNB()
-        toystream = open('datasets/toyset.arff', 'r')
-        clf = strlearn.ensembles.WAE(
-            base_classifier=nb_clf,
-            pruning_criterion=method
-        )
-        learner = strlearn.Learner(toystream, clf)
-        learner.run()
