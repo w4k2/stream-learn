@@ -15,6 +15,7 @@ def test_WAE():
     )
     learner = strlearn.Learner(toystream, clf)
     learner.run()
+    str(learner)
 
 def test_pp_WAE():
     nb_clf = naive_bayes.GaussianNB()

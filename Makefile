@@ -39,4 +39,8 @@ upload:
 	pip install --upgrade stream-learn
 
 install: clean
+	pip uninstall stream-learn --yes
+	python setup.py install --record files.txt
+	cat files.txt | xargs rm -rf
+	rm files.txt
 	python setup.py install --force

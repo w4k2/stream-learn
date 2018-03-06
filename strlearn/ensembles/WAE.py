@@ -45,15 +45,14 @@ class WAE(BaseEstimator):
         self.classes = None
 
     def __str__(self):
-        return "WAE_wcm_%i_am_%i_j_%i_jp_%s_t_%s_pp_%i_n_%i_pc_%i" % (
+        return "WAE_wcm_%s_am_%s_j_%s_t_%s_pp_%i_n_%i_pc_%s" % (
             self.weight_calculation_method,
             self.aging_method,
-            self.is_rejuvenating,
             ("%.3f" % self.rejuvenation_power)[2:],
             ("%.3f" % self.theta)[2:],
             self.is_post_pruning,
             self.ensemble_size,
-            self.pruning_criterion.value
+            self.pruning_criterion
         )
 
     def _prune(self):
