@@ -2,7 +2,7 @@ import sys, os, strlearn
 sys.path.insert(0, '../..')
 
 from sklearn import naive_bayes
-
+"""
 def test_bare_controller():
     nb_clf = naive_bayes.GaussianNB()
     toystream = open('datasets/toyset.arff', 'r')
@@ -29,3 +29,4 @@ def test_BLALC_controller():
     learner = strlearn.Learner(stream = toystream, base_classifier = nb_clf, controller = ctrl)
     print learner
     learner.run()
+"""
