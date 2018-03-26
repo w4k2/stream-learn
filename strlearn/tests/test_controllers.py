@@ -32,4 +32,3 @@ def test_BLALC_controller():
     learner = strlearn.Learner(stream=toystream, base_classifier=nb_clf, controller=ctrl)
     print learner
     learner.run()
-"""
