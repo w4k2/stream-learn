@@ -16,13 +16,15 @@ class Learner(object):
 
     Parameters
     ----------
-    stream : data stream as a binary arff file, loaded like ``toystream = open('datasets/toyset.arff', 'r')``
-    base_classifier : sklearn estimator implementing a ``partial_fit()`` method
+    stream : data stream as a binary arff file, loaded like
+    ``toystream = open('datasets/toyset.arff', 'r')``
+    clf : sklearn estimator implementing a ``partial_fit()`` method
     chunk_size : int, optional (default=200)
         Number of samples included in each chunk.
     evaluate_interval : int, optional (default=1000)
         Interval of processed samples before every evaluation.
-    controller : processing controller delegate object (default= ``controllers.Bare``)
+    controller : processing controller delegate object (default=
+    ``controllers.Bare``)
 
     Examples
     --------
@@ -31,11 +33,12 @@ class Learner(object):
     >>> base_classifier = naive_bayes.GaussianNB()
     >>> stream = open('datasets/toyset.arff', 'r')
     >>> controller = controllers.Bare()
-    >>> learner = Learner(stream = stream, base_classifier = base_classifier, controller = controller)
+    >>> learner = Learner(stream, base_classifier, controller = controller)
     >>> learner.run()
     """
 
-    def __init__(self, stream, base_classifier, chunk_size=200, evaluate_interval=1000, controller=controllers.Bare()):
+    def __init__(self, stream, base_classifier, chunk_size=200,
+                 evaluate_interval=1000, controller=controllers.Bare()):
         self.base_classifier = base_classifier
         self.chunk_size = chunk_size
         self.evaluate_interval = evaluate_interval
@@ -86,16 +89,20 @@ class Learner(object):
         Start learning process.
         '''
         self.training_time = time.time()
-        for i in tqdm(xrange(self.number_of_samples / self.chunk_size), desc='CHN'):
+        for i in tqdm(xrange(self.number_of_samples / self.chunk_size),
+                      desc='CHN'):
             self._process_chunk()
 
     def _process_chunk(self):
-        # Copy the old chunk used in the previous repetition and take a new one from the stream.
+        # Copy the old chunk used in the previous repetition and take a new one
+        # from the stream.
         self.previous_chunk = self.chunk
         startpoint = self.processed_chunks * self.chunk_size
-        self.chunk = (self.X[startpoint:startpoint + self.chunk_size], self.y[startpoint:startpoint + self.chunk_size])
+        self.chunk = (self.X[startpoint:startpoint + self.chunk_size],
+                      self.y[startpoint:startpoint + self.chunk_size])
 
-        # Inform the processing controller about the analysis of the next chunk.
+        # Inform the processing controller about the analysis of the next
+        # chunk.
         self.controller.next_chunk()
 
         # Initialize a training set.
@@ -108,7 +115,8 @@ class Learner(object):
                 # Get single object wit a label.
                 label = self.chunk[1][sid]
 
-                # Check if, according to controller, it is needed to include current sample in training set.
+                # Check if, according to controller, it is needed to include
+                # current sample in training set.
                 if self.controller.should_include(X, x, label):
                     X.append(x)
                     y.append(label)
@@ -126,7 +134,8 @@ class Learner(object):
         self.processed_chunks += 1
 
     def _fit_with_chunk(self, X, y):
-        self.clf.partial_fit(X, y, self.classes)
+        if len(X) > 0:
+            self.clf.partial_fit(X, y, self.classes)
 
     def _evaluate(self):
         self.training_time = time.time() - self.training_time
@@ -136,7 +145,10 @@ class Learner(object):
         startpoint = (self.evaluations - 1) * self.evaluate_interval
 
         if startpoint > 0:
-            evaluation_chunk = (self.X[startpoint:startpoint + self.evaluate_interval], self.y[startpoint:startpoint + self.evaluate_interval])
+            evaluation_chunk = (
+                self.X[startpoint:startpoint + self.evaluate_interval],
+                self.y[startpoint:startpoint + self.evaluate_interval]
+            )
 
             # Create empty training set
             X, y = evaluation_chunk

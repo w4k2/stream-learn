@@ -21,7 +21,6 @@ class BLALC(object):
         return np.sum(accumulator)
 
     def next_chunk(self):
-        # print "UWAGA CHUNK"
         # print self.learner
         # print self.learner.chunk
         # np.random.shuffle(self.learner.chunk)
@@ -41,9 +40,9 @@ class BLALC(object):
                 support_vector = self.learner.clf.predict_proba([x])
                 normalized_support = preprocessing.normalize(support_vector)
                 max_support = np.max(normalized_support)
-                value = np.sum(
-                    [abs(support-max_support) for support in normalized_support]
-                    ) / (self.learner.number_of_classes - 1)
+                value = np.sum([abs(support-max_support) for
+                                support in normalized_support]
+                               ) / (self.learner.number_of_classes - 1)
                 if value < self.treshold:
                     decision = True
                     self.used_pool += 1
