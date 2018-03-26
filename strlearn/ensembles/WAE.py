@@ -1,6 +1,5 @@
 from sklearn.base import BaseEstimator
-from sklearn import neural_network, base
-from enum import Enum
+from sklearn import base
 from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
@@ -8,9 +7,10 @@ import pruning
 import warnings
 warnings.simplefilter('always')
 
-WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy','kuncheva','proportional_to_accuracy_related_to_whole_ensemble','proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy', 'kuncheva', 'proportional_to_accuracy_related_to_whole_ensemble', 'proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
 
 AGING_METHOD = ('weights_proportional', 'constant', 'gaussian')
+
 
 class WAE(BaseEstimator):
     """Weighted Aging Ensemble
@@ -150,7 +150,7 @@ class WAE(BaseEstimator):
             w = np.sum(self.weights) / len(self.weights)
             mask = self.weights > w
             self.iterations[mask] -= self.rejuvenation_power * (self.weights[mask] - w)
-            #TODO do przemyslenia
+            # TODO do przemyslenia
 
     def _extinct(self):
         combination = np.array(np.where(self.weights > 0))[0]
@@ -171,8 +171,8 @@ class WAE(BaseEstimator):
 
     def score(self, X, y):
         """Accuracy score"""
-        #print "Scoring, ESM:"
-        #print self.ensemble_support_matrix
+        # print "Scoring, ESM:"
+        # print self.ensemble_support_matrix
         supports = self.predict_proba(X)
         decisions = np.argmax(supports, axis=1)
         _y = np.array([self.classes.index(a) for a in y])

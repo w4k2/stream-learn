@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Budget(object):
     def __init__(self, budget = .5):
         self.learner = None

@@ -2,8 +2,9 @@ from sklearn.exceptions import NotFittedError
 from sklearn import preprocessing
 import numpy as np
 
+
 class BLALC(object):
-    def __init__(self, budget = .5, treshold = .5):
+    def __init__(self, budget=.5, treshold=.5):
         self.learner = None
         self.budget = budget
         self.treshold = treshold
@@ -20,11 +21,11 @@ class BLALC(object):
         return np.sum(accumulator)
 
     def next_chunk(self):
-        #print "UWAGA CHUNK"
-        #print self.learner
-        #print self.learner.chunk
-        #np.random.shuffle(self.learner.chunk)
-        #TODO: Popraw przemieszanie
+        # print "UWAGA CHUNK"
+        # print self.learner
+        # print self.learner.chunk
+        # np.random.shuffle(self.learner.chunk)
+        # TODO: Popraw przemieszanie
         self.used_pools.append(self.used_pool)
         self.used_pool = 0
 
@@ -48,7 +49,7 @@ class BLALC(object):
                     self.used_pool += 1
                 else:
                     decision = False
-            except NotFittedError as e:
+            except NotFittedError:
                 decision = True
 
         return decision

@@ -1,12 +1,13 @@
 """Learner module"""
 import arff
-from sklearn import preprocessing, base
+from sklearn import base
 import numpy as np
 import time
 import csv
 from tqdm import tqdm
 
 import controllers
+
 
 class Learner(object):
     """Perform learning procedure on stream.
@@ -16,7 +17,7 @@ class Learner(object):
     Parameters
     ----------
     stream : data stream as a binary arff file, loaded like ``toystream = open('datasets/toyset.arff', 'r')``
-    clf : sklearn estimator implementing a ``partial_fit()`` method
+    base_classifier : sklearn estimator implementing a ``partial_fit()`` method
     chunk_size : int, optional (default=200)
         Number of samples included in each chunk.
     evaluate_interval : int, optional (default=1000)
@@ -45,8 +46,8 @@ class Learner(object):
         dataset = arff.load(stream)
         data = np.array(dataset['data'])
         self.classes = dataset['attributes'][-1][-1]
-        self.X = data[:,:-1].astype(np.float)
-        self.y = data[:,-1]
+        self.X = data[:, :-1].astype(np.float)
+        self.y = data[:, -1]
 
         # Data analysis
         self.number_of_samples = len(self.y)
