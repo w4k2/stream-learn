@@ -13,8 +13,6 @@ with open(ver_file) as f:
 
 DISTNAME = 'stream-learn'
 DESCRIPTION = 'Toolbox for streaming data.'
-with codecs.open('README.rst', encoding='utf-8-sig') as f:
-    LONG_DESCRIPTION = f.read()
 MAINTAINER = 'P. Ksieniewicz'
 MAINTAINER_EMAIL = 'pawel.ksieniewicz@pwr.edu.pl'
 URL = 'https://github.com/w4k2/stream-learn'
@@ -39,7 +37,6 @@ setup(name=DISTNAME,
       url=URL,
       version=VERSION,
       download_url=DOWNLOAD_URL,
-      long_description=LONG_DESCRIPTION,
       zip_safe=False,  # the package can run out of an .egg file
       classifiers=CLASSIFIERS,
       packages=find_packages(),
