@@ -34,7 +34,7 @@ if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
 
-pip install pytest pytest-cov codecov lias-arff
+pip install pytest pytest-cov codecov liac-arff
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
