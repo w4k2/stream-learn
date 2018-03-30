@@ -27,12 +27,6 @@ test: clean test-coverage
 run: clean
 	python workspace.py
 
-html: clean
-	rm -rf docs/
-	export SPHINXOPTS=-W; make -C doc html
-	mv doc/_build/html ./docs
-	open docs/index.html
-
 code-analysis:
 	flake8 strlearn | grep -v __init__
 	pylint -E strlearn/ -d E1103,E0611,E1101
