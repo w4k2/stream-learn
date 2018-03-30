@@ -18,7 +18,6 @@ def test_WAE():
     learner.run()
     str(learner)
 
-"""
 
 def test_pp_WAE():
     nb_clf = naive_bayes.GaussianNB()
@@ -71,7 +70,7 @@ def test_WAE_rejuvenation():
     learner.run()
     learner.serialize('ppWAE.csv')
     os.remove('ppWAE.csv')
-"""
+    
 
 def test_REA():
     nb_clf = naive_bayes.GaussianNB()
