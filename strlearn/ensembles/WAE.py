@@ -3,7 +3,7 @@ from sklearn import base
 from sklearn import neighbors
 from sklearn import metrics
 import numpy as np
-import pruning
+from strlearn.ensembles import pruning
 import warnings
 warnings.simplefilter('always')
 
@@ -97,7 +97,7 @@ class WAE(BaseEstimator):
             self._filter_ensemble(best_permutation)
 
         # Weights normalization
-        self.weights /= np.sum(self.weights)
+        self.weights = self.weights / np.sum(self.weights)
 
         # Ending procedure
         self.previous_training_set = (X, y)

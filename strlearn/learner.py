@@ -5,8 +5,9 @@ import numpy as np
 import time
 import csv
 from tqdm import tqdm
+from builtins import range
 
-import controllers
+from strlearn import controllers
 
 
 class Learner(object):
@@ -89,7 +90,7 @@ class Learner(object):
         Start learning process.
         '''
         self.training_time = time.time()
-        for i in tqdm(xrange(self.number_of_samples / self.chunk_size),
+        for i in tqdm(range(self.number_of_samples // self.chunk_size),
                       desc='CHN'):
             self._process_chunk()
 
@@ -177,7 +178,7 @@ class Learner(object):
         ----------
         filename : name of resulting CSV file
         """
-        with open(filename, 'wb') as csvfile:
+        with open(filename, 'w') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',')
             for idx, point in enumerate(self.score_points):
                 spamwriter.writerow([

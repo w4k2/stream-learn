@@ -1,6 +1,7 @@
 import numpy as np
 import warnings
 from sklearn import metrics
+from builtins import range
 warnings.simplefilter('always')
 
 PRUNING_CRITERION = ('accuracy')
@@ -26,8 +27,8 @@ class OneOffPruner(object):
         loser = 0
         best_accuracy = 0.
 
-        for cid in xrange(candidates_no):
-            weights = np.array([0 if i == cid else 1 for i in xrange(candidates_no)])
+        for cid in range(candidates_no):
+            weights = np.array([0 if i == cid else 1 for i in range(candidates_no)])
             weighted_support = self.ensemble_support_matrix * weights[:, np.newaxis, np.newaxis]
             acumulated_weighted_support = np.sum(weighted_support, axis=0)
             decisions = np.argmax(acumulated_weighted_support, axis=1)
@@ -36,7 +37,7 @@ class OneOffPruner(object):
                 loser = cid
                 best_accuracy = accuracy
 
-        best_permutation = list(xrange(candidates_no))
+        best_permutation = list(range(candidates_no))
         best_permutation.pop(loser)
 
         return best_permutation
