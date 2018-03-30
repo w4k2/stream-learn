@@ -1,6 +1,6 @@
 """Learner module"""
 import arff
-from sklearn import preprocessing, base
+from sklearn import base
 import numpy as np
 import time
 import csv

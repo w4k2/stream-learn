@@ -33,7 +33,7 @@ clf = ensembles.WAE(
     is_post_pruning=False, pruning_criterion='diversity',
     weight_calculation_method='kuncheva',
     aging_method='weights_proportional',
-    is_rejuvenating=True, rejuvenation_power=.5
+    rejuvenation_power=.5
 )
 
 ###############################################################################

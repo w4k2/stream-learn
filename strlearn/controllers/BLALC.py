@@ -48,7 +48,7 @@ class BLALC(object):
                     self.used_pool += 1
                 else:
                     decision = False
-            except NotFittedError as e:
+            except NotFittedError:
                 decision = True
 
         return decision
