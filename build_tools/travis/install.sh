@@ -1,39 +1,42 @@
-#!/bin/bash
-# This script is meant to be called by the "install" step defined in
-# .travis.yml. See http://docs.travis-ci.com/ for more details.
-# The behavior of the script is controlled by environment variabled defined
-# in the .travis.yml in the top level folder of the project.
-
-# License: 3-clause BSD
-
-# Travis clone pydicom/pydicom repository in to a local repository.
-
-set -e
-
-echo 'List files from cached directories'
-echo 'pip:'
-ls $HOME/.cache/pip
-
-export CC=/usr/lib/ccache/gcc
-export CXX=/usr/lib/ccache/g++
-# Useful for debugging how ccache is used
-# export CCACHE_LOGFILE=/tmp/ccache.log
-# ~60M is used by .ccache when compiling from scratch at the time of writing
-ccache --max-size 100M --show-stats
-
-# At the time of writing numpy 1.9.1 is included in the travis
-# virtualenv but we want to use the numpy installed through apt-get
-# install.
+# Deactivate the travis-provided virtual environment and setup a
+# conda-based environment instead
 deactivate
-# Create a new virtualenv using system site packages for python, numpy
-virtualenv --system-site-packages testvenv
-source testvenv/bin/activate
-pip install scikit-learn pandas nose nose-timer pytest pytest-cov codecov \
-    sphinx numpydoc enum liac-arff tqdm
+
+# Use the miniconda installer for faster download / install of conda
+# itself
+pushd .
+cd
+mkdir -p download
+cd download
+echo "Cached in $HOME/download :"
+ls -l
+echo
+if [[ ! -f miniconda.sh ]]
+   then
+   wget http://repo.continuum.io/miniconda/Miniconda-3.6.0-Linux-x86_64.sh \
+       -O miniconda.sh
+   fi
+chmod +x miniconda.sh && ./miniconda.sh -b
+cd ..
+export PATH=/home/travis/miniconda/bin:$PATH
+conda update --yes conda
+popd
+
+# Configure the conda environment and put it in the path using the
+# provided versions
+conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
+      numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION cython=$CYTHON_VERSION
+
+source activate testenv
+
+
+if [[ "$COVERAGE" == "true" ]]; then
+    pip install coverage coveralls
+fi
+
+pip install pytest pytest-cov codecov lias-arff
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
-
 python setup.py develop
-ccache --show-stats
