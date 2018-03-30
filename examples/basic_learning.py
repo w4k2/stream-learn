@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ==========================
 Usage of the WAE algorithm

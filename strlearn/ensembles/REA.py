@@ -4,7 +4,7 @@ from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
-from utils import minority_majority_name, minority_majority_split
+from strlearn.utils import minority_majority_name, minority_majority_split
 import math
 
 

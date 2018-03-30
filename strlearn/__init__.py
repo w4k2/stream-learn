@@ -1,11 +1,17 @@
 # Empty
 from ._version import __version__
 
-import utils
-from learner import Learner
-import controllers
+from .learner import Learner
+
 import ensembles
 
 __all__ = [
-    'ensembles', 'controllers', '__version__', 'utils'
+    'controllers', 'ensembles', 'utils', '__version__'
 ]
+"""
+from . import controllers
+from . import ensembles
+from . import utils
+
+
+"""

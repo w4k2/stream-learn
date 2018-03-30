@@ -4,6 +4,8 @@ import os
 import strlearn
 import warnings
 
+import strlearn
+
 sys.path.insert(0, '../..')
 warnings.simplefilter('always')
 
@@ -11,13 +13,12 @@ warnings.simplefilter('always')
 def test_WAE():
     nb_clf = naive_bayes.GaussianNB()
     toystream = open('datasets/toyset.arff', 'r')
-    clf = strlearn.ensembles.WAE(
-        base_classifier=nb_clf,
-    )
+    clf = strlearn.ensembles.WAE(base_classifier=nb_clf)
     learner = strlearn.Learner(toystream, clf)
     learner.run()
     str(learner)
 
+"""
 
 def test_pp_WAE():
     nb_clf = naive_bayes.GaussianNB()
@@ -70,7 +71,7 @@ def test_WAE_rejuvenation():
     learner.run()
     learner.serialize('ppWAE.csv')
     os.remove('ppWAE.csv')
-
+"""
 
 def test_REA():
     nb_clf = naive_bayes.GaussianNB()
