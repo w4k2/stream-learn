@@ -21,3 +21,7 @@ env:
 install: source ci_scripts/travis/install.sh
 script: bash ci_scripts/travis/test.sh
 after_success: source ci_scripts/travis/success.sh
+
+
+notifications:
+  email: false
