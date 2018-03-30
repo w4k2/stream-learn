@@ -5,7 +5,7 @@ machine:
     USERNAME: "w4k2"
 
     # The repository where the documentation will be hosted
-    DOC_REPO: "strlearn"
+    DOC_REPO: "stream-learn"
 
     # The base URL for the Github page where the documentation will be hosted
     DOC_URL: ""
