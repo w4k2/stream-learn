@@ -29,7 +29,8 @@ class REA(BaseEstimator):
            recursive approach." Evolving Systems 2.1 (2011): 35-50.
     """
 
-    def __init__(self, base_classifier=SVC(probability=True), n_classifiers=10, balance_ratio=0.5):
+    def __init__(self, base_classifier=SVC(probability=True), n_classifiers=10,
+                 balance_ratio=0.5):
         self.base_classifier = base_classifier
         self.n_classifiers = n_classifiers
         self.balance_ratio = balance_ratio
@@ -123,8 +124,10 @@ class REA(BaseEstimator):
         ratio = len(minority[:, 0])/float(len(X[:, 0]))
 
         if self.balance_ratio > ratio:
-            if ((len(minority)+len(self.minority_data))/float(len(X) + len(self.minority_data))) <= self.balance_ratio:
-                new_minority = np.concatenate((minority, self.minority_data), axis=0)
+            if ((len(minority) + len(self.minority_data)) / float(len(X) + len(self.minority_data))) <= self.balance_ratio:
+                new_minority = np.concatenate(
+                    (minority, self.minority_data),
+                    axis=0)
 
             else:
                 knn = NearestNeighbors(n_neighbors=3).fit(X, y)
@@ -135,7 +138,8 @@ class REA(BaseEstimator):
                 new_minority = minority
                 for i in range(int(len(X) * 2 * (self.balance_ratio - ratio))):
                     # print i
-                    new_minority = np.insert(new_minority, -1, self.minority_data[int(distance[i][1])], axis=0)
+                    new_minority = np.insert(new_minority, -1,
+                                             self.minority_data[int(distance[i][1])], axis=0)
 
             res_X = np.concatenate((new_minority, majority), axis=0)
             res_y = np.concatenate((np.full(len(new_minority), self.minority_name), np.full(len(majority), self.majority_name)), axis=0)
@@ -144,7 +148,8 @@ class REA(BaseEstimator):
             res_X = X
             res_y = y
 
-        self.minority_data = np.concatenate((minority, self.minority_data), axis=0)
+        self.minority_data = np.concatenate((minority, self.minority_data),
+                                            axis=0)
         self.iterator += 1
 
         return res_X, res_y
@@ -205,6 +210,5 @@ class REA(BaseEstimator):
         """
         supports = self.predict_proba(X)
         decisions = np.argmax(supports, axis=1)
-        _y = np.array([self.classes.index(a) for a in y])
-        accuracy = metrics.accuracy_score(_y, decisions)
+        accuracy = metrics.accuracy_score(y, self.classes[decisions])
         return accuracy

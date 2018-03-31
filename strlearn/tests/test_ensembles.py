@@ -3,17 +3,17 @@ import sys
 import os
 import strlearn
 import warnings
-
 import strlearn
 
 sys.path.insert(0, '../..')
-warnings.simplefilter('always')
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def test_WAE():
     nb_clf = naive_bayes.GaussianNB()
     with open('datasets/toyset.arff', 'r') as toystream:
-        clf = strlearn.ensembles.WAE(base_classifier=nb_clf)
+        clf = strlearn.ensembles.WAE()
+        clf.set_base_clf(nb_clf)
         learner = strlearn.Learner(toystream, clf)
         learner.run()
         str(learner)
@@ -22,7 +22,8 @@ def test_WAE():
 def test_pp_WAE():
     nb_clf = naive_bayes.GaussianNB()
     with open('datasets/toyset.arff', 'r') as toystream:
-        clf = strlearn.ensembles.WAE(base_classifier=nb_clf, is_post_pruning=True)
+        clf = strlearn.ensembles.WAE(post_pruning=True)
+        clf.set_base_clf(nb_clf)
         learner = strlearn.Learner(toystream, clf)
         learner.run()
         learner.serialize('ppWAE.csv')
@@ -30,14 +31,14 @@ def test_pp_WAE():
 
 
 def test_WAE_wcm():
-    methods = ('same_for_each', 'kuncheva',
+    methods = ('same_for_each', 'proportional_to_accuracy', 'kuncheva',
                'proportional_to_accuracy_related_to_whole_ensemble',
-               'proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+               'bell_curve')
     for method in methods:
         nb_clf = naive_bayes.GaussianNB()
         with open('datasets/toyset.arff', 'r') as toystream:
-            clf = strlearn.ensembles.WAE(base_classifier=nb_clf,
-                                         weight_calculation_method=method)
+            clf = strlearn.ensembles.WAE(weight_calculation_method=method)
+            clf.set_base_clf(nb_clf)
             learner = strlearn.Learner(toystream, clf)
             learner.run()
 
@@ -47,7 +48,8 @@ def test_WAE_am():
     for method in methods:
         nb_clf = naive_bayes.GaussianNB()
         with open('datasets/toyset.arff', 'r') as toystream:
-            clf = strlearn.ensembles.WAE(base_classifier=nb_clf, aging_method=method)
+            clf = strlearn.ensembles.WAE(aging_method=method)
+            clf.set_base_clf(nb_clf)
             learner = strlearn.Learner(toystream, clf)
             learner.run()
 
@@ -55,7 +57,9 @@ def test_WAE_am():
 def test_pp_WAE_rejuvenation():
     nb_clf = naive_bayes.GaussianNB()
     with open('datasets/toyset.arff', 'r') as toystream:
-        clf = strlearn.ensembles.WAE(base_classifier=nb_clf, rejuvenation_power=.5, is_post_pruning=True)
+        clf = strlearn.ensembles.WAE(rejuvenation_power=.5,
+                                     post_pruning=True)
+        clf.set_base_clf(nb_clf)
         learner = strlearn.Learner(toystream, clf)
         learner.run()
         learner.serialize('ppWAE.csv')
@@ -65,7 +69,8 @@ def test_pp_WAE_rejuvenation():
 def test_WAE_rejuvenation():
     nb_clf = naive_bayes.GaussianNB()
     with open('datasets/toyset.arff', 'r') as toystream:
-        clf = strlearn.ensembles.WAE(base_classifier=nb_clf, rejuvenation_power=.5)
+        clf = strlearn.ensembles.WAE(rejuvenation_power=.5)
+        clf.set_base_clf(nb_clf)
         learner = strlearn.Learner(toystream, clf)
         learner.run()
         learner.serialize('ppWAE.csv')

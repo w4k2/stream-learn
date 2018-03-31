@@ -1,4 +1,10 @@
 from sklearn.base import BaseEstimator
+from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils import check_random_state
+from sklearn.utils.multiclass import unique_labels
+from sklearn.utils.multiclass import check_classification_targets
+from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn import base
 from sklearn import neighbors
 from sklearn import metrics
@@ -7,42 +13,38 @@ from strlearn.ensembles import pruning
 import warnings
 warnings.simplefilter('always')
 
-WEIGHT_CALCULATION_METHOD = ('same_for_each', 'proportional_to_accuracy', 'kuncheva', 'proportional_to_accuracy_related_to_whole_ensemble', 'proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve')
+WEIGHT_CALCULATION = ('same_for_each', 'proportional_to_accuracy', 'kuncheva',
+                      'proportional_to_accuracy_related_to_whole_ensemble',
+                      'bell_curve')
 
 AGING_METHOD = ('weights_proportional', 'constant', 'gaussian')
 
 
-class WAE(BaseEstimator):
+class WAE(BaseEstimator, ClassifierMixin):
     """Weighted Aging Ensemble
     lorem ipsum
 
     References
     ----------
-    .. [1] A. Kasprzak, M. Wozniak, "Modifications of the Weighted Aged Ensemble algorithm applied to the data stream classification - experimental analysis of chosen characteristics"
+    .. [1] A. Kasprzak, M. Wozniak, "Modifications of the Weighted Aged
+    Ensemble algorithm applied to the data stream classification - experimental
+    analysis of chosen characteristics"
     """
 
-    def __init__(self, base_classifier=neighbors.KNeighborsClassifier(), ensemble_size=20, theta=.1, is_post_pruning=False, pruning_criterion='accuracy', weight_calculation_method='kuncheva', aging_method='weights_proportional', rejuvenation_power=0.):
+    def __init__(self, ensemble_size=20, theta=.1,
+                 post_pruning=False, pruning_criterion='accuracy',
+                 weight_calculation_method='kuncheva',
+                 aging_method='weights_proportional', rejuvenation_power=0.):
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
-        self.base_classifier = base_classifier
         self.theta = theta
-        self.is_post_pruning = is_post_pruning
+        self.post_pruning = post_pruning
         self.weight_calculation_method = weight_calculation_method
         self.aging_method = aging_method
         self.rejuvenation_power = rejuvenation_power
 
-        self.age = 0
-        self.overall_accuracy = 0
-
-        # Ensemble and its parameters
-        self.ensemble = []
-        self.iterations = np.array([])
-        self.weights = [1]
-
-        self.ensemble_support_matrix = None
-
-        self.previous_training_set = None
-        self.classes = None
+    def set_base_clf(self, base_clf=neighbors.KNeighborsClassifier()):
+        self.base_classifier_ = base_clf
 
     def __str__(self):
         return "WAE_wcm_%s_am_%s_j_%s_t_%s_pp_%i_n_%i_pc_%s" % (
@@ -50,41 +52,74 @@ class WAE(BaseEstimator):
             self.aging_method,
             ("%.3f" % self.rejuvenation_power)[2:],
             ("%.3f" % self.theta)[2:],
-            self.is_post_pruning,
+            self.post_pruning,
             self.ensemble_size,
             self.pruning_criterion
         )
 
     def _prune(self):
-        y = self.previous_training_set[1]
-        _y = np.array([self.classes.index(a) for a in y])
-        pruner = pruning.OneOffPruner(self.ensemble_support_matrix, _y, self.pruning_criterion)
-        return pruner.best_permutation
+        X, y = self.previous_X, self.previous_y
+        pruner = pruning.OneOffPruner(self.ensemble_support_matrix(X),
+                                      y, self.pruning_criterion)
+        self._filter_ensemble(pruner.best_permutation)
 
     def _filter_ensemble(self, combination):
-        self.ensemble = [self.ensemble[clf_id] for clf_id in combination]
-        self.iterations = self.iterations[combination]
-        self.weights = self.weights[combination]
+        self.ensemble_ = [self.ensemble_[clf_id] for clf_id in combination]
+        self.iterations_ = self.iterations_[combination]
+        self.weights_ = self.weights_[combination]
 
-    def partial_fit(self, X, y, classes):
+    def fit(self, X, y):
+        X, y = check_X_y(X, y)
+        self.X_ = X
+        self.y_ = y
+        if not hasattr(self, 'base_classifier_'):
+            self.set_base_clf()
+
+        candidate_clf = base.clone(self.base_classifier_)
+        candidate_clf.fit(X, y)
+
+        self.ensemble_ = [candidate_clf]
+        self.weights_ = np.array([1])
+        self.classes_, _ = np.unique(y, return_inverse=True)
+        self.age_ = 0
+        self.iterations_ = np.array([])
+
+        # Return the classifier
+        return self
+
+    def partial_fit(self, X, y, classes=None):
+        X, y = check_X_y(X, y)
+        self.X_ = X
+        self.y_ = y
+
+        if _check_partial_fit_first_call(self, classes):
+            if not hasattr(self, 'base_classifier_'):
+                self.set_base_clf()
+
+            self.classes_ = classes
+
+            self.ensemble_ = []
+            self.weights_ = np.array([1])
+            self.age_ = 0
+            self.iterations_ = np.array([])
+
         """Partial fitting"""
-        if self.age > 0:
+        if self.age_ > 0:
             self.overall_accuracy = self.score(
-                self.previous_training_set[0],
-                self.previous_training_set[1]
+                self.previous_X,
+                self.previous_y
             )
 
         # Pre-pruning
-        if len(self.ensemble) > self.ensemble_size and not self.is_post_pruning:
-            best_permutation = self._prune()
-            self._filter_ensemble(best_permutation)
+        if len(self.ensemble_) > self.ensemble_size and not self.post_pruning:
+            self._prune()
 
         # Preparing and training new candidate
-        self.classes = classes
-        candidate_clf = base.clone(self.base_classifier)
+        self.classes_ = classes
+        candidate_clf = base.clone(self.base_classifier_)
         candidate_clf.fit(X, y)
-        self.ensemble.append(candidate_clf)
-        self.iterations = np.append(self.iterations, [1])
+        self.ensemble_.append(candidate_clf)
+        self.iterations_ = np.append(self.iterations_, [1])
 
         self._set_weights()
         self._rejuvenate()
@@ -92,89 +127,98 @@ class WAE(BaseEstimator):
         self._extinct()
 
         # Post-pruning
-        if len(self.ensemble) > self.ensemble_size and self.is_post_pruning:
-            best_permutation = self._prune()
-            self._filter_ensemble(best_permutation)
+        if len(self.ensemble_) > self.ensemble_size and self.post_pruning:
+            self._prune()
 
         # Weights normalization
-        self.weights = self.weights / np.sum(self.weights)
+        self.weights_ = self.weights_ / np.sum(self.weights_)
 
         # Ending procedure
-        self.previous_training_set = (X, y)
-        self.age += 1
-        self.iterations += 1
+        self.previous_X, self.previous_y = (X, y)
+        self.age_ += 1
+        self.iterations_ += 1
 
     def _accuracies(self):
-        X, y = self.previous_training_set
         return np.array(
-            [m_clf.score(X, y) for m_clf in self.ensemble])
+            [m_clf.score(self.previous_X, self.previous_y)
+             for m_clf in self.ensemble_])
 
     def _set_weights(self):
-        if self.age > 0:
+        if self.age_ > 0:
             if self.weight_calculation_method == 'same_for_each':
-                self.weights = np.ones(len(self.ensemble))
+                self.weights_ = np.ones(len(self.ensemble_))
 
             elif self.weight_calculation_method == 'kuncheva':
                 accuracies = self._accuracies()
-                self.weights = np.log(accuracies / (1.0000001 - accuracies))
-                self.weights[self.weights < 0] = 0
+                self.weights_ = np.log(accuracies / (1.0000001 - accuracies))
+                self.weights_[self.weights_ < 0] = 0
 
             elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble':
                 accuracies = self._accuracies()
-                self.weights = accuracies / self.overall_accuracy
-                self.weights[self.weights < self.theta] = 0
+                self.weights_ = accuracies / self.overall_accuracy
+                self.weights_[self.weights_ < self.theta] = 0
 
-            elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble_using_bell_curve':
+            elif self.weight_calculation_method == 'bell_curve':
                 accuracies = self._accuracies()
-                self.weights = 1./(2. * np.pi) * np.exp((self.overall_accuracy - accuracies)/2.)
-                self.weights[self.weights < self.theta] = 0
+                self.weights_ = 1./(2. * np.pi) * np.exp(
+                    (self.overall_accuracy - accuracies)/2.)
+                self.weights_[self.weights_ < self.theta] = 0
 
-        self.weights = np.nan_to_num(self.weights)
+        self.weights_ = np.nan_to_num(self.weights_)
 
     def _aging(self):
-        if self.age > 0:
+        if self.age_ > 0:
             if self.aging_method == 'weights_proportional':
                 accuracies = self._accuracies()
-                self.weights = accuracies / np.sqrt(self.iterations)
+                self.weights_ = accuracies / np.sqrt(self.iterations_)
 
             elif self.aging_method == 'constant':
-                self.weights -= self.theta * self.iterations
-                self.weights[self.weights < self.theta] = 0
+                self.weights_ -= self.theta * self.iterations_
+                self.weights_[self.weights_ < self.theta] = 0
 
             elif self.aging_method == 'gaussian':
-                self.weights = 1. / (2. * np.pi) * \
-                    np.exp((self.iterations * self.weights) / 2.)
+                self.weights_ = 1. / (2. * np.pi) * \
+                    np.exp((self.iterations_ * self.weights_) / 2.)
 
     def _rejuvenate(self):
-        if self.rejuvenation_power > 0 and len(self.weights) > 0:
-            w = np.sum(self.weights) / len(self.weights)
-            mask = self.weights > w
-            self.iterations[mask] -= self.rejuvenation_power * (self.weights[mask] - w)
+        if self.rejuvenation_power > 0 and len(self.weights_) > 0:
+            w = np.sum(self.weights_) / len(self.weights_)
+            mask = self.weights_ > w
+            self.iterations_[mask] -= self.rejuvenation_power * (
+                self.weights_[mask] - w)
             # TODO do przemyslenia
 
     def _extinct(self):
-        combination = np.array(np.where(self.weights > 0))[0]
+        combination = np.array(np.where(self.weights_ > 0))[0]
         if len(combination) > 0:
             self._filter_ensemble(combination)
 
+    def ensemble_support_matrix(self, X):
+        return np.array([member_clf.predict_proba(X)
+                         for member_clf in self.ensemble_])
+
     def predict_proba(self, X):
-        """Predict proba"""
-        # Establish support matrix for ensemble
-        self.ensemble_support_matrix = np.array([member_clf.predict_proba(X) for member_clf in self.ensemble])
+        # Check is fit had been called
+        check_is_fitted(self, 'classes_')
 
         # Weight support before acumulation
-        weighted_support = self.ensemble_support_matrix * self.weights[:, np.newaxis, np.newaxis]
+        weighted_support = self.ensemble_support_matrix(X) * self.weights_[
+            :, np.newaxis, np.newaxis]
 
         # Acumulate supports
         acumulated_weighted_support = np.sum(weighted_support, axis=0)
         return acumulated_weighted_support
 
-    def score(self, X, y):
-        """Accuracy score"""
-        # print "Scoring, ESM:"
-        # print self.ensemble_support_matrix
+    def predict(self, X):
+        # Check is fit had been called
+        check_is_fitted(self, 'classes_')
+
+        # Input validation
+        X = check_array(X)
+        if X.shape[1] != self.X_.shape[1]:
+            raise ValueError('number of features does not match')
+
         supports = self.predict_proba(X)
-        decisions = np.argmax(supports, axis=1)
-        _y = np.array([self.classes.index(a) for a in y])
-        accuracy = metrics.accuracy_score(_y, decisions)
-        return accuracy
+        prediction = np.argmax(supports, axis=1)
+
+        return self.classes_[prediction]

@@ -49,7 +49,7 @@ class Learner(object):
         # Loading dataset
         dataset = arff.load(stream)
         data = np.array(dataset['data'])
-        self.classes = dataset['attributes'][-1][-1]
+        self.classes = np.array(dataset['attributes'][-1][-1])
         self.X = data[:, :-1].astype(np.float)
         self.y = data[:, -1]
 
