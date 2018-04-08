@@ -38,7 +38,7 @@ class Learner(object):
     >>> learner.run()
     """
 
-    def __init__(self, stream, base_classifier, chunk_size=200,
+    def __init__(self, X, y, base_classifier, chunk_size=200,
                  evaluate_interval=1000, controller=controllers.Bare()):
         self.base_classifier = base_classifier
         self.chunk_size = chunk_size
@@ -47,11 +47,9 @@ class Learner(object):
         self.controller.learner = self
 
         # Loading dataset
-        dataset = arff.load(stream)
-        data = np.array(dataset['data'])
-        self.classes = np.array(dataset['attributes'][-1][-1])
-        self.X = data[:, :-1].astype(np.float)
-        self.y = data[:, -1]
+        self.X = X
+        self.y = y
+        self.classes = np.unique(self.y)
 
         # Data analysis
         self.number_of_samples = len(self.y)
@@ -91,7 +89,7 @@ class Learner(object):
         '''
         self.training_time = time.time()
         for i in tqdm(range(self.number_of_samples // self.chunk_size),
-                      desc='CHN'):
+                      desc='CHN', ascii=True):
             self._process_chunk()
 
     def _process_chunk(self):
