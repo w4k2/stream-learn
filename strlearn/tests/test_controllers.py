@@ -5,7 +5,6 @@ import arff
 import numpy as np
 sys.path.insert(0, '../..')
 
-"""
 def test_bare_controller():
     with open('datasets/toyset.arff', 'r') as stream:
         dataset = arff.load(stream)
@@ -22,6 +21,7 @@ def test_bare_controller():
     print(ctrl)
 
 
+"""
 def test_budget_controller():
     with open('datasets/toyset.arff', 'r') as stream:
         dataset = arff.load(stream)

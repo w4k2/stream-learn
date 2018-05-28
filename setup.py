@@ -20,14 +20,7 @@ URL = 'https://github.com/w4k2/stream-learn'
 LICENSE = 'MIT'
 DOWNLOAD_URL = 'https://github.com/w4k2/stream-learn'
 VERSION = __version__
-INSTALL_REQUIRES = ['numpy', 'scipy', 'scikit-learn']
-CLASSIFIERS = ['Intended Audience :: Science/Research',
-               'Programming Language :: Python',
-               'Topic :: Scientific/Engineering',
-               'Operating System :: POSIX',
-               'Operating System :: Unix',
-               'Operating System :: MacOS',
-               'Programming Language :: Python :: 2.7']
+INSTALL_REQUIRES = ['numpy', 'scipy', 'scikit-learn', 'liac-arff','scikit-learn','tqdm','future']
 
 
 setup(name=DISTNAME,
@@ -38,7 +31,5 @@ setup(name=DISTNAME,
       url=URL,
       version=VERSION,
       download_url=DOWNLOAD_URL,
-      zip_safe=False,  # the package can run out of an .egg file
-      classifiers=CLASSIFIERS,
       packages=find_packages(),
       install_requires=INSTALL_REQUIRES)
