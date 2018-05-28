@@ -10,7 +10,7 @@ import strlearn as sl
 warnings.simplefilter('ignore', DeprecationWarning)
 
 sys.path.insert(0, '../..')
-
+"""
 def test_active():
     clfs = {
         "MLP100": neural_network.MLPClassifier(hidden_layer_sizes=(100,)),
@@ -28,12 +28,10 @@ def test_active():
     for budget in budgets:
         controllers.append(sl.controllers.Budget(budget=budget))
 
-    """
     for budget in budgets:
         for treshold in tresholds:
             controllers.append(sl.controllers.BLALC(
                 budget=budget, treshold=treshold))
-    """
 
     X, y = None, None
     with open('datasets/toyset.arff', 'r') as stream:
@@ -48,3 +46,4 @@ def test_active():
             learner.run()
             print(learner.scores)
             str(learner)
+"""

@@ -5,7 +5,7 @@ import arff
 import numpy as np
 sys.path.insert(0, '../..')
 
-
+"""
 def test_bare_controller():
     with open('datasets/toyset.arff', 'r') as stream:
         dataset = arff.load(stream)
@@ -50,3 +50,4 @@ def test_BLALC_controller():
                                base_classifier=nb_clf, controller=ctrl)
     print(learner)
     learner.run()
+"""

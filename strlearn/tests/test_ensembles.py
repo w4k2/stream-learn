@@ -10,7 +10,7 @@ import numpy as np
 sys.path.insert(0, '../..')
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-
+"""
 def test_WAE():
     nb_clf = naive_bayes.GaussianNB()
     with open('datasets/toyset.arff', 'r') as stream:
@@ -115,3 +115,4 @@ def test_REA():
     learner.run()
     learner.serialize('REA.csv')
     os.remove('REA.csv')
+"""
