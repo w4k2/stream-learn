@@ -4,6 +4,8 @@ import sys
 import os
 import strlearn
 import warnings
+import arff
+import numpy as np
 import strlearn as sl
 warnings.simplefilter('ignore', DeprecationWarning)
 
@@ -26,17 +28,23 @@ def test_active():
     for budget in budgets:
         controllers.append(sl.controllers.Budget(budget=budget))
 
+    """
     for budget in budgets:
         for treshold in tresholds:
             controllers.append(sl.controllers.BLALC(
                 budget=budget, treshold=treshold))
+    """
 
+    X, y = None, None
+    with open('datasets/toyset.arff', 'r') as stream:
+        dataset = arff.load(stream)
+        data = np.array(dataset['data'])
+        X = data[:, :-1].astype(np.float)
+        y = data[:, -1]
     for controller in controllers:
-        with open('datasets/toyset.arff', 'r') as toystream:
-            learner = sl.Learner(toystream, clfs["MLP100"],
+            learner = sl.Learner(X, y, clfs["MLP100"],
                                  evaluate_interval=1000, chunk_size=500,
                                  controller=controller)
             learner.run()
             print(learner.scores)
             str(learner)
-    assert(False)
