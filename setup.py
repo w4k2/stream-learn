@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import codecs
 import os
+import pypandoc
 
 from setuptools import find_packages, setup
 
@@ -27,6 +28,7 @@ setup(name=DISTNAME,
       maintainer=MAINTAINER,
       maintainer_email=MAINTAINER_EMAIL,
       description=DESCRIPTION,
+      long_description=pypandoc.convert('README.md', 'rst'),
       license=LICENSE,
       url=URL,
       version=VERSION,
