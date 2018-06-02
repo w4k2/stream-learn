@@ -19,6 +19,8 @@ stream-learn is available on the PyPi and you may install it with pip:
 pip install stream-learn
 ```
 
+## Example usage
+
 ```python
 import strlearn
 from sklearn import neural_network
@@ -29,4 +31,19 @@ learner = strlearn.Learner(X, y, clf)
 learner.run()
 ```
 
-### Flow controllers and stream estimators
+### About
+
+If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
+
+```
+@article{JMLR:v18:16-365,
+author  = {abc},
+title   = {def},
+journal = {ghi},
+year    = {2018},
+volume  = {1},
+number  = {1},
+pages   = {1-5},
+url     = {http://jkl}
+}
+```
