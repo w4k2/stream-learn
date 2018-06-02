@@ -23,12 +23,6 @@ Welcome to stream-learn documentation!
 
    auto_examples/index
 
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: Addtional Information
-
-   about
 
 `Getting started <install.html>`_
 ---------------------------------
@@ -46,11 +40,6 @@ all functions, and all parameters available for the algorithms.
 --------------------------------------
 
 A set of examples illustrating the use of the different algorithms.
-
-`About stream-learn <about.html>`_
---------------------------------------
-
-Just to know about history of stream-learn.
 
 See the `README <https://github.com/w4k2/stream-learn/blob/master/README.rst>`_
 for more information.
