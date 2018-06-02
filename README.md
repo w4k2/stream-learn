@@ -7,4 +7,16 @@
 
 stream-learn is a Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.
 
-### Flow controllers and stream estimators 
+
+```python
+import strlearn
+from sklearn import neural_network
+
+clf = neural_network.MLPClassifier()
+X, y = strlearn.utils.load_arff('toyset.arff')
+learner = strlearn.Learner(X, y, clf)
+learner.run()
+
+```
+
+### Flow controllers and stream estimators
