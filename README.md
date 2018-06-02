@@ -7,4 +7,4 @@
 
 stream-learn is a Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.
 
-### Flux controllers and estimators 
+### Flow controllers and stream estimators 
