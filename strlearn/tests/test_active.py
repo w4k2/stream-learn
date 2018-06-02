@@ -10,7 +10,7 @@ import strlearn as sl
 warnings.simplefilter('ignore', DeprecationWarning)
 
 sys.path.insert(0, '../..')
-"""
+
 def test_active():
     clfs = {
         "MLP100": neural_network.MLPClassifier(hidden_layer_sizes=(100,)),
@@ -46,4 +46,3 @@ def test_active():
             learner.run()
             print(learner.scores)
             str(learner)
-"""

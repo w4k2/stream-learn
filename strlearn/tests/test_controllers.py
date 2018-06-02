@@ -21,7 +21,6 @@ def test_bare_controller():
     print(ctrl)
 
 
-"""
 def test_budget_controller():
     with open('datasets/toyset.arff', 'r') as stream:
         dataset = arff.load(stream)
@@ -50,4 +49,3 @@ def test_BLALC_controller():
                                base_classifier=nb_clf, controller=ctrl)
     print(learner)
     learner.run()
-"""
