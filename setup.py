@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import codecs
 import os
-import pypandoc
 
 from setuptools import find_packages, setup
 
@@ -15,6 +14,11 @@ with open(ver_file) as f:
 
 DISTNAME = 'stream-learn'
 DESCRIPTION = 'Toolbox for streaming data.'
+try:
+    import pypandoc
+    LONG_DESCRIPTION = pypandoc.convert('README.md', 'rst')
+except(IOError, ImportError):
+    LONG_DESCRIPTION = open('README.md').read()
 MAINTAINER = 'P. Ksieniewicz'
 MAINTAINER_EMAIL = 'pawel.ksieniewicz@pwr.edu.pl'
 URL = 'https://github.com/w4k2/stream-learn'
@@ -28,7 +32,7 @@ setup(name=DISTNAME,
       maintainer=MAINTAINER,
       maintainer_email=MAINTAINER_EMAIL,
       description=DESCRIPTION,
-      long_description=pypandoc.convert('README.md', 'rst'),
+      long_description=LONG_DESCRIPTION,
       license=LICENSE,
       url=URL,
       version=VERSION,

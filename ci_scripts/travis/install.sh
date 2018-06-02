@@ -34,8 +34,7 @@ if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
 
-sudo apt-get install pandoc
-pip install pytest pytest-cov codecov liac-arff tqdm matplotlib future pypandoc
+pip install pytest pytest-cov codecov liac-arff tqdm matplotlib future
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
