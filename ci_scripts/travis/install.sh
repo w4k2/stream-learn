@@ -17,6 +17,7 @@ if [[ ! -f miniconda.sh ]]
        -O miniconda.sh
    fi
 chmod +x miniconda.sh && ./miniconda.sh -b
+sudo apt-get install pandoc
 cd ..
 export PATH=/home/travis/miniconda/bin:$PATH
 conda update --yes conda

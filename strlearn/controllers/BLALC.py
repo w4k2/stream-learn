@@ -55,6 +55,3 @@ class BLALC(object):
 
     def should_break_chunk(self, X):
         return self.used_pool > self.pool
-
-    def __str__(self):
-        return 'blalc_b%.2f_t%.2f' % (self.budget, self.treshold)

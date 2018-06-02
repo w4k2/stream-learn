@@ -47,17 +47,6 @@ class WAE(BaseEstimator, ClassifierMixin):
     def set_base_clf(self, base_clf=neighbors.KNeighborsClassifier()):
         self.base_classifier_ = base_clf
 
-    def __str__(self):
-        return "WAE_wcm_%s_am_%s_j_%s_t_%s_pp_%i_n_%i_pc_%s" % (
-            self.weight_calculation_method,
-            self.aging_method,
-            ("%.3f" % self.rejuvenation_power)[2:],
-            ("%.3f" % self.theta)[2:],
-            self.post_pruning,
-            self.ensemble_size,
-            self.pruning_criterion
-        )
-
     def _prune(self):
         X, y = self.previous_X, self.previous_y
         pruner = pruning.OneOffPruner(self.ensemble_support_matrix(X),

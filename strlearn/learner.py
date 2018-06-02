@@ -58,14 +58,6 @@ class Learner(object):
         # Prepare to classification
         self._reset()
 
-    def __str__(self):
-        return "stream_learner_c_%i_e_%i_clf_%s_ctrl_%s" % (
-            self.chunk_size,
-            self.evaluate_interval,
-            self.base_classifier,
-            self.controller
-        )
-
     def _reset(self):
         self.clf = base.clone(self.base_classifier)
         self.evaluations = 0

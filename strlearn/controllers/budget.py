@@ -32,6 +32,3 @@ class Budget(object):
 
     def should_break_chunk(self, _X):
         return False
-
-    def __str__(self):
-        return 'bc_b%.2f' % (self.budget)
