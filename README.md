@@ -36,7 +36,7 @@ learner.run()
 If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
 
 ```
-@article{JMLR:v18:16-365,
+@article{key:key,
 author  = {abc},
 title   = {def},
 journal = {ghi},
