@@ -8,6 +8,7 @@ from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn import base
 from sklearn import neighbors
 from sklearn import metrics
+from sklearn import neural_network
 import numpy as np
 from strlearn.ensembles import pruning
 import warnings

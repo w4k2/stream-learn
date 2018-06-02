@@ -6,3 +6,5 @@
 [![KSSK](https://img.shields.io/badge/KSSK-alive-green.svg)](http://kssk.pwr.edu.pl)
 
 stream-learn is a Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.
+
+### Flux controllers and estimators 

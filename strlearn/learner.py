@@ -6,7 +6,7 @@ import time
 import csv
 from tqdm import tqdm
 from builtins import range
-
+from sklearn import neural_network
 from strlearn import controllers
 
 
@@ -38,7 +38,7 @@ class Learner(object):
     >>> learner.run()
     """
 
-    def __init__(self, X, y, base_classifier, chunk_size=200,
+    def __init__(self, X, y, base_classifier = neural_network.MLPClassifier(), chunk_size=200,
                  evaluate_interval=1000, controller=controllers.Bare()):
         self.base_classifier = base_classifier
         self.chunk_size = chunk_size
