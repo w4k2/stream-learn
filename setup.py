@@ -13,7 +13,7 @@ with open(ver_file) as f:
     exec(f.read())
 
 DISTNAME = 'stream-learn'
-DESCRIPTION = 'Toolbox for streaming data.'
+DESCRIPTION = 'Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.'
 MAINTAINER = 'P. Ksieniewicz'
 MAINTAINER_EMAIL = 'pawel.ksieniewicz@pwr.edu.pl'
 URL = 'https://github.com/w4k2/stream-learn'
