@@ -2,7 +2,6 @@ import numpy as np
 import warnings
 from sklearn import metrics
 from builtins import range
-warnings.simplefilter('always')
 
 PRUNING_CRITERION = ('accuracy')
 # TODO Liczba kombinacji jest opcjonalna. Przy jej braku dokonujemy przegladu zupelnego.

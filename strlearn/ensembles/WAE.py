@@ -10,7 +10,7 @@ from sklearn import neighbors
 from sklearn import metrics
 from sklearn import neural_network
 import numpy as np
-from strlearn.ensembles import pruning
+from ..ensembles import pruning
 import warnings
 warnings.simplefilter('always')
 

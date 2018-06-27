@@ -2,7 +2,7 @@ import sys
 import strlearn as sl
 
 sys.path.insert(0, '../..')
-"""
+
 def test_WAE():
     X, y = sl.utils.load_arff('toyset.arff')
     clf = sl.ensembles.WAE()
@@ -52,4 +52,3 @@ def test_REA():
     clf = sl.ensembles.REA()
     learner = sl.Learner(X, y, clf)
     learner.run()
-"""

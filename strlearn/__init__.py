@@ -1,21 +1,11 @@
-# Empty
-from __future__ import absolute_import
 from ._version import __version__
-
 from .learner import Learner
 
-#import ensembles
-from . import controllers
-from . import ensembles
+#from . import controllers
+#from . import ensembles
 from . import utils
+#from . import arff
 
 __all__ = [
-    'controllers', 'ensembles', 'utils', '__version__'
+    'controllers', 'ensembles', 'utils', 'arff', '__version__'
 ]
-"""
-from . import controllers
-from . import ensembles
-from . import utils
-
-
-"""
