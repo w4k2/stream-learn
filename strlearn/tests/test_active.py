@@ -3,6 +3,7 @@ import strlearn as sl
 
 sys.path.insert(0, '../..')
 
+"""
 def test_active():
     tresholds = [.3, .7]
     budgets = [.3, .7]
@@ -26,3 +27,4 @@ def test_active():
                                  evaluate_interval=1000, chunk_size=500,
                                  controller=controller)
             learner.run()
+"""

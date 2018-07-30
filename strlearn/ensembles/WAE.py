@@ -1,28 +1,35 @@
-from sklearn.base import BaseEstimator
+"""
+Weighted Aging Ensemble.
+
+cxzkdsa kcxzk sa.
+"""
+
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-from sklearn.utils import check_random_state
-from sklearn.utils.multiclass import unique_labels
-from sklearn.utils.multiclass import check_classification_targets
+# from sklearn.utils import check_random_state
+# from sklearn.utils.multiclass import unique_labels
+# from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn import base
 from sklearn import neighbors
-from sklearn import metrics
-from sklearn import neural_network
 import numpy as np
 from ..ensembles import pruning
 import warnings
+
 warnings.simplefilter('always')
 
 WEIGHT_CALCULATION = ('same_for_each', 'proportional_to_accuracy', 'kuncheva',
-                      'proportional_to_accuracy_related_to_whole_ensemble',
+                      'pta_related_to_whole',
                       'bell_curve')
 
-AGING_METHOD = ('weights_proportional', 'constant', 'gaussian')
+AGING_METHOD = ('weights_proportional', 'constant',
+                'gaussian')
 
 
 class WAE(BaseEstimator, ClassifierMixin):
-    """Weighted Aging Ensemble
+    """
+    Weighted Aging Ensemble.
+
     lorem ipsum
 
     References
@@ -30,13 +37,14 @@ class WAE(BaseEstimator, ClassifierMixin):
     .. [1] A. Kasprzak, M. Wozniak, "Modifications of the Weighted Aged
     Ensemble algorithm applied to the data stream classification - experimental
     analysis of chosen characteristics"
+
     """
 
     def __init__(self, ensemble_size=20, theta=.1,
                  post_pruning=False, pruning_criterion='accuracy',
                  weight_calculation_method='kuncheva',
-                 aging_method='weights_proportional', rejuvenation_power=0.,
-                 base_clf=neighbors.KNeighborsClassifier()):
+                 aging_method='weights_proportional', rejuvenation_power=0.):
+        """Initialization."""
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
         self.theta = theta
@@ -44,7 +52,10 @@ class WAE(BaseEstimator, ClassifierMixin):
         self.weight_calculation_method = weight_calculation_method
         self.aging_method = aging_method
         self.rejuvenation_power = rejuvenation_power
-        self.base_clf = base_clf
+
+    def set_base_clf(self, base_clf=neighbors.KNeighborsClassifier()):
+        """Establish base classifier."""
+        self._base_clf = base_clf
 
     def _prune(self):
         X, y = self.previous_X, self.previous_y
@@ -57,12 +68,17 @@ class WAE(BaseEstimator, ClassifierMixin):
         self.iterations_ = self.iterations_[combination]
         self.weights_ = self.weights_[combination]
 
+    # Fitting
     def fit(self, X, y):
+        """Fitting."""
+        if not hasattr(self, '_base_clf'):
+            self.set_base_clf()
+
         X, y = check_X_y(X, y)
         self.X_ = X
         self.y_ = y
 
-        candidate_clf = base.clone(self.base_clf)
+        candidate_clf = base.clone(self._base_clf)
         candidate_clf.fit(X, y)
 
         self.ensemble_ = [candidate_clf]
@@ -75,6 +91,9 @@ class WAE(BaseEstimator, ClassifierMixin):
         return self
 
     def partial_fit(self, X, y, classes=None):
+        """Partial fitting."""
+        if not hasattr(self, '_base_clf'):
+            self.set_base_clf()
         X, y = check_X_y(X, y)
         self.X_ = X
         self.y_ = y
@@ -100,7 +119,7 @@ class WAE(BaseEstimator, ClassifierMixin):
 
         # Preparing and training new candidate
         self.classes_ = classes
-        candidate_clf = base.clone(self.base_clf)
+        candidate_clf = base.clone(self._base_clf)
         candidate_clf.fit(X, y)
         self.ensemble_.append(candidate_clf)
         self.iterations_ = np.append(self.iterations_, [1])
@@ -137,7 +156,7 @@ class WAE(BaseEstimator, ClassifierMixin):
                 self.weights_ = np.log(accuracies / (1.0000001 - accuracies))
                 self.weights_[self.weights_ < 0] = 0
 
-            elif self.weight_calculation_method == 'proportional_to_accuracy_related_to_whole_ensemble':
+            elif self.weight_calculation_method == 'pta_related_to_whole':
                 accuracies = self._accuracies()
                 self.weights_ = accuracies / self.overall_accuracy
                 self.weights_[self.weights_ < self.theta] = 0
@@ -178,10 +197,12 @@ class WAE(BaseEstimator, ClassifierMixin):
             self._filter_ensemble(combination)
 
     def ensemble_support_matrix(self, X):
+        """ESM."""
         return np.array([member_clf.predict_proba(X)
                          for member_clf in self.ensemble_])
 
     def predict_proba(self, X):
+        """Aposteriori probabilities."""
         # Check is fit had been called
         check_is_fitted(self, 'classes_')
 
@@ -194,6 +215,7 @@ class WAE(BaseEstimator, ClassifierMixin):
         return acumulated_weighted_support
 
     def predict(self, X):
+        """Hard decision."""
         # Check is fit had been called
         check_is_fitted(self, 'classes_')
 
