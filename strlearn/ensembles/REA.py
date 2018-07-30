@@ -29,7 +29,7 @@ class REA(BaseEstimator):
            recursive approach." Evolving Systems 2.1 (2011): 35-50.
     """
 
-    def __init__(self, base_classifier=SVC(probability=True,gamma='scale'), n_classifiers=10,
+    def __init__(self, base_classifier=SVC(probability=True), n_classifiers=10,
                  balance_ratio=0.5):
         self.base_classifier = base_classifier
         self.n_classifiers = n_classifiers

@@ -3,11 +3,13 @@ import strlearn as sl
 
 sys.path.insert(0, '../..')
 
+
 def test_WAE():
     X, y = sl.utils.load_arff('toyset.arff')
     clf = sl.ensembles.WAE()
     learner = sl.Learner(X, y, clf)
     learner.run()
+
 
 def test_pp_WAE():
     X, y = sl.utils.load_arff('toyset.arff')
