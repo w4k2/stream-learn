@@ -10,7 +10,7 @@ from sklearn import neural_network
 from strlearn import controllers
 
 
-class Learner(object):
+class TestAndTrain(object):
     """Perform learning procedure on stream.
 
     lorem ipsum of description
