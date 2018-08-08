@@ -12,3 +12,8 @@ jobs:
       - checkout
       - run: ls
       - run: pip install --user -r requirements.txt
+      - run: python setup.py clean
+      - run: python setup.py develop
+      - run: cd doc
+      - run: make html
+      - run: ls
