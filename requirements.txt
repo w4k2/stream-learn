@@ -3,6 +3,6 @@ scipy
 scikit-learn
 matplotlib
 setuptools
-spxinx
+sphinx
 sphinx_rtd_theme
 sphinx_gallery
