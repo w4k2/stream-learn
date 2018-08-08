@@ -1,4 +1,4 @@
-"""Learner module."""
+"""Learnerr module."""
 from sklearn import base
 import time
 import csv
