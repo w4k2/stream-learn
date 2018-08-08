@@ -10,7 +10,8 @@ jobs:
       EMAIL: "pawel.ksieniewicz@pwr.edu.pl"
     steps:
       - checkout
-      - pip install numpy scikit-learn matplotlib setuptools
+      - run: ls
+      - run: pip install numpy scikit-learn matplotlib setuptools
 
 workflows:
   version: 2
