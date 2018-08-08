@@ -10,13 +10,18 @@ jobs:
       EMAIL: "pawel.ksieniewicz@pwr.edu.pl"
     steps:
       - checkout
+      - restore_cache: # restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run: # install and activate virtual environment with pip
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-      - run: ls
+      - save_cache: # special step to save dependency cache
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
       - run: python setup.py clean
       - run: python setup.py develop --user
-      - run: set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
+      - run: set -o pipefail && cd doc && . venv/bin/activate make html 2>&1 | tee ~/log.txt
       - run: ls doc
