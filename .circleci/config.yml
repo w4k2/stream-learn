@@ -14,8 +14,5 @@ jobs:
       - run: pip install --user -r requirements.txt
       - run: python setup.py clean
       - run: python setup.py develop --user
-      - run: cd doc
-      - run: ls
-      - run: pwd
-      - run: make html
-      - run: ls
+      - run: set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
+      - run: ls doc
