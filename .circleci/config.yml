@@ -26,6 +26,9 @@ jobs:
             . venv/bin/activate
             python setup.py clean
             python setup.py develop
+      - run:
+          command: |
+            . venv/bin/activate
             cd doc
             make html 2>&1 | tee ~/log.txt
       - run: ls doc
