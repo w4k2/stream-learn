@@ -5,18 +5,31 @@ import strlearn as sl
 sys.path.insert(0, '../..')
 
 
-def test_arff():
-    """Testing ARFF parser."""
+def test_arff_a():
+    """Testing ARFF parser on dividable stream."""
     parser = sl.utils.ARFF('toyset.arff')
     print("RELATION: %s" % parser.relation)
     print("NUMERIC: %s" % parser.numeric_atts)
     print("NOMINAL: %s" % parser.nominal_atts)
 
-    while True:
-        X, y = parser.get_chunk(500)
+    while not parser.is_dry:
+        X, y = parser.get_chunk(1000)
+        print(X.shape)
         # print("Chunk %i of size %s" % (i, X.shape))
-        if parser.is_dry:
-            break
+    parser.close()
+
+
+def test_arff_b():
+    """Testing ARFF parser on non-dividable stream."""
+    parser = sl.utils.ARFF('toyset.arff')
+    print("RELATION: %s" % parser.relation)
+    print("NUMERIC: %s" % parser.numeric_atts)
+    print("NOMINAL: %s" % parser.nominal_atts)
+
+    while not parser.is_dry:
+        X, y = parser.get_chunk(1001)
+        print(X.shape)
+        # print("Chunk %i of size %s" % (i, X.shape))
     parser.close()
 
 

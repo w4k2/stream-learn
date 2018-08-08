@@ -90,6 +90,7 @@ class ARFF():
                 self.a_line = self._f.readline()
                 if not self.a_line:
                     self.is_dry = True
+                    break
 
         y = self.le.transform(y)
         return X[:i+1, :], y[:i+1]
