@@ -12,3 +12,4 @@ jobs:
       - checkout
       - run: ls
       - run: pip install numpy scikit-learn matplotlib setuptools
+      - run: pip install -r requirements.txt
