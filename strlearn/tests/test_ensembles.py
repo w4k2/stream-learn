@@ -58,9 +58,11 @@ def test_pp_WAE_rejuvenation():
     learner.run()
 
 
+"""
 def test_REA():
-    """Testing REA."""
+    # Testing REA.
     stream = sl.utils.ARFF('toyset.arff')
     clf = sl.ensembles.REA()
     learner = sl.learners.TestAndTrain(stream, clf)
     learner.run()
+"""
