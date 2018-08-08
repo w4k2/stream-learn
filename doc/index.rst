@@ -27,6 +27,10 @@ Welcome to stream-learn documentation!
 `Getting started <install.html>`_
 ---------------------------------
 
+.. warning::
+
+   Some random warning!
+
 Information to install and usage of the package.
 
 `API Documentation <api.html>`_

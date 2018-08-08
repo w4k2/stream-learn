@@ -9,7 +9,7 @@ ATYPES = ('nominal', 'numeric')
 
 
 class ARFF():
-    """ARFF."""
+    """Stream-aware parser of datasets in ARFF format."""
 
     def __init__(self, path):
         """Initializer."""
