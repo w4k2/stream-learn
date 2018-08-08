@@ -1,6 +1,7 @@
 numpy
 scipy
 scikit-learn
+numpydoc
 matplotlib
 setuptools
 sphinx
