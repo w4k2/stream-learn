@@ -26,8 +26,8 @@ jobs:
       - run: python setup.py develop --user
       - run:
         - command: |
-        set -o pipefail
-        cd doc
-        . venv/bin/activate
-        make html 2>&1 | tee ~/log.txt
+          set -o pipefail
+          cd doc
+          . venv/bin/activate
+          make html 2>&1 | tee ~/log.txt
       - run: ls doc
