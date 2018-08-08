@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/Python:3.6.5
+      - image: circleci/python:3.6.6-jessie-node-browsers
     environment:
       USERNAME: "w4k2"
       DOC_REPO: "stream-learn"
