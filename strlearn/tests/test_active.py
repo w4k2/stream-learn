@@ -1,10 +1,12 @@
+"""Testing active learning approach."""
 import sys
 import strlearn as sl
 
 sys.path.insert(0, '../..')
 
-"""
+
 def test_active():
+    """Test active learning using BLALC."""
     tresholds = [.3, .7]
     budgets = [.3, .7]
 
@@ -20,11 +22,9 @@ def test_active():
             controllers.append(sl.controllers.BLALC(
                 budget=budget, treshold=treshold))
 
-    X, y = sl.utils.load_arff('toyset.arff')
-
     for controller in controllers:
-            learner = sl.Learner(X, y,
-                                 evaluate_interval=1000, chunk_size=500,
-                                 controller=controller)
+            stream = sl.utils.ARFF('toyset.arff')
+            learner = sl.learners.TestAndTrain(stream,
+                                               chunk_size=500,
+                                               controller=controller)
             learner.run()
-"""

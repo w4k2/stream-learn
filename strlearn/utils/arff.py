@@ -35,6 +35,7 @@ class ARFF():
                     # Analyze classes
                     self.le = preprocessing.LabelEncoder()
                     self.le.fit(np.array(elements[2][1:-1].split(',')))
+                    self.classes = self.le.transform(self.le.classes_)
                 else:
                     self.names.append(elements[1])
                     if elements[2][0] == "{":
@@ -55,19 +56,19 @@ class ARFF():
         self.n_attributes = self.types.shape[0]
         self.is_dry = False
 
+        # Read filrst line
+        self.a_line = self._f.readline()
+
     def get_chunk(self, size):
         """Get Chunk of size."""
         X, y = np.zeros((size, self.n_attributes)), []
         for i in range(size):
             # Read pattern and break it into elements
-            line = self._f.readline()
-            if not line:
+            if not self.a_line[-1] == '\n':
                 self.is_dry = True
-                break
-            elif not line[-1] == '\n':
-                self.is_dry = True
+                line = self.a_line
             else:
-                line = line[:-1]
+                line = self.a_line[:-1]
             elements = line.split(',')
 
             # Get class
@@ -84,6 +85,11 @@ class ARFF():
 
             if self.is_dry:
                 break
+            else:
+                # Catch dry stream with length dividable by chunk size
+                self.a_line = self._f.readline()
+                if not self.a_line:
+                    self.is_dry = True
 
         y = self.le.transform(y)
         return X[:i+1, :], y[:i+1]

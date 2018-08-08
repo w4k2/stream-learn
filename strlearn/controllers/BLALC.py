@@ -13,7 +13,7 @@ class BLALC(object):
         self.pool = int(self.learner.chunk_size * self.budget)
         self.used_pool = 0
         self.used_pools = []
-        self.m = self.learner.number_of_classes - 1
+        self.m = len(self.learner.stream.classes) - 1
 
     def get_measures(self):
         accumulator = self.used_pools
@@ -42,7 +42,7 @@ class BLALC(object):
                 max_support = np.max(normalized_support)
                 value = np.sum([abs(support-max_support) for
                                 support in normalized_support]
-                               ) / (self.learner.number_of_classes - 1)
+                               ) / self.m
                 if value < self.treshold:
                     decision = True
                     self.used_pool += 1
