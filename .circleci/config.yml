@@ -2,46 +2,16 @@ version: 2
 jobs:
   build:
     environment:
-      # The github organization or username of the repository which hosts the
-      # project and documentation.
       USERNAME: "w4k2"
-
-      # The repository where the documentation will be hosted
       DOC_REPO: "stream-learn"
-
-      # The base URL for the Github page where the documentation will be hosted
       DOC_URL: ""
-
-      # The email is to be used for commits in the Github Page
       EMAIL: "pawel.ksieniewicz@pwr.edu.pl"
+    steps:
+      - checkout
+      - pip install numpy scikit-learn matplotlib setuptools
 
-dependencies:
-  # Various dependencies
-  pre:
-    - pip install numpy scikit-learn matplotlib setuptools
-    - pip install sphinx sphinx_rtd_theme numpydoc sphinx-gallery
-
-  # The --user is needed to let sphinx see the source and the binaries
-  # The pipefail is requested to propagate exit code
-  override:
-    - python setup.py clean
-    - python setup.py develop
-    - set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
-test:
-  # Grep error on the documentation
-  override:
-    - cat ~/log.txt && if grep -q "Traceback (most recent call last):" ~/log.txt; then false; else true; fi
-deployment:
-  push:
-    branch: master
-    commands:
-      - bash ci_scripts/circleci/push_doc.sh
-general:
-  # Open the doc to the API
-  artifacts:
-    - "doc/_build/html"
-    - "~/log.txt"
-  # Restric the build to the branch master only
-  branches:
-    ignore:
-       - gh-pages
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
