@@ -21,12 +21,11 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "venv"
-      - run: ls
-      - run: python setup.py clean
-      - run: python setup.py develop --user
       - run:
           command: |
             . venv/bin/activate
+            python setup.py clean
+            python setup.py develop --user
             cd doc
             make html 2>&1 | tee ~/log.txt
       - run: ls doc
