@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.6-jessie-node-browsers
+      - image: circleci/python:3.6.6
     environment:
       USERNAME: "w4k2"
       DOC_REPO: "stream-learn"
@@ -10,10 +10,13 @@ jobs:
       EMAIL: "pawel.ksieniewicz@pwr.edu.pl"
     steps:
       - checkout
+      - run: # install and activate virtual environment with pip
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
       - run: ls
-      - run: pip install --user -r requirements.txt
       - run: python setup.py clean
       - run: python setup.py develop --user
-      - run: which sphinx-build
       - run: set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
       - run: ls doc
