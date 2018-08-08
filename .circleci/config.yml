@@ -1,6 +1,8 @@
 version: 2
 jobs:
   build:
+    docker:
+      - image: circleci/Python:3.6.5
     environment:
       USERNAME: "w4k2"
       DOC_REPO: "stream-learn"
