@@ -15,5 +15,7 @@ jobs:
       - run: python setup.py clean
       - run: python setup.py develop --user
       - run: cd doc
+      - run: ls
+      - run: pwd
       - run: make html
       - run: ls
