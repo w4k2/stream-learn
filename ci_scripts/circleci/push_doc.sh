@@ -6,16 +6,28 @@
 
 MSG="Pushing the docs for revision for branch: $CIRCLE_BRANCH, commit $CIRCLE_SHA1"
 
-cd $HOME
+echo "BEFORE LS"
+ls
+#cd $HOME
 # Copy the build docs to a temporary folder
 rm -rf tmp
 mkdir tmp
 cp -R $HOME/$DOC_REPO/doc/_build/html/* ./tmp/
 
+echo "DOC LS"
+ls
+ls tmp
+
 # Clone the docs repo if it isnt already there
 if [ ! -d $DOC_REPO ];
     then git clone "git@github.com:$USERNAME/"$DOC_REPO".git";
 fi
+
+echo "AFTER CLONING"
+ls
+ls tmp
+
+
 
 cd $DOC_REPO
 git branch gh-pages
