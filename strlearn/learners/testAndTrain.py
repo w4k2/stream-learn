@@ -14,8 +14,8 @@ class TestAndTrain(object):
 
     Parameters
     ----------
-    stream : data stream as a binary arff file, loaded like
-    ``toystream = open('datasets/toyset.arff', 'r')``
+    stream : object
+        data stream as an object
     clf : sklearn estimator implementing a ``partial_fit()`` method
     chunk_size : int, optional (default=200)
         Number of samples included in each chunk.
