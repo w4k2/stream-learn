@@ -7,8 +7,7 @@ from strlearn import controllers
 
 
 class TestAndTrain(object):
-    """
-    Perform learning procedure on stream.
+    """Perform learning procedure on stream.
 
     lorem ipsum of description
 
