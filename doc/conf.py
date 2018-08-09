@@ -2,7 +2,10 @@ import sys
 import os
 import strlearn
 import sphinx
-import alabaster
+
+import sphinx_rtd_theme
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -11,15 +14,15 @@ print(a)
 
 extensions = [
     'sphinx.ext.autodoc',
-    #'sphinx.ext.doctest',
-    #'sphinx.ext.intersphinx',
-    #'sphinx.ext.todo',
-    #'sphinx.ext.autosummary',
-    #'numpydoc',
-    #'sphinx.ext.ifconfig',
-    #'sphinx.ext.viewcode',
+    'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.autosummary',
+    'numpydoc',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.viewcode',
     'sphinx_gallery.gen_gallery',
-    #'alabaster'
+    'alabaster'
 ]
 
 #sphinx_gallery_conf = {
@@ -57,9 +60,9 @@ release = strlearn.__version__
 
 
 # -- Options for HTML output ----------------------------------------------
-html_theme_path = [alabaster.get_path()]
-html_theme = 'alabaster'
-
+#html_theme_path = [alabaster.get_path()]
+#html_theme = 'alabaster'
+"""
 html_theme_options = {
     'logo': 'logo.png',
     'logo_name': True,
@@ -70,7 +73,7 @@ html_theme_options = {
     'github_user': 'w4k2',
     'github_repo': 'stream-learn',
 }
-
+"""
 html_static_path = ['_static']
 htmlhelp_basename = 'stream-learndoc'
 

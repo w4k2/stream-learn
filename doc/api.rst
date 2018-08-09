@@ -1,19 +1,20 @@
 ######################
-stream-learn API
+imbalanced-learn API
 ######################
+
+This is the full API documentation of the `imbalanced-learn` toolbox.
+
+.. _learners_ref:
+
+:mod:`strlearn.learners`: Stream learners
+=========================================
+
+.. automodule:: strlearn.learners
 
 .. currentmodule:: strlearn
 
-This is the full API documentation of the `stream-learn` toolbox.
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
 
-.. automodule:: strlearn.learners
-   :members:
-
-.. automodule:: strlearn.controllers
-   :members:
-
-.. automodule:: strlearn.ensembles
-   :members:
-
-.. automodule:: strlearn.utils
-   :members:
+   learners.TestAndTrain
