@@ -2,12 +2,14 @@ import sys
 import os
 import strlearn
 import sphinx
+from sklearn.externals.six import u
 
 import sphinx_rtd_theme
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('sphinxext'))
 
 a = strlearn.utils.arff
 print(a)
@@ -21,10 +23,15 @@ extensions = [
     'numpydoc',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx_gallery.gen_gallery',
-    'alabaster'
+    'sphinx_gallery.gen_gallery'
 ]
 
+
+# this is needed for some reason...
+# see https://github.com/numpy/numpydoc/issues/69
+numpydoc_show_class_members = False
+
+autodoc_default_flags = ['members', 'inherited-members']
 #sphinx_gallery_conf = {
     # path to your examples scripts
 #    'examples_dirs' : '../examples',
@@ -32,15 +39,13 @@ extensions = [
 #    'gallery_dirs'  : 'auto_examples'
 #}
 
-html_sidebars = {
-    '**': [
-        'about.html',
-        'navigation.html',
-        'relations.html',
-        'searchbox.html',
-        # 'donate.html',
-    ]
-}
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
+# generate autosummary even if no references
+autosummary_generate = True
+
+
 
 # Generate the plots for the gallery
 plot_gallery = False
@@ -77,7 +82,7 @@ html_theme_options = {
 html_static_path = ['_static']
 htmlhelp_basename = 'stream-learndoc'
 
-
+"""
 def generate_example_rst(app, what, name, obj, options, lines):
     # generate empty examples files, so that we don't get
     # inclusion errors if there are no examples for a class / module
@@ -86,10 +91,11 @@ def generate_example_rst(app, what, name, obj, options, lines):
     if not os.path.exists(examples_path):
         # touch file
         open(examples_path, 'w').close()
-
+"""
 
 def setup(app):
-    app.connect('autodoc-process-docstring', generate_example_rst)
+    pass
+    #app.connect('autodoc-process-docstring', generate_example_rst)
 
 
 # Example configuration for intersphinx: refer to the Python standard library.

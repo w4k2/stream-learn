@@ -1,5 +1,7 @@
 doc/modules
 doc/auto_examples
+doc/generated
+doc/sphinxext
 doc/_build
 # Byte-compiled / optimized / DLL files
 __pycache__/
