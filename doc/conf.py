@@ -4,13 +4,17 @@ import strlearn
 import sphinx
 import alabaster
 
+sys.path.insert(0, os.path.abspath('..'))
+
+a = strlearn.utils.arff
+print(a)
 
 extensions = [
     'sphinx.ext.autodoc',
     #'sphinx.ext.doctest',
     #'sphinx.ext.intersphinx',
     #'sphinx.ext.todo',
-    'sphinx.ext.autosummary',
+    #'sphinx.ext.autosummary',
     #'numpydoc',
     #'sphinx.ext.ifconfig',
     #'sphinx.ext.viewcode',
