@@ -26,6 +26,8 @@ jobs:
             . venv/bin/activate
             python setup.py clean
             python setup.py develop
+      - run: pwd
+      - run: ls
       - run:
           command: |
             . venv/bin/activate
