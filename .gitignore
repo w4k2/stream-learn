@@ -76,3 +76,5 @@ target/
 
 # OS
 .DS_Store
+
+work.py

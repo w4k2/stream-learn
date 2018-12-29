@@ -1,7 +1,6 @@
 """
 Weighted Aging Ensemble.
 
-cxzkdsa kcxzk sa.
 """
 
 from sklearn.base import BaseEstimator, ClassifierMixin

@@ -15,6 +15,9 @@ clean:
 	rm -rf doc/modules
 	rm -rf examples/.ipynb_checkpoints
 
+docs: clean install
+	cd doc && make
+
 test-code:
 	py.test strlearn
 

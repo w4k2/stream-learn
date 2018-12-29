@@ -7,7 +7,8 @@ from strlearn import controllers
 
 
 class TestAndTrain(object):
-    """Perform learning procedure on stream.
+    """
+    Perform learning procedure on stream.
 
     lorem ipsum of description
 
@@ -139,7 +140,6 @@ class TestAndTrain(object):
         self.evaluations += 1
 
         self.training_time = time.time()
-        print(self.scores)
 
         return score
 
