@@ -22,4 +22,4 @@ after_success: source ci_scripts/travis/success.sh
 
 
 notifications:
-  email: false
+  email: true
