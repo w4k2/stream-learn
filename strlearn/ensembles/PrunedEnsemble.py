@@ -10,8 +10,6 @@ from sklearn import neighbors
 from sklearn.metrics import f1_score, balanced_accuracy_score, accuracy_score
 import numpy as np
 import matplotlib.pyplot as plt
-from deslib.des import KNORAE, KNORAU
-from deslib.dcs import Rank, LCA
 from imblearn.over_sampling import RandomOverSampler
 
 measure = accuracy_score
