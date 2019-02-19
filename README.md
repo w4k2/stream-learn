@@ -30,6 +30,7 @@ learner = strlearn.Learner(X, y, clf)
 learner.run()
 ```
 
+<!--
 ### About
 
 If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
@@ -46,3 +47,4 @@ pages   = {1-5},
 url     = {http://jkl}
 }
 ```
+-->

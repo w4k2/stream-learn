@@ -6,6 +6,16 @@ import strlearn as sl
 sys.path.insert(0, "../..")
 
 
+def test_PE():
+    """Pruned Ensemble."""
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
+    clf = sl.ensembles.PrunedEnsemble()
+    learner = sl.learners.TestAndTrain(stream, clf)
+    learner.run()
+
+
 def test_WAE():
     """Bare WAE."""
     stream = sl.utils.StreamGenerator(
