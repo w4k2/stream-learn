@@ -9,7 +9,6 @@ cache:
   - $HOME/download
 env:
   global:
-    # Directory where tests are run from
     - TEST_DIR=/tmp/test_dir/
     - MODULE=strlearn
   matrix:
