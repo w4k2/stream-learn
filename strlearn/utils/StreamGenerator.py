@@ -1,3 +1,8 @@
+"""
+Stream Generator.
+
+A class to generate streams.
+"""
 from sklearn.datasets import make_classification
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,6 +11,8 @@ DRIFT_TYPES = ("sudden", "gradual")
 
 
 class StreamGenerator:
+    """Stream generator."""
+
     def __init__(
         self,
         chunk_size=500,

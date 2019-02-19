@@ -64,6 +64,13 @@ stream-learn API
 
 .. currentmodule:: strlearn
 
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   utils.StreamGenerator
+
 .. autosummary::
    :toctree: generated/
    :template: class.rst
