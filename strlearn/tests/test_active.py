@@ -1,6 +1,8 @@
 """Testing active learning approach."""
 import sys
-from .context import strlearn as sl
+import strlearn as sl
+
+sys.path.insert(0, "../..")
 
 
 def test_active():

@@ -1,6 +1,9 @@
 """Tests of implemented controllers."""
 import sys
-from .context import strlearn as sl
+
+import strlearn as sl
+
+sys.path.insert(0, "../..")
 
 
 def test_bare_controller():
