@@ -36,16 +36,20 @@ class TestAndTrain(object):
 
     """
 
-    def __init__(self, stream, base_classifier=neural_network.MLPClassifier(),
-                 chunk_size=500, controller=controllers.Bare()):
+    def __init__(
+        self,
+        stream,
+        base_classifier=neural_network.MLPClassifier(),
+        controller=controllers.Bare(),
+    ):
         """Initializer."""
         self.base_classifier = base_classifier
-        self.chunk_size = chunk_size
         self.controller = controller
         self.controller.learner = self
 
         # Loading dataset
         self.stream = stream
+        self.chunk_size = stream.chunk_size
 
         # Prepare to classification
         self._reset()
@@ -80,7 +84,7 @@ class TestAndTrain(object):
         # Copy the old chunk used in the previous repetition and take a new one
         # from the stream.
         self.previous_chunk = self.chunk
-        self.chunk = self.stream.get_chunk(self.chunk_size)
+        self.chunk = self.stream.get_chunk()
         X, y = self.chunk
 
         # Test
@@ -152,13 +156,15 @@ class TestAndTrain(object):
         filename : name of resulting CSV file
 
         """
-        with open(filename, 'w') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=',')
+        with open(filename, "w") as csvfile:
+            spamwriter = csv.writer(csvfile, delimiter=",")
             for idx, point in enumerate(self.score_points):
-                spamwriter.writerow([
-                    '%i' % self.score_points[idx],
-                    '%.3f' % self.scores[idx],
-                    '%.0f' % (self.evaluation_times[idx] * 1000.),
-                    '%.0f' % (self.training_times[idx] * 1000.),
-                    self.controller_measures[idx]
-                ])
+                spamwriter.writerow(
+                    [
+                        "%i" % self.score_points[idx],
+                        "%.3f" % self.scores[idx],
+                        "%.0f" % (self.evaluation_times[idx] * 1000.0),
+                        "%.0f" % (self.training_times[idx] * 1000.0),
+                        self.controller_measures[idx],
+                    ]
+                )

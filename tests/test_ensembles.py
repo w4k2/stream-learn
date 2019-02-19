@@ -1,13 +1,13 @@
 """Testing variations of ensemble methods."""
 import sys
-import strlearn as sl
-
-sys.path.insert(0, '../..')
+from .context import strlearn as sl
 
 
 def test_WAE():
     """Bare WAE."""
-    stream = sl.utils.ARFF('toyset.arff')
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
     clf = sl.ensembles.WAE()
     learner = sl.learners.TestAndTrain(stream, clf)
     learner.run()
@@ -15,7 +15,9 @@ def test_WAE():
 
 def test_pp_WAE():
     """Post pruned WAE."""
-    stream = sl.utils.ARFF('toyset.arff')
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
     clf = sl.ensembles.WAE(post_pruning=True)
     learner = sl.learners.TestAndTrain(stream, clf)
     learner.run()
@@ -23,37 +25,52 @@ def test_pp_WAE():
 
 def test_WAE_wcm():
     """Various weight computation methods of WAE."""
-    methods = ('same_for_each', 'proportional_to_accuracy', 'kuncheva',
-               'pta_related_to_whole', 'bell_curve')
+    methods = (
+        "same_for_each",
+        "proportional_to_accuracy",
+        "kuncheva",
+        "pta_related_to_whole",
+        "bell_curve",
+    )
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
     for method in methods:
-        stream = sl.utils.ARFF('toyset.arff')
         clf = sl.ensembles.WAE(weight_calculation_method=method)
         learner = sl.learners.TestAndTrain(stream, clf)
         learner.run()
+        stream.reset()
 
 
 def test_WAE_am():
     """Various aging methods of WAE."""
-    methods = ('weights_proportional', 'constant', 'gaussian')
+    methods = ("weights_proportional", "constant", "gaussian")
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
     for method in methods:
-        stream = sl.utils.ARFF('toyset.arff')
         clf = sl.ensembles.WAE(aging_method=method)
         learner = sl.learners.TestAndTrain(stream, clf)
         learner.run()
+        stream.reset()
 
 
 def test_WAE_rejuvenation():
     """Rejuvenation of WAE."""
-    stream = sl.utils.ARFF('toyset.arff')
-    clf = sl.ensembles.WAE(rejuvenation_power=.5)
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
+    clf = sl.ensembles.WAE(rejuvenation_power=0.5)
     learner = sl.learners.TestAndTrain(stream, clf)
     learner.run()
 
 
 def test_pp_WAE_rejuvenation():
     """Post pruning with rejuvenation WAE."""
-    stream = sl.utils.ARFF('toyset.arff')
-    clf = sl.ensembles.WAE(rejuvenation_power=.5, post_pruning=True)
+    stream = sl.utils.StreamGenerator(
+        drift_type="sudden", n_chunks=10, n_drifts=1, n_features=4, chunk_size=100
+    )
+    clf = sl.ensembles.WAE(rejuvenation_power=0.5, post_pruning=True)
     learner = sl.learners.TestAndTrain(stream, clf)
     learner.run()
 
