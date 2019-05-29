@@ -4,6 +4,8 @@ import time
 import csv
 from sklearn import neural_network
 from strlearn import controllers
+from sklearn.metrics import accuracy_score
+import numpy as np
 
 
 class TestAndTrain(object):
@@ -40,12 +42,11 @@ class TestAndTrain(object):
         self,
         stream,
         base_classifier=neural_network.MLPClassifier(),
-        controller=controllers.Bare(),
+        metric=accuracy_score,
     ):
         """Initializer."""
         self.base_classifier = base_classifier
-        self.controller = controller
-        self.controller.learner = self
+        self.metric = metric
 
         # Loading dataset
         self.stream = stream
@@ -64,12 +65,9 @@ class TestAndTrain(object):
         self.score_points = []
         self.training_times = []
         self.evaluation_times = []
-        self.controller_measures = []
 
         self.previous_chunk = None
         self.chunk = None
-
-        self.controller.prepare()
 
     def run(self):
         """Start learning process."""
@@ -91,10 +89,6 @@ class TestAndTrain(object):
         if self.processed_chunks > 0:
             self.test(X, y)
 
-        # Inform the processing controller about the analysis of the next
-        # chunk.
-        self.controller.next_chunk()
-
         # Train
         self.train(X, y)
 
@@ -102,26 +96,12 @@ class TestAndTrain(object):
 
     def train(self, X, y):
         """Train model."""
-        # Initialize a training set.
-        X_, y_ = [], []
+        # TODO: Nowe podejście do kontrolerów
         # Iterate samples from chunk.
-        for sid, x in enumerate(X):
-            # Check if interruption case occured according to controller.
-            if not self.controller.should_break_chunk(X_):
-                # Get single object wit a label.
-                label = y[sid]
-
-                # Check if, according to controller, it is needed to include
-                # current sample in training set.
-                if self.controller.should_include(X_, x, label):
-                    X_.append(x)
-                    y_.append(label)
-
-            # Verify if evaluation is needed.
-            self.processed_instances += 1
+        self.processed_instances += X.shape[0]
 
         # Train.
-        self.clf.partial_fit(X_, y_, self.stream.classes)
+        self.clf.partial_fit(X, y, self.stream.classes)
 
     def test(self, X, y):
         """Evaluate and return score."""
@@ -129,21 +109,28 @@ class TestAndTrain(object):
         evaluation_time = time.time()
 
         # Prepare evaluation chunk
-        score = self.clf.score(X, y)
+        y_pred = self.clf.predict(X)
+        score = self.metric(y, y_pred)
+        # score = self.clf.score(X, y)
+        # print(score, self.metric)
         evaluation_time = time.time() - evaluation_time
-
-        controller_measure = self.controller.get_measures()
 
         # Collecting results
         self.score_points.append(self.processed_instances)
         self.scores.append(score)
         self.evaluation_times.append(evaluation_time)
         self.training_times.append(self.training_time)
-        self.controller_measures.append(controller_measure)
-
-        self.evaluations += 1
 
         self.training_time = time.time()
+
+        try:
+            metrics = self.clf.metrics()
+            if not hasattr(self, "metrics"):
+                self.metrics = np.zeros((self.stream.n_chunks - 1, metrics.shape[0]))
+            self.metrics[self.evaluations] = metrics
+        except:
+            pass
+        self.evaluations += 1
 
         return score
 
@@ -165,6 +152,5 @@ class TestAndTrain(object):
                         "%.3f" % self.scores[idx],
                         "%.0f" % (self.evaluation_times[idx] * 1000.0),
                         "%.0f" % (self.training_times[idx] * 1000.0),
-                        self.controller_measures[idx],
                     ]
                 )

@@ -1,7 +1,7 @@
 """REA implementation."""
 from sklearn import metrics
 from sklearn.base import BaseEstimator
-from sklearn.svm import SVC
+from sklearn import neighbors
 from sklearn.preprocessing import LabelEncoder
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
@@ -32,8 +32,12 @@ class REA(BaseEstimator):
 
     """
 
-    def __init__(self, base_classifier=SVC(probability=True, gamma='scale'), n_classifiers=10,
-                 balance_ratio=0.5):
+    def __init__(
+        self,
+        base_classifier=neighbors.KNeighborsClassifier(),
+        n_classifiers=10,
+        balance_ratio=0.5,
+    ):
         """Initializer."""
         self.base_classifier = base_classifier
         self.n_classifiers = n_classifiers
@@ -85,7 +89,7 @@ class REA(BaseEstimator):
 
         self.classifier_array.append(new_classifier)
 
-        s1 = 1/float(len(X))
+        s1 = 1 / float(len(X))
         weights = []
         for clf in self.classifier_array:
             proba = clf.predict_proba(X)
@@ -93,7 +97,7 @@ class REA(BaseEstimator):
             for i, x in enumerate(X):
                 probas = proba[i][y[i]]
                 s2 += math.pow((1 - probas), 2)
-            s3 = math.log(1/float(s1*s2))
+            s3 = math.log(1 / float(s1 * s2))
             weights.append(s3)
 
         self.classifier_weights = weights
@@ -122,20 +126,23 @@ class REA(BaseEstimator):
         y = np.array(y)
         X = np.array(X)
 
-        minority, majority = minority_majority_split(X, y, self.minority_name, self.majority_name)
+        minority, majority = minority_majority_split(
+            X, y, self.minority_name, self.majority_name
+        )
 
         if self.minority_data is None:
             self.minority_data = minority
             self.iterator += 1
             return X, y
 
-        ratio = len(minority[:, 0])/float(len(X[:, 0]))
+        ratio = len(minority[:, 0]) / float(len(X[:, 0]))
 
         if self.balance_ratio > ratio:
-            if ((len(minority) + len(self.minority_data)) / float(len(X) + len(self.minority_data))) <= self.balance_ratio:
-                new_minority = np.concatenate(
-                    (minority, self.minority_data),
-                    axis=0)
+            if (
+                (len(minority) + len(self.minority_data))
+                / float(len(X) + len(self.minority_data))
+            ) <= self.balance_ratio:
+                new_minority = np.concatenate((minority, self.minority_data), axis=0)
 
             else:
                 knn = NearestNeighbors(n_neighbors=3).fit(X, y)
@@ -146,18 +153,27 @@ class REA(BaseEstimator):
                 new_minority = minority
                 for i in range(int(len(X) * 2 * (self.balance_ratio - ratio))):
                     # print i
-                    new_minority = np.insert(new_minority, -1,
-                                             self.minority_data[int(distance[i][1])], axis=0)
+                    new_minority = np.insert(
+                        new_minority,
+                        -1,
+                        self.minority_data[int(distance[i][1])],
+                        axis=0,
+                    )
 
             res_X = np.concatenate((new_minority, majority), axis=0)
-            res_y = np.concatenate((np.full(len(new_minority), self.minority_name), np.full(len(majority), self.majority_name)), axis=0)
+            res_y = np.concatenate(
+                (
+                    np.full(len(new_minority), self.minority_name),
+                    np.full(len(majority), self.majority_name),
+                ),
+                axis=0,
+            )
 
         else:
             res_X = X
             res_y = y
 
-        self.minority_data = np.concatenate((minority, self.minority_data),
-                                            axis=0)
+        self.minority_data = np.concatenate((minority, self.minority_data), axis=0)
         self.iterator += 1
 
         return res_X, res_y
@@ -179,7 +195,11 @@ class REA(BaseEstimator):
 
         """
         predictions = np.asarray([clf.predict(X) for clf in self.classifier_array]).T
-        maj = np.apply_along_axis(lambda x: np.argmax(np.bincount(x, weights=self.classifier_weights)), axis=1, arr=predictions)
+        maj = np.apply_along_axis(
+            lambda x: np.argmax(np.bincount(x, weights=self.classifier_weights)),
+            axis=1,
+            arr=predictions,
+        )
         maj = self.label_encoder.inverse_transform(maj)
         return maj
 
