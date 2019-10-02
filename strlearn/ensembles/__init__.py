@@ -1,5 +1,3 @@
-from .WAE import WAE
-from .REA import REA
-from .PrunedEnsemble import PrunedEnsemble
+from .DumbEnsemble import DumbEnsemble
 
-__all__ = ["WAE", "REA", "PrunedEnsemble"]
+__all__ = ["DumbEnsemble"]
