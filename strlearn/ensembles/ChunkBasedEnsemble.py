@@ -17,7 +17,7 @@ class DumbEnsemble(BaseEstimator, ClassifierMixin):
     def fit(self, X, y):
         self.set_base_clf()
 
-    def partial_fit(self, X, y):
+    def partial_fit(self, X, y, classes=None):
         if not hasattr(self, "_base_clf"):
             self.set_base_clf()
         X, y = check_X_y(X, y)

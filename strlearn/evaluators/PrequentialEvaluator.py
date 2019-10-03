@@ -15,6 +15,7 @@ class PrequentialEvaluator:
         self.clf = clf
         self.stream = stream
         self.interval = interval
+        self.classes = np.array(range(stream.n_classes))
 
         intervals_per_chunk = int(self.stream.chunk_size / self.interval)
         self.scores = np.zeros(
@@ -46,7 +47,7 @@ class PrequentialEvaluator:
                     i += 1
             else:
                 X_train, y_train = stream.current_chunk
-                clf.partial_fit(X_train, y_train)
+                clf.partial_fit(X_train, y_train, self.classes)
 
             if stream.is_dry():
                 break
