@@ -1,7 +1,7 @@
 .PHONY: all clean test
 
 profile:
-	kernprof -l -v strlearn/tests/test_ensembles.py
+	kernprof -l -v strlearn/tests/test_common.py
 
 clean:
 	find . -name "*.so" -o -name "*.pyc" -o -name "*.md5" -o -name "*.pyd" -o -name "*~" | xargs rm -f

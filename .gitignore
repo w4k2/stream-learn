@@ -1,3 +1,4 @@
+*.lprof
 doc/modules
 doc/auto_examples
 doc/generated
