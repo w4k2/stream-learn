@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.naive_bayes import GaussianNB
 
 
-class DumbEnsemble(BaseEstimator, ClassifierMixin):
+class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
 
     def __init__(self, ensemble_size=5):
         self.ensemble_size = ensemble_size
