@@ -8,7 +8,7 @@ from sklearn.neural_network import MLPClassifier
 
 
 def test_mlp_drifted():
-    stream = sl.generators.DriftedStream(sigmoid_spacing=999)
-    clf = MLPClassifier(hidden_layer_sizes=(100,))
+    stream = sl.streams.StreamGenerator()
+    clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(clf, stream)

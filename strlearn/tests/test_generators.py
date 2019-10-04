@@ -8,23 +8,20 @@ from sklearn.neural_network import MLPClassifier
 
 
 def test_generators_drying():
-    stream = sl.generators.DriftedStream()
-    while stream.get_chunk():
-        pass
-    stream = sl.generators.StationaryStream()
+    stream = sl.streams.StreamGenerator()
     while stream.get_chunk():
         pass
 
 
 def test_generator_drifted():
-    stream = sl.generators.DriftedStream()
+    stream = sl.streams.StreamGenerator(n_drifts=1)
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(clf, stream)
 
 
 def test_generator_stationary():
-    stream = sl.generators.StationaryStream()
+    stream = sl.streams.StreamGenerator(n_drifts=0)
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(clf, stream)

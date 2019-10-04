@@ -4,7 +4,7 @@ import numpy as np
 from scipy.stats import logistic
 
 
-class DriftedStream:
+class StreamGenerator:
     def __init__(
         self,
         n_chunks=250,
@@ -43,6 +43,9 @@ class DriftedStream:
         if hasattr(self, "X"):
             self.previous_chunk = self.current_chunk
         else:
+            # To pomocniczo
+            n_samples = self.n_chunks * self.chunk_size
+
             X_a, y_a = make_classification(
                 n_samples=self.n_chunks * self.chunk_size,
                 random_state=self.random_state,
@@ -68,24 +71,33 @@ class DriftedStream:
             big_X = np.array([X_a, X_b])
             big_y = np.array([y_a, y_b])
 
-            # To pomocniczo
-            n_samples = self.n_chunks * self.chunk_size
-
             # Okres
-            period = int((n_samples) / (self.n_drifts))
+            period = (
+                int((n_samples) / (self.n_drifts))
+                if self.n_drifts > 0
+                else int(n_samples)
+            )
 
             # Sigmoid
-            self.period_sigmoid = logistic.cdf(
-                np.concatenate(
-                    [
-                        np.linspace(
-                            -self.sigmoid_spacing if i % 2 else self.sigmoid_spacing,
-                            self.sigmoid_spacing if i % 2 else -self.sigmoid_spacing,
-                            period,
-                        )
-                        for i in range(self.n_drifts)
-                    ]
+            self.period_sigmoid = (
+                logistic.cdf(
+                    np.concatenate(
+                        [
+                            np.linspace(
+                                -self.sigmoid_spacing
+                                if i % 2
+                                else self.sigmoid_spacing,
+                                self.sigmoid_spacing
+                                if i % 2
+                                else -self.sigmoid_spacing,
+                                period,
+                            )
+                            for i in range(self.n_drifts)
+                        ]
+                    )
                 )
+                if self.n_drifts > 0
+                else np.ones(n_samples)
             )
             # Szum
             self.noise = np.random.rand(n_samples)

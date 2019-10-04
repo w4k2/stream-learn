@@ -7,13 +7,14 @@ sys.path.insert(0, "../..")
 
 
 def test_ACS_TestThanTrain():
-    stream = sl.generators.DriftedStream(sigmoid_spacing=999)
+    stream = sl.streams.StreamGenerator()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(clf, stream)
 
+
 def test_ACS_Prequential():
-    stream = sl.generators.DriftedStream(sigmoid_spacing=999)
+    stream = sl.streams.StreamGenerator()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
     evaluator = sl.evaluators.PrequentialEvaluator()
     evaluator.process(clf, stream)
