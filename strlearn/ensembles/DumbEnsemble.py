@@ -6,7 +6,6 @@ from sklearn.naive_bayes import GaussianNB
 
 
 class DumbEnsemble(BaseEstimator, ClassifierMixin):
-
     def __init__(self, ensemble_size=5):
         self.ensemble_size = ensemble_size
         self.ensemble_ = []
@@ -28,7 +27,6 @@ class DumbEnsemble(BaseEstimator, ClassifierMixin):
 
         if len(self.ensemble_) > self.ensemble_size:
             del self.ensemble_[0]
-
 
     def ensemble_support_matrix(self, X):
         return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
