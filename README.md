@@ -21,13 +21,7 @@ pip install stream-learn
 ## Example usage
 
 ```python
-import strlearn
-from sklearn import neural_network
-
-clf = neural_network.MLPClassifier()
-X, y = strlearn.utils.load_arff('toyset.arff')
-learner = strlearn.Learner(X, y, clf)
-learner.run()
+WRONG
 ```
 
 <!--
