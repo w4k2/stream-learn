@@ -26,7 +26,7 @@ pip install stream-learn
 ### Sudden drift
 ![plots/2_sudden_drift.png](plots/2_sudden_drift.png)
 
-### Stationary stream
+### Incremental drift
 ![plots/1_incremental_drift.png](plots/1_incremental_drift.png)
 
 ## Example usage
