@@ -5,7 +5,12 @@ import numpy as np
 from sklearn.naive_bayes import GaussianNB
 
 
+<<<<<<< HEAD:strlearn/ensembles/DumbEnsemble.py
 class DumbEnsemble(BaseEstimator, ClassifierMixin):
+=======
+class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
+
+>>>>>>> d1f956f3d62da366c19023a263bde389b720bce2:strlearn/ensembles/ChunkBasedEnsemble.py
     def __init__(self, ensemble_size=5):
         self.ensemble_size = ensemble_size
         self.ensemble_ = []
@@ -16,7 +21,7 @@ class DumbEnsemble(BaseEstimator, ClassifierMixin):
     def fit(self, X, y):
         self.set_base_clf()
 
-    def partial_fit(self, X, y):
+    def partial_fit(self, X, y, classes=None):
         if not hasattr(self, "_base_clf"):
             self.set_base_clf()
         X, y = check_X_y(X, y)

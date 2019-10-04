@@ -1,3 +1,3 @@
-from .DumbEnsemble import DumbEnsemble
+from .ChunkBasedEnsemble import ChunkBasedEnsemble
 
-__all__ = ["DumbEnsemble"]
+__all__ = ["ChunkBasedEnsemble"]
