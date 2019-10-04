@@ -10,21 +10,29 @@ class DriftedStream:
         n_chunks=250,
         chunk_size=200,
         random_state=1410,
-        n_features=8,
+        n_features=20,
+        n_informative=2,
+        n_redundant=2,
+        n_repeated=0,
         n_classes=2,
         weights=None,
         n_drifts=4,
         sigmoid_spacing=10,
+        n_clusters_per_class=2,
     ):
         # Wyższy spacing, bardziej nagły
         self.n_chunks = n_chunks
         self.chunk_size = chunk_size
         self.random_state = random_state
         self.n_features = n_features
+        self.n_informative = n_informative
+        self.n_redundant = n_redundant
+        self.n_repeated = n_repeated
         self.n_classes = n_classes
         self.weights = weights
         self.n_drifts = n_drifts
         self.sigmoid_spacing = sigmoid_spacing
+        self.n_clusters_per_class = n_clusters_per_class
 
     def is_dry(self):
         return (
@@ -39,14 +47,22 @@ class DriftedStream:
                 n_samples=self.n_chunks * self.chunk_size,
                 random_state=self.random_state,
                 n_features=self.n_features,
+                n_informative=self.n_informative,
+                n_redundant=self.n_redundant,
+                n_repeated=self.n_repeated,
                 n_classes=self.n_classes,
+                n_clusters_per_class=self.n_clusters_per_class,
                 weights=self.weights,
             )
             X_b, y_b = make_classification(
                 n_samples=self.n_chunks * self.chunk_size,
                 random_state=self.random_state + 1,
                 n_features=self.n_features,
+                n_informative=self.n_informative,
+                n_redundant=self.n_redundant,
+                n_repeated=self.n_repeated,
                 n_classes=self.n_classes,
+                n_clusters_per_class=self.n_clusters_per_class,
                 weights=self.weights,
             )
             big_X = np.array([X_a, X_b])
