@@ -11,7 +11,7 @@ class StreamGenerator:
         chunk_size=200,
         random_state=1410,
         n_drifts=4,
-        sigmoid_spacing=10,
+        concept_sigmoid_spacing=10,
         n_classes=2,
         **kwargs,
     ):
@@ -20,7 +20,7 @@ class StreamGenerator:
         self.chunk_size = chunk_size
         self.random_state = random_state
         self.n_drifts = n_drifts
-        self.sigmoid_spacing = sigmoid_spacing
+        self.concept_sigmoid_spacing = concept_sigmoid_spacing
         self.n_classes = n_classes
         self.make_classification_kwargs = kwargs
 
@@ -58,17 +58,17 @@ class StreamGenerator:
             )
 
             # Sigmoid
-            self.period_sigmoid = (
+            self.concept_sigmoid = (
                 logistic.cdf(
                     np.concatenate(
                         [
                             np.linspace(
-                                -self.sigmoid_spacing
+                                -self.concept_sigmoid_spacing
                                 if i % 2
-                                else self.sigmoid_spacing,
-                                self.sigmoid_spacing
+                                else self.concept_sigmoid_spacing,
+                                self.concept_sigmoid_spacing
                                 if i % 2
-                                else -self.sigmoid_spacing,
+                                else -self.concept_sigmoid_spacing,
                                 period,
                             )
                             for i in range(self.n_drifts)
@@ -79,10 +79,12 @@ class StreamGenerator:
                 else np.ones(n_samples)
             )
             # Szum
-            self.noise = np.random.rand(n_samples)
+            self.concept_noise = np.random.rand(n_samples)
 
             # Selekcja klas
-            self.concept_selector = (self.period_sigmoid > self.noise).astype(int)
+            self.concept_selector = (self.concept_sigmoid > self.concept_noise).astype(
+                int
+            )
 
             # Przypisanie klas {do naprawy}
             self.X = np.zeros(X_a.shape)

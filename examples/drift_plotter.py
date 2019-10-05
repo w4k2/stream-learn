@@ -27,7 +27,7 @@ streams = {
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
-        sigmoid_spacing=5,
+        concept_sigmoid_spacing=5,
         n_clusters_per_class=1,
     ),
     "0_stationary": StreamGenerator(
@@ -40,7 +40,7 @@ streams = {
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
-        sigmoid_spacing=5,
+        concept_sigmoid_spacing=5,
         n_clusters_per_class=1,
     ),
     "2_sudden_drift": StreamGenerator(
@@ -53,7 +53,7 @@ streams = {
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
-        sigmoid_spacing=999,
+        concept_sigmoid_spacing=999,
         n_clusters_per_class=1,
     ),
 }
@@ -98,10 +98,10 @@ for stream_name in streams:
     # Periodical sigmoid
     ax = fig.add_subplot(gs[0, :])
     ax.set_title(
-        "Periodical sigmoid (ss=%.1f, n_drifts=%i)"
-        % (stream.sigmoid_spacing, stream.n_drifts)
+        "Concept sigmoid (ss=%.1f, n_drifts=%i)"
+        % (stream.concept_sigmoid_spacing, stream.n_drifts)
     )
-    ax.plot(stream.period_sigmoid, lw=1, c="black")
+    ax.plot(stream.concept_sigmoid_spacing, lw=1, c="black")
     ax.set_ylim(-0.05, 1.05)
 
     plt.savefig("plots/%s.png" % stream_name)
