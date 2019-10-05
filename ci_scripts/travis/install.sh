@@ -9,26 +9,6 @@ cd
 mkdir -p download
 cd download
 echo "Cached in $HOME/download :"
-ls -l
-echo
-if [[ ! -f miniconda.sh ]]
-   then
-   wget http://repo.continuum.io/miniconda/Miniconda-3.7.0-Linux-x86_64.sh \
-       -O miniconda.sh
-   fi
-chmod +x miniconda.sh && ./miniconda.sh -b
-cd ..
-export PATH=/home/travis/miniconda/bin:$PATH
-conda update --yes conda
-popd
-
-# Configure the conda environment and put it in the path using the
-# provided versions
-conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
-      numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION cython=$CYTHON_VERSION
-
-source activate testenv
-
 
 if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
