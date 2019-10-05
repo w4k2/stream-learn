@@ -34,7 +34,7 @@ if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
 
-pip install pytest pytest-cov codecov tqdm matplotlib future imblearn
+pip install pytest pytest-cov codecov matplotlib future
 
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
