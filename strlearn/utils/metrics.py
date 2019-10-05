@@ -65,3 +65,15 @@ def bac(y_true, y_pred):
     bac = (recall_a + recall_b) / 2
 
     return np.nan_to_num(bac)
+
+def geometric_mean_score(y_true, y_pred):
+
+    neg_true = 1 - y_true
+    neg_pred = 1 - y_pred
+
+    recall_1 = recall(neg_true[neg_true == 1], neg_pred[neg_true == 1])
+    recall_2 = recall(y_true[y_true == 1], y_pred[y_true == 1])
+
+    gmean = (recall_1 * recall_2)**(1/2)
+
+    return np.nan_to_num(gmean)
