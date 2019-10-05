@@ -13,7 +13,7 @@ class StreamGenerator:
         n_drifts=4,
         concept_sigmoid_spacing=10,
         n_classes=2,
-        **kwargs,
+        **kwargs
     ):
         # Wyższy spacing, bardziej nagły
         self.n_chunks = n_chunks
