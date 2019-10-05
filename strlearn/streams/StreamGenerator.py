@@ -12,6 +12,7 @@ class StreamGenerator:
         random_state=1410,
         n_drifts=4,
         sigmoid_spacing=10,
+        n_classes=2,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -20,6 +21,7 @@ class StreamGenerator:
         self.random_state = random_state
         self.n_drifts = n_drifts
         self.sigmoid_spacing = sigmoid_spacing
+        self.n_classes = n_classes
         self.make_classification_kwargs = kwargs
 
     def is_dry(self):
@@ -33,15 +35,16 @@ class StreamGenerator:
         else:
             # To pomocniczo
             n_samples = self.n_chunks * self.chunk_size
-
             X_a, y_a = make_classification(
                 **self.make_classification_kwargs,
                 n_samples=self.n_chunks * self.chunk_size,
+                n_classes=self.n_classes,
                 random_state=self.random_state,
             )
             X_b, y_b = make_classification(
                 **self.make_classification_kwargs,
                 n_samples=self.n_chunks * self.chunk_size,
+                n_classes=self.n_classes,
                 random_state=self.random_state + 1,
             )
             big_X = np.array([X_a, X_b])
