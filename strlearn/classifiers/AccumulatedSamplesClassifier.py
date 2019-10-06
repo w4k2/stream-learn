@@ -14,7 +14,7 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
 
     Attributes
     ----------
-    classes_ : array of shape = [n_classes]
+    classes_ : array-like, shape (n_classes, )
         The classes labels.
 
     """
@@ -64,12 +64,12 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
 
         Parameters
         ----------
-        X : {array-like, sparse matrix} of shape = [n_samples, n_features]
+        X : array-like, shape (n_samples, n_features)
             The training input samples.
 
         Returns
         -------
-        y : array of shape = [n_samples]
+        y : array-like, shape (n_samples, )
             The predicted classes.
         """
         check_is_fitted(self, "classes_")
