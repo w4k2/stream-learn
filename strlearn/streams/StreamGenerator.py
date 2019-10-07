@@ -25,7 +25,7 @@ class StreamGenerator:
         The seed used by the random number generator.
     n_drifts : integer, optional (default=4)
         The number of concept changes in the data stream.
-    concept_sigmoid_spacing : integer, optional (default=10)
+    concept_sigmoid_spacing : float, optional (default=10.)
         Value that determines how sudden is the change of concept.
         The higher the value, the more sudden the drift is.
     n_classes : integer, optional (default=2)
@@ -35,13 +35,14 @@ class StreamGenerator:
     ----------
 
     """
+
     def __init__(
         self,
         n_chunks=250,
         chunk_size=200,
         random_state=1410,
         n_drifts=4,
-        concept_sigmoid_spacing=10,
+        concept_sigmoid_spacing=10.0,
         n_classes=2,
         **kwargs,
     ):
@@ -53,6 +54,12 @@ class StreamGenerator:
         self.concept_sigmoid_spacing = concept_sigmoid_spacing
         self.n_classes = n_classes
         self.make_classification_kwargs = kwargs
+        self.n_samples = self.n_chunks * self.chunk_size
+        self.classes = [label for label in range(self.n_classes)]
+        if "n_features" in kwargs:
+            self.n_features = kwargs["n_features"]
+        else:
+            self.n_features = 20
 
     def is_dry(self):
         """Checking if we have reached the end of the stream."""
@@ -74,28 +81,31 @@ class StreamGenerator:
         if hasattr(self, "X"):
             self.previous_chunk = self.current_chunk
         else:
-            # To pomocniczo
-            n_samples = self.n_chunks * self.chunk_size
-            X_a, y_a = make_classification(
-                **self.make_classification_kwargs,
-                n_samples=self.n_chunks * self.chunk_size,
-                n_classes=self.n_classes,
-                random_state=self.random_state,
+            # To jest dziwna koncepcja z wagami z wierszy macierzy diagonalnej ale działa.
+            # Jak coś działa to jest dobre.
+            self.concepts = np.array(
+                [
+                    [
+                        make_classification(
+                            **self.make_classification_kwargs,
+                            n_samples=self.n_chunks * self.chunk_size,
+                            n_classes=self.n_classes,
+                            random_state=self.random_state + i,
+                            weights=weights.tolist(),
+                        )[0].T
+                        for weights in np.diag(
+                            np.diag(np.ones((self.n_classes, self.n_classes)))
+                        )
+                    ]
+                    for i in range(self.n_drifts + 1)
+                ]
             )
-            X_b, y_b = make_classification(
-                **self.make_classification_kwargs,
-                n_samples=self.n_chunks * self.chunk_size,
-                n_classes=self.n_classes,
-                random_state=self.random_state + 1,
-            )
-            big_X = np.array([X_a, X_b])
-            big_y = np.array([y_a, y_b])
 
             # Okres
             period = (
-                int((n_samples) / (self.n_drifts))
+                int((self.n_samples) / (self.n_drifts))
                 if self.n_drifts > 0
-                else int(n_samples)
+                else int(self.n_samples)
             )
 
             # Sigmoid
@@ -117,24 +127,28 @@ class StreamGenerator:
                     )
                 )
                 if self.n_drifts > 0
-                else np.ones(n_samples)
+                else np.ones(self.n_samples)
             )
             # Szum
-            self.concept_noise = np.random.rand(n_samples)
+            self.concept_noise = np.random.rand(self.n_samples)
+            self.balance_noise = np.random.rand(self.n_samples)
 
             # Selekcja klas
             self.concept_selector = (self.concept_sigmoid > self.concept_noise).astype(
                 int
             )
+            self.class_selector = (self.balance_noise * self.n_classes).astype(int)
 
-            # Przypisanie klas {do naprawy}
-            self.X = np.zeros(X_a.shape)
-            self.X[self.concept_selector == 0] = big_X[0, self.concept_selector == 0, :]
-            self.X[self.concept_selector == 1] = big_X[1, self.concept_selector == 1, :]
+            # Przypisanie klas i etykiet
+            if self.n_drifts > 0:
+                # Jeśli dryfy, przypisz koncepty
+                self.concepts = np.choose(self.concept_selector, self.concepts)
+            else:
+                # Jeśli nie, przecież jest jeden, więc spłaszcz
+                self.concepts = np.squeeze(self.concepts)
 
-            self.y = np.zeros(y_a.shape)
-            self.y[self.concept_selector == 0] = big_y[0, self.concept_selector == 0]
-            self.y[self.concept_selector == 1] = big_y[1, self.concept_selector == 1]
+            self.X = np.choose(self.class_selector, self.concepts).T
+            self.y = self.class_selector
 
             self.chunk_id = -1
             self.previous_chunk = None
@@ -148,8 +162,6 @@ class StreamGenerator:
             )
 
             self.current_chunk = (self.X[start:end], self.y[start:end])
-            print(self.current_chunk)
-
             return self.current_chunk
         else:
             return None

@@ -10,10 +10,11 @@ This example shows a basic stream processing using WAE algorithm.
 # Authors: Paweł Ksieniewicz <pawel.ksieniewicz@pwr.edu.pl>
 # License: MIT
 
+
+import numpy as np
 from strlearn.streams import StreamGenerator
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-import numpy as np
 
 
 streams = {
@@ -22,21 +23,8 @@ streams = {
         chunk_size=100,
         random_state=105,
         n_features=2,
-        n_classes=2,
+        n_classes=3,
         n_drifts=2,
-        n_informative=2,
-        n_redundant=0,
-        n_repeated=0,
-        concept_sigmoid_spacing=5,
-        n_clusters_per_class=1,
-    ),
-    "0_stationary": StreamGenerator(
-        n_chunks=100,
-        chunk_size=100,
-        random_state=105,
-        n_features=2,
-        n_classes=2,
-        n_drifts=0,
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
@@ -48,12 +36,25 @@ streams = {
         chunk_size=100,
         random_state=105,
         n_features=2,
-        n_classes=2,
+        n_classes=3,
         n_drifts=2,
         n_informative=2,
         n_redundant=0,
         n_repeated=0,
         concept_sigmoid_spacing=999,
+        n_clusters_per_class=1,
+    ),
+    "0_stationary": StreamGenerator(
+        n_chunks=100,
+        chunk_size=100,
+        random_state=105,
+        n_features=2,
+        n_classes=3,
+        n_drifts=0,
+        n_informative=2,
+        n_redundant=0,
+        n_repeated=0,
+        concept_sigmoid_spacing=5,
         n_clusters_per_class=1,
     ),
 }
@@ -81,7 +82,7 @@ for stream_name in streams:
         if i in checkpoints:
             index = np.where(checkpoints == i)[0][0]
             ax = fig.add_subplot(gs[2, index])
-            ax.scatter(X[:, 0], X[:, 1], c=y, s=10, alpha=0.5, cmap="bwr")
+            ax.scatter(X[:, 0], X[:, 1], c=y, s=10, alpha=0.5, cmap="brg")
             ax.set_xlim(-5, 5)
             ax.set_ylim(-5, 5)
             ax.set_xticks([])
@@ -101,7 +102,7 @@ for stream_name in streams:
         "Concept sigmoid (ss=%.1f, n_drifts=%i)"
         % (stream.concept_sigmoid_spacing, stream.n_drifts)
     )
-    ax.plot(stream.concept_sigmoid_spacing, lw=1, c="black")
+    ax.plot(stream.concept_sigmoid, lw=1, c="black")
     ax.set_ylim(-0.05, 1.05)
 
     plt.savefig("plots/%s.png" % stream_name)
