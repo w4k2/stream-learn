@@ -17,45 +17,24 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 
+mcargs = {
+    "n_classes": 2,
+    "n_chunks": 100,
+    "chunk_size": 100,
+    "random_state": 105,
+    "n_features": 2,
+    "n_informative": 2,
+    "n_redundant": 0,
+    "n_repeated": 0,
+    "n_features": 2,
+    "n_clusters_per_class": 1,
+}
+
 streams = {
+    "0_stationary": StreamGenerator(**mcargs),
+    "2_sudden_drift": StreamGenerator(n_drifts=1, **mcargs),
     "1_incremental_drift": StreamGenerator(
-        n_chunks=100,
-        chunk_size=100,
-        random_state=105,
-        n_features=2,
-        n_classes=3,
-        n_drifts=2,
-        n_informative=2,
-        n_redundant=0,
-        n_repeated=0,
-        concept_sigmoid_spacing=5,
-        n_clusters_per_class=1,
-    ),
-    "2_sudden_drift": StreamGenerator(
-        n_chunks=100,
-        chunk_size=100,
-        random_state=105,
-        n_features=2,
-        n_classes=3,
-        n_drifts=2,
-        n_informative=2,
-        n_redundant=0,
-        n_repeated=0,
-        concept_sigmoid_spacing=999,
-        n_clusters_per_class=1,
-    ),
-    "0_stationary": StreamGenerator(
-        n_chunks=100,
-        chunk_size=100,
-        random_state=105,
-        n_features=2,
-        n_classes=3,
-        n_drifts=0,
-        n_informative=2,
-        n_redundant=0,
-        n_repeated=0,
-        concept_sigmoid_spacing=5,
-        n_clusters_per_class=1,
+        n_drifts=1, concept_sigmoid_spacing=5, **mcargs
     ),
 }
 
@@ -75,9 +54,13 @@ for stream_name in streams:
         X, y = stream.get_chunk()
 
         start, end = (stream.chunk_size * i, stream.chunk_size * i + stream.chunk_size)
-        cs = stream.concept_selector[start:end]
-        a.append(np.sum(cs == 0))
-        b.append(np.sum(cs == 1))
+
+        if hasattr(stream, "concept_selector"):
+            cs = stream.concept_selector[start:end]
+            a.append(np.sum(cs == 0))
+            b.append(np.sum(cs == 1))
+        else:
+            a.append(stream.chunk_size)
 
         if i in checkpoints:
             index = np.where(checkpoints == i)[0][0]
@@ -98,11 +81,17 @@ for stream_name in streams:
 
     # Periodical sigmoid
     ax = fig.add_subplot(gs[0, :])
-    ax.set_title(
-        "Concept sigmoid (ss=%.1f, n_drifts=%i)"
-        % (stream.concept_sigmoid_spacing, stream.n_drifts)
-    )
-    ax.plot(stream.concept_sigmoid, lw=1, c="black")
+    if hasattr(stream, "concept_sigmoid"):
+        if stream.concept_sigmoid_spacing is not None:
+            ax.set_title(
+                "Concept sigmoid (ss=%.1f, n_drifts=%i)"
+                % (stream.concept_sigmoid_spacing, stream.n_drifts)
+            )
+        else:
+            ax.set_title("Concept sigmoid (n_drifts=%i)" % (stream.n_drifts))
+        ax.plot(stream.concept_sigmoid, lw=1, c="black")
+    else:
+        ax.set_title("No concept sigmoid")
     ax.set_ylim(-0.05, 1.05)
 
     plt.savefig("plots/%s.png" % stream_name)

@@ -41,8 +41,8 @@ class StreamGenerator:
         n_chunks=250,
         chunk_size=200,
         random_state=1410,
-        n_drifts=4,
-        concept_sigmoid_spacing=10.0,
+        n_drifts=0,
+        concept_sigmoid_spacing=None,
         n_classes=2,
         **kwargs,
     ):
@@ -97,42 +97,46 @@ class StreamGenerator:
                 ]
             )
 
-            # Okres
-            period = (
-                int((self.n_samples) / (self.n_drifts))
-                if self.n_drifts > 0
-                else int(self.n_samples)
-            )
-
-            # Sigmoid
-            self.concept_sigmoid = (
-                logistic.cdf(
-                    np.concatenate(
-                        [
-                            np.linspace(
-                                -self.concept_sigmoid_spacing
-                                if i % 2
-                                else self.concept_sigmoid_spacing,
-                                self.concept_sigmoid_spacing
-                                if i % 2
-                                else -self.concept_sigmoid_spacing,
-                                period,
-                            )
-                            for i in range(self.n_drifts)
-                        ]
-                    )
+            # Prepare concept sigmoids if there are drifts
+            if self.n_drifts > 0:
+                # Okres
+                period = (
+                    int((self.n_samples) / (self.n_drifts))
+                    if self.n_drifts > 0
+                    else int(self.n_samples)
                 )
-                if self.n_drifts > 0
-                else np.ones(self.n_samples)
-            )
-            # Szum
-            self.concept_noise = np.random.rand(self.n_samples)
-            self.balance_noise = np.random.rand(self.n_samples)
 
-            # Selekcja klas
-            self.concept_selector = (self.concept_sigmoid > self.concept_noise).astype(
-                int
-            )
+                # Sigmoid
+                css = (
+                    self.concept_sigmoid_spacing
+                    if self.concept_sigmoid_spacing is not None
+                    else 9999
+                )
+                self.concept_sigmoid = (
+                    logistic.cdf(
+                        np.concatenate(
+                            [
+                                np.linspace(
+                                    -css if i % 2 else css,
+                                    css if i % 2 else -css,
+                                    period,
+                                )
+                                for i in range(self.n_drifts)
+                            ]
+                        )
+                    )
+                    if self.n_drifts > 0
+                    else np.ones(self.n_samples)
+                )
+                # Szum
+                self.concept_noise = np.random.rand(self.n_samples)
+
+                # Selekcja klas
+                self.concept_selector = (
+                    self.concept_sigmoid > self.concept_noise
+                ).astype(int)
+
+            self.balance_noise = np.random.rand(self.n_samples)
             self.class_selector = (self.balance_noise * self.n_classes).astype(int)
 
             # Przypisanie klas i etykiet
