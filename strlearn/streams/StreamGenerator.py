@@ -148,7 +148,6 @@ class StreamGenerator:
             )
 
             self.current_chunk = (self.X[start:end], self.y[start:end])
-            print(self.current_chunk)
 
             return self.current_chunk
         else:
