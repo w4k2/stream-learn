@@ -56,10 +56,6 @@ class StreamGenerator:
         self.make_classification_kwargs = kwargs
         self.n_samples = self.n_chunks * self.chunk_size
         self.classes = [label for label in range(self.n_classes)]
-        if "n_features" in kwargs:
-            self.n_features = kwargs["n_features"]
-        else:
-            self.n_features = 20
 
     def is_dry(self):
         """Checking if we have reached the end of the stream."""
