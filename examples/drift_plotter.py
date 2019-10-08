@@ -18,9 +18,9 @@ from matplotlib.gridspec import GridSpec
 
 
 mcargs = {
-    "n_classes": 2,
+    "n_classes": 3,
     "n_chunks": 100,
-    "chunk_size": 100,
+    "chunk_size": 500,
     "random_state": 105,
     "n_features": 2,
     "n_informative": 2,
@@ -32,8 +32,12 @@ mcargs = {
 
 streams = {
     "0_stationary": StreamGenerator(**mcargs),
-    "2_sudden_drift": StreamGenerator(n_drifts=2, reocurring=False, **mcargs),
-    "1_incremental_drift": StreamGenerator(
+    "1_sudden": StreamGenerator(n_drifts=1, **mcargs),
+    "2_incremental": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
+    "3_reocurring": StreamGenerator(
+        n_drifts=2, concept_sigmoid_spacing=5, reocurring=True, **mcargs
+    ),
+    "4_nonreocurring": StreamGenerator(
         n_drifts=2, concept_sigmoid_spacing=5, reocurring=False, **mcargs
     ),
 }

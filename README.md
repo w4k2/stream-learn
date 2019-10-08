@@ -20,14 +20,21 @@ pip install stream-learn
 
 ## Streams
 
-### Stationary stream
+### Stationary
 ![plots/0_stationary.png](plots/0_stationary.png)
 
 ### Sudden drift
-![plots/2_sudden_drift.png](plots/2_sudden_drift.png)
+![plots/1_sudden.png](plots/2_sudden_drift.png)
 
 ### Incremental drift
-![plots/1_incremental_drift.png](plots/1_incremental_drift.png)
+![plots/2_incremental.png](plots/1_incremental_drift.png)
+
+### Reocurring drift
+![plots/3_reocurring.png](plots/1_incremental_drift.png)
+
+### Non-reocurring drift
+![plots/4_nonreocurring.png](plots/1_incremental_drift.png)
+
 
 ## Example usage
 

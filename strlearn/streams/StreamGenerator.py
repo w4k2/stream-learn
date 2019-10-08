@@ -44,7 +44,7 @@ class StreamGenerator:
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
-        reocurring=True,
+        reocurring=False,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -95,7 +95,7 @@ class StreamGenerator:
                             np.diag(np.ones((self.n_classes, self.n_classes)))
                         )
                     ]
-                    for i in range(self.n_drifts + 1)
+                    for i in range(self.n_drifts + 1 if not self.reocurring else 2)
                 ]
             )
 
