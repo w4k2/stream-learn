@@ -44,6 +44,7 @@ class StreamGenerator:
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
+        reocurring=True,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -54,6 +55,7 @@ class StreamGenerator:
         self.concept_sigmoid_spacing = concept_sigmoid_spacing
         self.n_classes = n_classes
         self.make_classification_kwargs = kwargs
+        self.reocurring = reocurring
         self.n_samples = self.n_chunks * self.chunk_size
         self.classes = [label for label in range(self.n_classes)]
 
@@ -112,7 +114,7 @@ class StreamGenerator:
                     if self.concept_sigmoid_spacing is not None
                     else 9999
                 )
-                self.concept_sigmoid = (
+                self.concept_probabilities = (
                     logistic.cdf(
                         np.concatenate(
                             [
@@ -133,8 +135,19 @@ class StreamGenerator:
 
                 # Selekcja klas
                 self.concept_selector = (
-                    self.concept_sigmoid > self.concept_noise
+                    self.concept_probabilities < self.concept_noise
                 ).astype(int)
+
+                # Reocurring drift
+                if self.reocurring == False:
+                    for i in range(1, self.n_drifts):
+                        start, end = (i * period, (i + 1) * period)
+                        self.concept_selector[
+                            np.where(self.concept_selector[start:end] == 1)[0] + start
+                        ] = i + ((i + 1) % 2)
+                        self.concept_selector[
+                            np.where(self.concept_selector[start:end] == 0)[0] + start
+                        ] = i + (i % 2)
 
             self.balance_noise = np.random.rand(self.n_samples)
             self.class_selector = (self.balance_noise * self.n_classes).astype(int)
