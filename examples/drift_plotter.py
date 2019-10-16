@@ -98,26 +98,41 @@ for stream_name in streams:
             ax.set_ylim(-5, 5)
             ax.set_xticks([])
             ax.set_yticks([])
+            ax.axis("off")
+            ax.grid(color="r", linestyle="-", linewidth=2)
 
     # Concept presence
     ax = fig.add_subplot(gs[1, :])
-    ax.set_title("Concept presence")
-    ax.plot(a, c="red", ls=":", label="0")
-    ax.plot(b, c="green", ls=":", label="1")
-    ax.plot(c, c="blue", ls=":", label="2")
-    ax.legend()
+    ax.set_title("Concept presence", fontsize=8)
+    ax.plot(a, c="red", ls=":", label="A")
+    if stream.n_drifts > 0:
+        ax.plot(b, c="green", ls=":", label="B")
+    if stream.n_drifts > 1 and not stream.reocurring:
+        ax.plot(c, c="blue", ls=":", label="C")
+    ax.legend(frameon=False, loc=5)
     ax.set_ylim(-10, stream.chunk_size + 10)
+    ax.set_xlim(0, stream.n_chunks - 1)
     ax.set_xticks(checkpoints)
+    ax.set_yticks([0, 250, 500])
+    ax.grid(color="k", linestyle=":", linewidth=0.1)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     # Class presence
     ax = fig.add_subplot(gs[3, :])
-    ax.set_title("Class presence")
+    ax.set_title("Class presence", fontsize=8)
     ax.plot(A, c="red", ls="-", label="0")
     ax.plot(B, c="green", ls="-", label="1")
-    ax.plot(C, c="blue", ls="-", label="2")
-    ax.legend()
+    if stream.n_classes > 2:
+        ax.plot(C, c="blue", ls="-", label="2")
+    ax.legend(frameon=False, loc=5)
     ax.set_ylim(-10, stream.chunk_size + 10)
+    ax.set_xlim(0, stream.n_chunks - 1)
     ax.set_xticks(checkpoints)
+    ax.set_yticks([0, 250, 500])
+    ax.grid(color="k", linestyle=":", linewidth=0.1)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     # Concept Periodical sigmoid
     ax = fig.add_subplot(gs[0, :])
@@ -125,15 +140,21 @@ for stream_name in streams:
         if stream.concept_sigmoid_spacing is not None:
             ax.set_title(
                 "Concept probabilities (ss=%.1f, n_drifts=%i)"
-                % (stream.concept_sigmoid_spacing, stream.n_drifts)
+                % (stream.concept_sigmoid_spacing, stream.n_drifts),
+                fontsize=8,
             )
         else:
-            ax.set_title("Concept probabilities (n_drifts=%i)" % (stream.n_drifts))
+            ax.set_title(
+                "Concept probabilities (n_drifts=%i)" % (stream.n_drifts), fontsize=8
+            )
         ax.plot(stream.concept_probabilities, lw=1, c="black")
     else:
-        ax.set_title("No concept probabilities")
-        ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+        ax.set_title("No concept probabilities", fontsize=8)
     ax.set_ylim(-0.05, 1.05)
+    ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+    ax.grid(color="k", linestyle=":", linewidth=0.1)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     # Class Periodical sigmoid
     ax = fig.add_subplot(gs[4, :])
@@ -144,12 +165,17 @@ for stream_name in streams:
                 stream.class_sigmoid_spacing,
                 stream.n_balance_drifts,
                 stream.balance_amplitude,
-            )
+            ),
+            fontsize=8,
         )
         ax.plot(stream.class_probabilities, lw=1, c="black")
     else:
-        ax.set_title("No class probabilities")
+        ax.set_title("No class probabilities", fontsize=8)
         ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
     ax.set_ylim(-0.05, 1.05)
+    ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+    ax.grid(color="k", linestyle=":", linewidth=0.1)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
     plt.savefig("plots/%s.png" % stream_name)
