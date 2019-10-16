@@ -30,6 +30,12 @@ class StreamGenerator:
         The higher the value, the more sudden the drift is.
     n_classes : integer, optional (default=2)
         The number of classes in the generated data stream.
+    weights : jeśli krotka to zmienny w czasie (temporalny?), jeśli cokolwiek innego, to wektor wag działający jak przekazywany bezpośrednio do make_classification. W wypadku krotki przepuszczamy jedynie problemy binarne.
+
+    elementy krotki to:
+    - liczba dryfów
+    - sigmoid spacing dla dryfu wag (zakładamy)
+    - wartość z przedziału 0-1 określająca amplitudę zmian balansu oscylującego wokół stanu równowagi klas
 
     Attributes
     ----------
@@ -45,6 +51,7 @@ class StreamGenerator:
         concept_sigmoid_spacing=None,
         n_classes=2,
         reocurring=False,
+        weights=None,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -57,6 +64,7 @@ class StreamGenerator:
         self.make_classification_kwargs = kwargs
         self.reocurring = reocurring
         self.n_samples = self.n_chunks * self.chunk_size
+        self.weights = weights
         self.classes = [label for label in range(self.n_classes)]
 
     def is_dry(self):
@@ -65,6 +73,28 @@ class StreamGenerator:
         return (
             self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
+
+    def _sigmoid(self, sigmoid_spacing, n_drifts):
+        period = (
+            int((self.n_samples) / (n_drifts)) if n_drifts > 0 else int(self.n_samples)
+        )
+        css = sigmoid_spacing if sigmoid_spacing is not None else 9999
+        probabilities = (
+            logistic.cdf(
+                np.concatenate(
+                    [
+                        np.linspace(
+                            -css if i % 2 else css, css if i % 2 else -css, period
+                        )
+                        for i in range(n_drifts)
+                    ]
+                )
+            )
+            if n_drifts > 0
+            else np.ones(self.n_samples)
+        )
+
+        return (period, probabilities)
 
     def get_chunk(self):
         """
@@ -101,35 +131,11 @@ class StreamGenerator:
 
             # Prepare concept sigmoids if there are drifts
             if self.n_drifts > 0:
-                # Okres
-                period = (
-                    int((self.n_samples) / (self.n_drifts))
-                    if self.n_drifts > 0
-                    else int(self.n_samples)
+                # Get period and probabilities
+                period, self.concept_probabilities = self._sigmoid(
+                    self.concept_sigmoid_spacing, self.n_drifts
                 )
 
-                # Sigmoid
-                css = (
-                    self.concept_sigmoid_spacing
-                    if self.concept_sigmoid_spacing is not None
-                    else 9999
-                )
-                self.concept_probabilities = (
-                    logistic.cdf(
-                        np.concatenate(
-                            [
-                                np.linspace(
-                                    -css if i % 2 else css,
-                                    css if i % 2 else -css,
-                                    period,
-                                )
-                                for i in range(self.n_drifts)
-                            ]
-                        )
-                    )
-                    if self.n_drifts > 0
-                    else np.ones(self.n_samples)
-                )
                 # Szum
                 self.concept_noise = np.random.rand(self.n_samples)
 
@@ -149,8 +155,39 @@ class StreamGenerator:
                             np.where(self.concept_selector[start:end] == 0)[0] + start
                         ] = i + (i % 2)
 
+            # Selekcja klas na potrzeby doboru balansu
             self.balance_noise = np.random.rand(self.n_samples)
-            self.class_selector = (self.balance_noise * self.n_classes).astype(int)
+
+            # Case of same size of all classes
+            if self.weights is None:
+                self.class_selector = (self.balance_noise * self.n_classes).astype(int)
+            # If static balance is given
+            elif not isinstance(self.weights, tuple):
+                self.class_selector = np.zeros(self.balance_noise.shape).astype(int)
+                accumulator = 0.0
+                for i, treshold in enumerate(self.weights):
+                    mask = self.balance_noise > accumulator
+                    self.class_selector[mask] = i
+                    accumulator += treshold
+            # If dynamic balance is given
+            else:
+                self.n_balance_drifts, self.class_sigmoid_spacing, self.balance_amplitude = (
+                    self.weights
+                )
+
+                period, self.class_probabilities = self._sigmoid(
+                    self.class_sigmoid_spacing, self.n_balance_drifts
+                )
+
+                # Amplitude correction
+                self.class_probabilities -= 0.5
+                self.class_probabilities *= self.balance_amplitude
+                self.class_probabilities += 0.5
+
+                # Will it work?
+                self.class_selector = (
+                    self.class_probabilities < self.balance_noise
+                ).astype(int)
 
             # Przypisanie klas i etykiet
             if self.n_drifts > 0:

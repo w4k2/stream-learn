@@ -42,18 +42,35 @@ streams = {
     ),
 }
 
+mcargs.update({"n_classes": 2})
+streams.update(
+    {
+        "5_balanced": StreamGenerator(**mcargs),
+        "6_static_imbalanced": StreamGenerator(**mcargs, weights=[0.3, 0.7]),
+        "7_dynamic_imbalanced": StreamGenerator(**mcargs, weights=(2, 5, 0.9)),
+        "8_it_all": StreamGenerator(
+            **mcargs,
+            weights=(2, 5, 0.9),
+            n_drifts=1,
+            concept_sigmoid_spacing=5,
+            reocurring=True
+        ),
+    }
+)
+
 for stream_name in streams:
     print(stream_name)
     stream = streams[stream_name]
 
     checkpoints = np.linspace(0, stream.n_chunks - 1, 8).astype(int)
 
-    fig = plt.figure(constrained_layout=True, figsize=(8, 4))
+    fig = plt.figure(constrained_layout=True, figsize=(8, 6))
 
-    gs = GridSpec(3, len(checkpoints), figure=fig)
+    gs = GridSpec(5, len(checkpoints), figure=fig)
 
     # Scatter plots
     a, b, c = [], [], []
+    A, B, C = [], [], []
     for i in range(100):
         X, y = stream.get_chunk()
 
@@ -66,6 +83,12 @@ for stream_name in streams:
             c.append(np.sum(cs == 2))
         else:
             a.append(stream.chunk_size)
+
+        if hasattr(stream, "class_selector"):
+            cs = stream.class_selector[start:end]
+            A.append(np.sum(cs == 0))
+            B.append(np.sum(cs == 1))
+            C.append(np.sum(cs == 2))
 
         if i in checkpoints:
             index = np.where(checkpoints == i)[0][0]
@@ -86,7 +109,17 @@ for stream_name in streams:
     ax.set_ylim(-10, stream.chunk_size + 10)
     ax.set_xticks(checkpoints)
 
-    # Periodical sigmoid
+    # Class presence
+    ax = fig.add_subplot(gs[3, :])
+    ax.set_title("Class presence")
+    ax.plot(A, c="red", ls="-", label="0")
+    ax.plot(B, c="green", ls="-", label="1")
+    ax.plot(C, c="blue", ls="-", label="2")
+    ax.legend()
+    ax.set_ylim(-10, stream.chunk_size + 10)
+    ax.set_xticks(checkpoints)
+
+    # Concept Periodical sigmoid
     ax = fig.add_subplot(gs[0, :])
     if hasattr(stream, "concept_probabilities"):
         if stream.concept_sigmoid_spacing is not None:
@@ -99,6 +132,24 @@ for stream_name in streams:
         ax.plot(stream.concept_probabilities, lw=1, c="black")
     else:
         ax.set_title("No concept probabilities")
+        ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+    ax.set_ylim(-0.05, 1.05)
+
+    # Class Periodical sigmoid
+    ax = fig.add_subplot(gs[4, :])
+    if hasattr(stream, "class_probabilities"):
+        ax.set_title(
+            "Class probabilities (ss=%.1f, n_drifts=%i, ba=%.1f)"
+            % (
+                stream.class_sigmoid_spacing,
+                stream.n_balance_drifts,
+                stream.balance_amplitude,
+            )
+        )
+        ax.plot(stream.class_probabilities, lw=1, c="black")
+    else:
+        ax.set_title("No class probabilities")
+        ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
     ax.set_ylim(-0.05, 1.05)
 
     plt.savefig("plots/%s.png" % stream_name)

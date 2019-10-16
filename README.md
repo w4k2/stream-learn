@@ -35,6 +35,20 @@ pip install stream-learn
 ### Non-reocurring drift
 ![plots/4_nonreocurring.png](plots/4_nonreocurring.png)
 
+---
+
+### Balanced stream
+![plots/5_balanced.png](plots/5_balanced.png)
+
+
+### Stationary imbalanced stream
+![plots/6_static_imbalanced.png](plots/6_static_imbalanced.png)
+
+### Dynamically imbalanced stream
+![plots/7_dynamic_imbalanced.png](plots/7_dynamic_imbalanced.png)
+
+### DISCO
+![plots/8_it_all.png](plots/8_it_all.png)
 
 ## Example usage
 
