@@ -96,6 +96,101 @@ class StreamGenerator:
 
         return (period, probabilities)
 
+    def _make_classification(self):
+        np.random.seed(self.random_state)
+        # To jest dziwna koncepcja z wagami z wierszy macierzy diagonalnej ale działa.
+        # Jak coś działa to jest dobre.
+        self.concepts = np.array(
+            [
+                [
+                    make_classification(
+                        **self.make_classification_kwargs,
+                        n_samples=self.n_chunks * self.chunk_size,
+                        n_classes=self.n_classes,
+                        random_state=self.random_state + i,
+                        weights=weights.tolist(),
+                    )[0].T
+                    for weights in np.diag(
+                        np.diag(np.ones((self.n_classes, self.n_classes)))
+                    )
+                ]
+                for i in range(self.n_drifts + 1 if not self.reocurring else 2)
+            ]
+        )
+
+        # Prepare concept sigmoids if there are drifts
+        if self.n_drifts > 0:
+            # Get period and probabilities
+            period, self.concept_probabilities = self._sigmoid(
+                self.concept_sigmoid_spacing, self.n_drifts
+            )
+
+            # Szum
+            self.concept_noise = np.random.rand(self.n_samples)
+
+            # Selekcja klas
+            self.concept_selector = (
+                self.concept_probabilities < self.concept_noise
+            ).astype(int)
+
+            # Reocurring drift
+            if self.reocurring == False:
+                for i in range(1, self.n_drifts):
+                    start, end = (i * period, (i + 1) * period)
+                    self.concept_selector[
+                        np.where(self.concept_selector[start:end] == 1)[0] + start
+                    ] = i + ((i + 1) % 2)
+                    self.concept_selector[
+                        np.where(self.concept_selector[start:end] == 0)[0] + start
+                    ] = i + (i % 2)
+
+        # Selekcja klas na potrzeby doboru balansu
+        self.balance_noise = np.random.rand(self.n_samples)
+
+        # Case of same size of all classes
+        if self.weights is None:
+            self.class_selector = (self.balance_noise * self.n_classes).astype(int)
+        # If static balance is given
+        elif not isinstance(self.weights, tuple):
+            self.class_selector = np.zeros(self.balance_noise.shape).astype(int)
+            accumulator = 0.0
+            for i, treshold in enumerate(self.weights):
+                mask = self.balance_noise > accumulator
+                self.class_selector[mask] = i
+                accumulator += treshold
+        # If dynamic balance is given
+        else:
+            self.n_balance_drifts, self.class_sigmoid_spacing, self.balance_amplitude = (
+                self.weights
+            )
+
+            period, self.class_probabilities = self._sigmoid(
+                self.class_sigmoid_spacing, self.n_balance_drifts
+            )
+
+            # Amplitude correction
+            self.class_probabilities -= 0.5
+            self.class_probabilities *= self.balance_amplitude
+            self.class_probabilities += 0.5
+
+            # Will it work?
+            self.class_selector = (
+                self.class_probabilities < self.balance_noise
+            ).astype(int)
+
+        # Przypisanie klas i etykiet
+        if self.n_drifts > 0:
+            # Jeśli dryfy, przypisz koncepty
+            self.concepts = np.choose(self.concept_selector, self.concepts)
+        else:
+            # Jeśli nie, przecież jest jeden, więc spłaszcz
+            self.concepts = np.squeeze(self.concepts)
+
+        X = np.choose(self.class_selector, self.concepts).T
+        y = self.class_selector
+
+        return X, y
+
     def get_chunk(self):
         """
         Generating a data chunk of a stream.
@@ -109,96 +204,7 @@ class StreamGenerator:
         if hasattr(self, "X"):
             self.previous_chunk = self.current_chunk
         else:
-            # To jest dziwna koncepcja z wagami z wierszy macierzy diagonalnej ale działa.
-            # Jak coś działa to jest dobre.
-            self.concepts = np.array(
-                [
-                    [
-                        make_classification(
-                            **self.make_classification_kwargs,
-                            n_samples=self.n_chunks * self.chunk_size,
-                            n_classes=self.n_classes,
-                            random_state=self.random_state + i,
-                            weights=weights.tolist(),
-                        )[0].T
-                        for weights in np.diag(
-                            np.diag(np.ones((self.n_classes, self.n_classes)))
-                        )
-                    ]
-                    for i in range(self.n_drifts + 1 if not self.reocurring else 2)
-                ]
-            )
-
-            # Prepare concept sigmoids if there are drifts
-            if self.n_drifts > 0:
-                # Get period and probabilities
-                period, self.concept_probabilities = self._sigmoid(
-                    self.concept_sigmoid_spacing, self.n_drifts
-                )
-
-                # Szum
-                self.concept_noise = np.random.rand(self.n_samples)
-
-                # Selekcja klas
-                self.concept_selector = (
-                    self.concept_probabilities < self.concept_noise
-                ).astype(int)
-
-                # Reocurring drift
-                if self.reocurring == False:
-                    for i in range(1, self.n_drifts):
-                        start, end = (i * period, (i + 1) * period)
-                        self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 1)[0] + start
-                        ] = i + ((i + 1) % 2)
-                        self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 0)[0] + start
-                        ] = i + (i % 2)
-
-            # Selekcja klas na potrzeby doboru balansu
-            self.balance_noise = np.random.rand(self.n_samples)
-
-            # Case of same size of all classes
-            if self.weights is None:
-                self.class_selector = (self.balance_noise * self.n_classes).astype(int)
-            # If static balance is given
-            elif not isinstance(self.weights, tuple):
-                self.class_selector = np.zeros(self.balance_noise.shape).astype(int)
-                accumulator = 0.0
-                for i, treshold in enumerate(self.weights):
-                    mask = self.balance_noise > accumulator
-                    self.class_selector[mask] = i
-                    accumulator += treshold
-            # If dynamic balance is given
-            else:
-                self.n_balance_drifts, self.class_sigmoid_spacing, self.balance_amplitude = (
-                    self.weights
-                )
-
-                period, self.class_probabilities = self._sigmoid(
-                    self.class_sigmoid_spacing, self.n_balance_drifts
-                )
-
-                # Amplitude correction
-                self.class_probabilities -= 0.5
-                self.class_probabilities *= self.balance_amplitude
-                self.class_probabilities += 0.5
-
-                # Will it work?
-                self.class_selector = (
-                    self.class_probabilities < self.balance_noise
-                ).astype(int)
-
-            # Przypisanie klas i etykiet
-            if self.n_drifts > 0:
-                # Jeśli dryfy, przypisz koncepty
-                self.concepts = np.choose(self.concept_selector, self.concepts)
-            else:
-                # Jeśli nie, przecież jest jeden, więc spłaszcz
-                self.concepts = np.squeeze(self.concepts)
-
-            self.X = np.choose(self.class_selector, self.concepts).T
-            self.y = self.class_selector
+            self.X, self.y = self._make_classification()
 
             self.chunk_id = -1
             self.previous_chunk = None
