@@ -21,34 +21,48 @@ pip install stream-learn
 ## Streams
 
 ### Stationary
+![plots/0_stationary.png](plots/0_stationary.gif)
 ![plots/0_stationary.png](plots/0_stationary.png)
 
 ### Sudden drift
+![plots/1_sudden.png](plots/1_sudden.gif)
 ![plots/1_sudden.png](plots/1_sudden.png)
 
 ### Incremental drift
+![plots/2_incremental.png](plots/2_incremental.gif)
 ![plots/2_incremental.png](plots/2_incremental.png)
 
+
+### Gradual drift
+![plots/3_gradual.png](plots/3_gradual.gif)
+![plots/2_incremental.png](plots/3_gradual.png)
+
 ### Reocurring drift
-![plots/3_reocurring.png](plots/3_reocurring.png)
+![plots/3_reocurring.png](plots/4_reocurring.gif)
+![plots/3_reocurring.png](plots/4_reocurring.png)
 
 ### Non-reocurring drift
-![plots/4_nonreocurring.png](plots/4_nonreocurring.png)
+![plots/4_nonreocurring.png](plots/5_nonreocurring.gif)
+![plots/4_nonreocurring.png](plots/5_nonreocurring.png)
 
 ---
 
 ### Balanced stream
-![plots/5_balanced.png](plots/5_balanced.png)
+![plots/5_balanced.png](plots/6_balanced.gif)
+![plots/5_balanced.png](plots/6_balanced.png)
 
 
 ### Stationary imbalanced stream
-![plots/6_static_imbalanced.png](plots/6_static_imbalanced.png)
+![plots/6_static_imbalanced.png](plots/7_static_imbalanced.gif)
+![plots/6_static_imbalanced.png](plots/7_static_imbalanced.png)
 
 ### Dynamically imbalanced stream
-![plots/7_dynamic_imbalanced.png](plots/7_dynamic_imbalanced.png)
+![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
+![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.png)
 
 ### DISCO
-![plots/8_it_all.png](plots/8_it_all.png)
+![plots/8_it_all.png](plots/9_disco.gif)
+![plots/8_it_all.png](plots/9_disco.png)
 
 ## Example usage
 

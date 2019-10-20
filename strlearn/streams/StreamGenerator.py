@@ -7,6 +7,7 @@ A class for generating streams with various parameters.
 from sklearn.datasets import make_classification
 import numpy as np
 from scipy.stats import logistic
+import matplotlib.pyplot as plt
 
 
 class StreamGenerator:
@@ -52,6 +53,7 @@ class StreamGenerator:
         n_classes=2,
         reocurring=False,
         weights=None,
+        gradual=False,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -65,6 +67,7 @@ class StreamGenerator:
         self.reocurring = reocurring
         self.n_samples = self.n_chunks * self.chunk_size
         self.weights = weights
+        self.gradual = gradual
         self.classes = [label for label in range(self.n_classes)]
 
     def is_dry(self):
@@ -75,11 +78,15 @@ class StreamGenerator:
         )
 
     def _sigmoid(self, sigmoid_spacing, n_drifts):
+        """
+        Funkcja, która generuje okresowy sigmoid zgodnie z wymaganiami.
+        """
+
         period = (
             int((self.n_samples) / (n_drifts)) if n_drifts > 0 else int(self.n_samples)
         )
         css = sigmoid_spacing if sigmoid_spacing is not None else 9999
-        probabilities = (
+        _probabilities = (
             logistic.cdf(
                 np.concatenate(
                     [
@@ -93,6 +100,10 @@ class StreamGenerator:
             if n_drifts > 0
             else np.ones(self.n_samples)
         )
+
+        # Szybka naprawa, żeby dało się przepuścić podzielną z resztą liczbę dryfów
+        probabilities = np.ones(self.n_chunks * self.chunk_size) * _probabilities[-1]
+        probabilities[: _probabilities.shape[0]] = _probabilities
 
         return (period, probabilities)
 
@@ -128,21 +139,43 @@ class StreamGenerator:
             # Szum
             self.concept_noise = np.random.rand(self.n_samples)
 
-            # Selekcja klas
-            self.concept_selector = (
-                self.concept_probabilities < self.concept_noise
-            ).astype(int)
+            # Gradualny
+            if self.gradual:
 
-            # Reocurring drift
-            if self.reocurring == False:
-                for i in range(1, self.n_drifts):
-                    start, end = (i * period, (i + 1) * period)
-                    self.concept_selector[
-                        np.where(self.concept_selector[start:end] == 1)[0] + start
-                    ] = i + ((i + 1) % 2)
-                    self.concept_selector[
-                        np.where(self.concept_selector[start:end] == 0)[0] + start
-                    ] = i + (i % 2)
+                self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
+                self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
+
+                # Reocurring
+                if self.reocurring == False:
+                    for i in range(0, self.n_drifts):
+                        start, end = (i * period, (i + 1) * period)
+                        self.a_ind[start:end] = i + ((i + 1) % 2)
+                        self.b_ind[start:end] = i + (i % 2)
+
+                a = np.choose(self.a_ind, self.concepts)
+                b = np.choose(self.b_ind, self.concepts)
+
+                a = a * (1 - self.concept_probabilities)
+                b = b * (self.concept_probabilities)
+                c = a + b
+
+            # Inkrementalny
+            else:
+                # Selekcja klas
+                self.concept_selector = (
+                    self.concept_probabilities < self.concept_noise
+                ).astype(int)
+
+                # Reocurring drift
+                if self.reocurring == False:
+                    for i in range(1, self.n_drifts):
+                        start, end = (i * period, (i + 1) * period)
+                        self.concept_selector[
+                            np.where(self.concept_selector[start:end] == 1)[0] + start
+                        ] = i + ((i + 1) % 2)
+                        self.concept_selector[
+                            np.where(self.concept_selector[start:end] == 0)[0] + start
+                        ] = i + (i % 2)
 
         # Selekcja klas na potrzeby doboru balansu
         self.balance_noise = np.random.rand(self.n_samples)
@@ -181,7 +214,10 @@ class StreamGenerator:
         # Przypisanie klas i etykiet
         if self.n_drifts > 0:
             # Jeśli dryfy, przypisz koncepty
-            self.concepts = np.choose(self.concept_selector, self.concepts)
+            if self.gradual:
+                self.concepts = c
+            else:
+                self.concepts = np.choose(self.concept_selector, self.concepts)
         else:
             # Jeśli nie, przecież jest jeden, więc spłaszcz
             self.concepts = np.squeeze(self.concepts)

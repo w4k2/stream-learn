@@ -1,3 +1,5 @@
+animate.sh
+plots/keyframes
 *.lprof
 doc/modules
 doc/auto_examples
