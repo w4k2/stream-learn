@@ -11,7 +11,7 @@ ATYPES = ("nominal", "numeric")
 class ARFFParser:
     """Stream-aware parser of datasets in ARFF format."""
 
-    def __init__(self, path, chunk_size=500, n_chunks=100, n_classes=2):
+    def __init__(self, path, chunk_size=200, n_chunks=250, n_classes=2):
         """Initializer."""
         # Read file.
         self.name = path
@@ -27,6 +27,7 @@ class ARFFParser:
         self.lencs = {}
 
         self.chunk_id = 0
+        self.starting_chunk = False
         # Analyze its header
         while True:
             line = self._f.readline()[:-1]
@@ -75,8 +76,10 @@ class ARFFParser:
     def get_chunk(self):
         """Get Chunk of size."""
 
-        if self.chunk_id == 0:
+        if self.chunk_id == 0 and self.starting_chunk is False:
             self.previous_chunk = None
+            self.chunk_id = -1
+            self.starting_chunk = True
         else:
             self.previous_chunk = self.current_chunk
 
@@ -104,7 +107,6 @@ class ARFFParser:
             ]
 
             if self.is_dry_:
-                self.reset()
                 break
             else:
                 # Catch dry stream with length dividable by chunk size
