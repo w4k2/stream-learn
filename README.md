@@ -66,16 +66,16 @@ The most commonly studied nature of data streams is their variability in time. R
 StreamGenerator(n_drifts=1)
 ```
 
-![plots/1_sudden.png](plots/1_sudden.gif)
 ![plots/1_sudden.png](plots/1_sudden.png)
+![plots/1_sudden.png](plots/1_sudden.gif)
 
 #### Incremental drift
 ```python
 StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5)
 ```
 
-![plots/2_incremental.png](plots/2_incremental.gif)
 ![plots/2_incremental.png](plots/2_incremental.png)
+![plots/2_incremental.png](plots/2_incremental.gif)
 
 
 #### Gradual drift
@@ -84,29 +84,28 @@ StreamGenerator(
   n_drifts=1, concept_sigmoid_spacing=5, gradual=True
 )
 ```
-![plots/3_gradual.png](plots/3_gradual.gif)
 ![plots/2_incremental.png](plots/3_gradual.png)
+![plots/3_gradual.png](plots/3_gradual.gif)
 
 #### Reocurring drift
-![plots/3_reocurring.png](plots/4_reocurring.gif)
 ![plots/3_reocurring.png](plots/4_reocurring.png)
+![plots/3_reocurring.png](plots/4_reocurring.gif)
 
 ### Class imbalance
 
-![plots/6_static_imbalanced.png](plots/6_balanced.gif)
 ![plots/6_static_imbalanced.png](plots/6_balanced.png)
+![plots/6_static_imbalanced.png](plots/6_balanced.gif)
 
 #### Stationary imbalanced stream
-![plots/6_static_imbalanced.png](plots/7_static_imbalanced.gif)
 ![plots/6_static_imbalanced.png](plots/7_static_imbalanced.png)
+![plots/6_static_imbalanced.png](plots/7_static_imbalanced.gif)
 
 #### Dynamically imbalanced stream
-![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.png)
+![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 
 ### DISCO
 ![plots/8_it_all.png](plots/9_disco.gif)
-![plots/8_it_all.png](plots/9_disco.png)
 
 ## Example usage
 
