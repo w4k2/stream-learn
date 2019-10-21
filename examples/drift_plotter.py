@@ -62,15 +62,20 @@ streams.update(
 )
 
 
-for stream_name in streams:
-    print(stream_name)
+for sid, stream_name in enumerate(streams):
+    print(sid, stream_name)
     stream = streams[stream_name]
+    if sid == 9:
+        continue
 
     checkpoints = np.linspace(0, stream.n_chunks - 1, 8).astype(int)
 
-    fig = plt.figure(constrained_layout=True, figsize=(8, 6))
-
-    gs = GridSpec(5, len(checkpoints), figure=fig)
+    if sid < 1:
+        fig = plt.figure(constrained_layout=True, figsize=(8, 1))
+        gs = GridSpec(1, len(checkpoints), figure=fig)
+    else:
+        fig = plt.figure(constrained_layout=True, figsize=(8, 4))
+        gs = GridSpec(3, len(checkpoints), figure=fig)
 
     # Scatter plots
     a, b, c, d = [], [], [], []
@@ -97,7 +102,10 @@ for stream_name in streams:
 
         if i in checkpoints:
             index = np.where(checkpoints == i)[0][0]
-            ax = fig.add_subplot(gs[2, index])
+            if sid < 1:
+                ax = fig.add_subplot(gs[0, index])
+            else:
+                ax = fig.add_subplot(gs[2, index])
             ax.scatter(X[:, 0], X[:, 1], c=y, s=10, alpha=0.5, cmap="brg")
             ax.set_xlim(-5, 5)
             ax.set_ylim(-5, 5)
@@ -107,89 +115,103 @@ for stream_name in streams:
             ax.grid(color="r", linestyle="-", linewidth=2)
 
     # Concept presence
-    ax = fig.add_subplot(gs[1, :])
-    if not stream.gradual:
-        ax.set_title("Concept presence", fontsize=8)
-        ax.plot(a, c="red", ls=":", label="A")
-        if stream.n_drifts > 0:
-            ax.plot(b, c="green", ls=":", label="B")
-        if stream.n_drifts > 1 and not stream.reocurring:
-            ax.plot(c, c="blue", ls=":", label="C")
-        if stream.n_drifts > 2 and not stream.reocurring:
-            ax.plot(d, c="red", ls=":", label="D")
-        ax.legend(frameon=False, loc=5)
-        ax.set_ylim(-10, stream.chunk_size + 10)
-        ax.set_yticks([0, 250, 500])
-    else:
-        ax.set_title("Gradual drift", fontsize=8)
-        # ax.plot(stream.a_ind)
-        # ax.plot(stream.b_ind)
-        ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+    if sid < 1:
+        pass
+    elif sid < 6:
+        ax = fig.add_subplot(gs[1, :])
+        if not stream.gradual:
+            ax.set_title("Concept presence", fontsize=8)
+            ax.plot(a, c="red", ls=":", label="A")
+            if stream.n_drifts > 0:
+                ax.plot(b, c="green", ls=":", label="B")
+            if stream.n_drifts > 1 and not stream.reocurring:
+                ax.plot(c, c="blue", ls=":", label="C")
+            if stream.n_drifts > 2 and not stream.reocurring:
+                ax.plot(d, c="red", ls=":", label="D")
+            ax.legend(frameon=False, loc=5)
+            ax.set_ylim(-10, stream.chunk_size + 10)
+            ax.set_yticks([0, 250, 500])
+        else:
+            ax.set_title("Gradual drift", fontsize=8)
+            # ax.plot(stream.a_ind)
+            # ax.plot(stream.b_ind)
+            ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
 
-    ax.set_xlim(0, stream.n_chunks - 1)
-    ax.set_xticks(checkpoints)
-    ax.grid(color="k", linestyle=":", linewidth=0.1)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+        ax.set_xlim(0, stream.n_chunks - 1)
+        ax.set_xticks(checkpoints)
+        ax.grid(color="k", linestyle=":", linewidth=0.1)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
     # Class presence
-    ax = fig.add_subplot(gs[3, :])
-    ax.set_title("Class presence", fontsize=8)
-    ax.plot(A, c="red", ls="-", label="0")
-    ax.plot(B, c="green", ls="-", label="1")
-    if stream.n_classes > 2:
-        ax.plot(C, c="blue", ls="-", label="2")
-    ax.legend(frameon=False, loc=5)
-    ax.set_ylim(-10, stream.chunk_size + 10)
-    ax.set_xlim(0, stream.n_chunks - 1)
-    ax.set_xticks(checkpoints)
-    ax.set_yticks([0, 250, 500])
-    ax.grid(color="k", linestyle=":", linewidth=0.1)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+    if sid < 6:
+        pass
+    else:
+        ax = fig.add_subplot(gs[1, :])
+        ax.set_title("Class presence", fontsize=8)
+        ax.plot(A, c="red", ls="-", label="0")
+        ax.plot(B, c="green", ls="-", label="1")
+        if stream.n_classes > 2:
+            ax.plot(C, c="blue", ls="-", label="2")
+        ax.legend(frameon=False, loc=5)
+        ax.set_ylim(-10, stream.chunk_size + 10)
+        ax.set_xlim(0, stream.n_chunks - 1)
+        ax.set_xticks(checkpoints)
+        ax.set_yticks([0, 250, 500])
+        ax.grid(color="k", linestyle=":", linewidth=0.1)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
     # Concept Periodical sigmoid
-    ax = fig.add_subplot(gs[0, :])
-    if hasattr(stream, "concept_probabilities"):
-        if stream.concept_sigmoid_spacing is not None:
-            ax.set_title(
-                "Concept probabilities (ss=%.1f, n_drifts=%i)"
-                % (stream.concept_sigmoid_spacing, stream.n_drifts),
-                fontsize=8,
-            )
-        else:
-            ax.set_title(
-                "Concept probabilities (n_drifts=%i)" % (stream.n_drifts), fontsize=8
-            )
-        ax.plot(stream.concept_probabilities, lw=1, c="black")
+    if sid < 1:
+        pass
     else:
-        ax.set_title("No concept probabilities", fontsize=8)
-    ax.set_ylim(-0.05, 1.05)
-    ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
-    ax.grid(color="k", linestyle=":", linewidth=0.1)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+        ax = fig.add_subplot(gs[0, :])
+        if hasattr(stream, "concept_probabilities"):
+            if stream.concept_sigmoid_spacing is not None:
+                ax.set_title(
+                    "Concept probabilities (ss=%.1f, n_drifts=%i)"
+                    % (stream.concept_sigmoid_spacing, stream.n_drifts),
+                    fontsize=8,
+                )
+            else:
+                ax.set_title(
+                    "Concept probabilities (n_drifts=%i)" % (stream.n_drifts),
+                    fontsize=8,
+                )
+            ax.plot(stream.concept_probabilities, lw=1, c="black")
+        else:
+            ax.set_title("No concept probabilities", fontsize=8)
+        ax.set_ylim(-0.05, 1.05)
+        ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+        ax.grid(color="k", linestyle=":", linewidth=0.1)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
     # Class Periodical sigmoid
-    ax = fig.add_subplot(gs[4, :])
-    if hasattr(stream, "class_probabilities"):
-        ax.set_title(
-            "Class probabilities (ss=%.1f, n_drifts=%i, ba=%.1f)"
-            % (
-                stream.class_sigmoid_spacing,
-                stream.n_balance_drifts,
-                stream.balance_amplitude,
-            ),
-            fontsize=8,
-        )
-        ax.plot(stream.class_probabilities, lw=1, c="black")
+
+    if sid < 6:
+        pass
     else:
-        ax.set_title("No class probabilities", fontsize=8)
+        ax = fig.add_subplot(gs[0, :])
+        if hasattr(stream, "class_probabilities"):
+            ax.set_title(
+                "Class probabilities (ss=%.1f, n_drifts=%i, ba=%.1f)"
+                % (
+                    stream.class_sigmoid_spacing,
+                    stream.n_balance_drifts,
+                    stream.balance_amplitude,
+                ),
+                fontsize=8,
+            )
+            ax.plot(stream.class_probabilities, lw=1, c="black")
+        else:
+            ax.set_title("No class probabilities", fontsize=8)
+            ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
+        ax.set_ylim(-0.05, 1.05)
         ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
-    ax.set_ylim(-0.05, 1.05)
-    ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
-    ax.grid(color="k", linestyle=":", linewidth=0.1)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+        ax.grid(color="k", linestyle=":", linewidth=0.1)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
 
     plt.savefig("plots/%s.png" % stream_name)
