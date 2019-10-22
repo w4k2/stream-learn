@@ -19,6 +19,7 @@ class TestThenTrainEvaluator:
     ----------
 
     """
+
     def __init__(self):
         pass
 
@@ -45,17 +46,16 @@ class TestThenTrainEvaluator:
         self.classes = np.array(range(stream.n_classes))
 
         while True:
-            X_train, y_train = stream.get_chunk()
+            X, y = stream.get_chunk()
 
             if stream.previous_chunk is not None:
-                X_test, y_test = stream.previous_chunk
-                y_pred = clf.predict(X_test)
+                y_pred = self.clf.predict(X)
 
                 self.scores[stream.chunk_id - 1] = [
-                    metric(y_test, y_pred) for metric in METRICS
+                    metric(y, y_pred) for metric in METRICS
                 ]
 
-            clf.partial_fit(X_train, y_train, self.classes)
+            clf.partial_fit(X, y, self.classes)
 
             if stream.is_dry():
                 break
