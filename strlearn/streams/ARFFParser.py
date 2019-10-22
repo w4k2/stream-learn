@@ -31,8 +31,11 @@ class ARFFParser:
         # Analyze its header
         while True:
             line = self._f.readline()[:-1]
+            pos = self._f.tell()
             if line == "@data":
-                self._f.readline()
+                line = self._f.readline()
+                if line not in ['\n', '\r\n']:
+                    self._f.seek(pos)
                 break
 
             elements = line.split(" ")
