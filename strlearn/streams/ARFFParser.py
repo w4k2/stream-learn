@@ -50,7 +50,7 @@ class ARFFParser:
                     if elements[2][0] == "{":
                         self.types.append("nominal")
                         le = preprocessing.LabelEncoder()
-                        le.fit(np.array(elements[2][1:-2].split(",")))
+                        le.fit(np.array(elements[2][1:-1].split(",")))
                         self.lencs.update({len(self.names) - 1: le})
                     elif elements[2] == "numeric":
                         self.types.append("numeric")
