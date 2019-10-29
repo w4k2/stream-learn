@@ -31,8 +31,11 @@ class ARFFParser:
         # Analyze its header
         while True:
             line = self._f.readline()[:-1]
+            pos = self._f.tell()
             if line == "@data":
-                self._f.readline()
+                line = self._f.readline()
+                if line not in ['\n', '\r\n']:
+                    self._f.seek(pos)
                 break
 
             elements = line.split(" ")
@@ -94,8 +97,12 @@ class ARFFParser:
                 line = self.a_line[:-1]
             elements = line.split(",")
 
+
             # Get class
-            y.append(elements[-2])
+            if elements[-1] == '':
+                y.append(elements[-2])
+            else:
+                y.append(elements[-1])
 
             # Read attributes
             attributes = np.array(elements[:-1])
