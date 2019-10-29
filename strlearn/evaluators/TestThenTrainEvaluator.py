@@ -5,6 +5,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from ..utils import bac, f_score, geometric_mean_score
 
 METRICS = (accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score)
+METRICS = (accuracy_score, bac)
 
 
 class TestThenTrainEvaluator:
@@ -20,8 +21,8 @@ class TestThenTrainEvaluator:
 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, cut=0):
+        self.cut = cut
 
     def process(self, clf, stream):
         """
@@ -41,12 +42,15 @@ class TestThenTrainEvaluator:
         self.clf = clf
         self.stream = stream
 
-        self.scores = np.zeros((stream.n_chunks - 1, len(METRICS)))
+        self.scores = np.zeros(
+            (((stream.n_chunks - 1) if self.cut == 0 else self.cut), len(METRICS))
+        )
 
         self.classes = np.array(range(stream.n_classes))
 
         while True:
             X, y = stream.get_chunk()
+            print("CHUNK %i" % stream.chunk_id)
 
             if stream.previous_chunk is not None:
                 y_pred = self.clf.predict(X)
@@ -56,6 +60,9 @@ class TestThenTrainEvaluator:
                 ]
 
             clf.partial_fit(X, y, self.classes)
+
+            if self.cut > 0 and stream.chunk_id == self.cut:
+                break
 
             if stream.is_dry():
                 break
