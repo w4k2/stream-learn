@@ -41,15 +41,37 @@ class PrequentialEvaluator:
 
         Attributes
         ----------
+        classes_ : array-like, shape (n_classes, )
+            The class labels.
+        scores_ : array-like, shape (stream.n_chunks, 5)
+            Values of accuracy_score, roc_auc_score,
+            geometric_mean_score, bac and f_score for
+            each processed data chunk.
 
+        Examples
+        --------
+        >>> import strlearn as sl
+        >>> stream = sl.streams.StreamGenerator()
+        >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
+        >>> evaluator = sl.evaluators.PrequentialEvaluator()
+        >>> evaluator.process(clf, stream, interval=50)
+        >>> print(evaluator.scores_)
+        ...
+       [[0.95       0.9483469  0.94805282 0.9483469  0.95412844]
+        [0.96       0.95728313 0.95696445 0.95728313 0.96460177]
+        [0.96       0.95858586 0.95848154 0.95858586 0.96396396]
+        ...
+        [0.92       0.91987179 0.91986621 0.91987179 0.91666667]
+        [0.91       0.91065705 0.91050889 0.91065705 0.90816327]
+        [0.925      0.92567027 0.9250634  0.92567027 0.92610837]]
         """
         self.clf = clf
         self.stream = stream
         self.interval = interval
-        self.classes = np.array(range(stream.n_classes))
+        self.classes_ = np.array(range(stream.n_classes))
 
         intervals_per_chunk = int(self.stream.chunk_size / self.interval)
-        self.scores = np.zeros(
+        self.scores_ = np.zeros(
             ((stream.n_chunks - 1) * intervals_per_chunk, len(METRICS))
         )
 
@@ -69,7 +91,7 @@ class PrequentialEvaluator:
 
                     y_pred = clf.predict(X[start:end])
 
-                    self.scores[i] = [
+                    self.scores_[i] = [
                         metric(y[start:end], y_pred) for metric in METRICS
                     ]
 
@@ -78,7 +100,7 @@ class PrequentialEvaluator:
                     i += 1
             else:
                 X_train, y_train = stream.current_chunk
-                clf.partial_fit(X_train, y_train, self.classes)
+                clf.partial_fit(X_train, y_train, self.classes_)
 
             if stream.is_dry():
                 break

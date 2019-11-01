@@ -27,16 +27,18 @@ class StreamGenerator:
     n_drifts : integer, optional (default=4)
         The number of concept changes in the data stream.
     concept_sigmoid_spacing : float, optional (default=10.)
-        Value that determines how sudden is the change of concept.
-        The higher the value, the more sudden the drift is.
+        Value that determines the shape of sigmoid function and
+        how sudden is the change of concept. The higher the value,
+        the more sudden the drift is.
     n_classes : integer, optional (default=2)
         The number of classes in the generated data stream.
-    weights : jeśli krotka to zmienny w czasie (temporalny?), jeśli cokolwiek innego, to wektor wag działający jak przekazywany bezpośrednio do make_classification. W wypadku krotki przepuszczamy jedynie problemy binarne.
-
-    elementy krotki to:
-    - liczba dryfów
-    - sigmoid spacing dla dryfu wag (zakładamy)
-    - wartość z przedziału 0-1 określająca amplitudę zmian balansu oscylującego wokół stanu równowagi klas
+    reocurring : boolean, optional (default=False)
+        Determines if the streams can go back to
+        the previously encountered concepts.
+    weights : array-like, shape (n_classes, ) or tuple (only for 2 classes)
+        If array - class weight for static imbalance,
+        if tuple - (n_drifts, concept_sigmoid_spacing, IR aplitude [0-1])
+        for generation of dynamically imbalanced streams.
 
     Attributes
     ----------
