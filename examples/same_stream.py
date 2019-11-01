@@ -18,10 +18,10 @@ from matplotlib.gridspec import GridSpec
 
 
 mcargs = {
-    "n_classes": 3,
+    "n_classes": 2,
     "n_chunks": 100,
     "chunk_size": 500,
-    "random_state": 105,
+    "random_state": 5,
     "n_features": 2,
     "n_informative": 2,
     "n_redundant": 0,
@@ -31,7 +31,8 @@ mcargs = {
 }
 
 streams = {
-    "9_first": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
+    "9_first": StreamGenerator(n_drifts=3, concept_sigmoid_spacing=5, reocurring=True, incremental=True,
+                               weights=(2, 5, 0.9), **mcargs),
     "9_second": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs)
 }
 
@@ -80,11 +81,13 @@ for stream_name in streams:
 
     # Concept presence
     ax = fig.add_subplot(gs[1, :])
-    ax.set_title("Concept presence", fontsize=8)
-    ax.plot(a, c="red", ls=":", label="A")
-    if stream.n_drifts > 0:
+    ax.set_title("Incremental drift", fontsize=8)
+    if not stream.incremental:
+        ax.set_title("Concept presence", fontsize=8)
+        ax.plot(a, c="red", ls=":", label="A")
+    if stream.n_drifts > 0 and not stream.incremental:
         ax.plot(b, c="green", ls=":", label="B")
-    if stream.n_drifts > 1 and not stream.reocurring:
+    if stream.n_drifts > 1 and not stream.reocurring and not stream.incremental:
         ax.plot(c, c="blue", ls=":", label="C")
     ax.legend(frameon=False, loc=5)
     ax.set_ylim(-10, stream.chunk_size + 10)
@@ -155,4 +158,4 @@ for stream_name in streams:
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    plt.savefig("plots/%s.png" % stream_name)
+    plt.savefig("../plots/%s.png" % stream_name)

@@ -74,7 +74,7 @@ StreamGenerator(n_drifts=1)
 StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5)
 ```
 
-![plots/2_incremental.png](plots/2_gradual.png)
+![plots/2_gradual.png](plots/2_gradual.png)
 ![plots/2_incremental.png](plots/2_incremental.gif)
 
 
@@ -84,15 +84,17 @@ StreamGenerator(
   n_drifts=1, concept_sigmoid_spacing=5, incremental=True
 )
 ```
-![plots/2_incremental.png](plots/3_incremental.png)
+![plots/3_incremental.png](plots/3_incremental.png)
 ![plots/3_gradual.png](plots/3_gradual.gif)
 
 #### Reocurring gradual drift
-![plots/3_reocurring.png](plots/4_reocurring.png)
-![plots/3_reocurring.png](plots/4_reocurring.gif)
+![plots/4_reocurring.png](plots/4_reocurring.png)
+![plots/4_reocurring.png](plots/4_reocurring.gif)
+
+#### Non-reocurring gradual drift
+![plots/5_nonreocurring.png](plots/5_nonreocurring.png)
 
 ### Class imbalance
-
 ![plots/6_static_imbalanced.png](plots/6_balanced.png)
 ![plots/6_static_imbalanced.png](plots/6_balanced.gif)
 
@@ -105,6 +107,7 @@ StreamGenerator(
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 
 ### DISCO
+![plots/9_first.png](plots/9_first.png)
 ![plots/8_it_all.png](plots/9_disco.gif)
 
 ## Example usage
