@@ -60,15 +60,6 @@ What's very important, contrary to the typical call to `make_classification()`, 
 
 The most commonly studied nature of data streams is their variability in time. Responsible for this is the phenomenon of the *concept drift*, where class distributions change over time with different dynamics, which necessitates the rebuilding of already fitted classification models. The `stream-learn` package tries to meet the need to synthesize all basic variations of this phenomenon.
 
-#### Sudden drift
-
-```python
-StreamGenerator(n_classes=3, n_drifts=1)
-```
-
-![plots/1_sudden.png](plots/1_sudden.png)
-![plots/1_sudden.png](plots/1_sudden.gif)
-
 #### Gradual drift
 ```python
 StreamGenerator(
@@ -79,6 +70,14 @@ StreamGenerator(
 ![plots/2_gradual.png](plots/2_gradual.png)
 ![plots/2_incremental.png](plots/2_incremental.gif)
 
+#### Sudden drift
+
+```python
+StreamGenerator(n_classes=3, n_drifts=1)
+```
+
+![plots/1_sudden.png](plots/1_sudden.png)
+![plots/1_sudden.png](plots/1_sudden.gif)
 
 #### Incremental drift
 ```python
@@ -105,6 +104,7 @@ StreamGenerator(
 )
 ```
 ![plots/5_nonreocurring.png](plots/5_nonreocurring.png)
+![plots/5_nonreocurring.gif](plots/5_nonreocurring.gif)
 
 ### Class imbalance
 ```python
@@ -127,7 +127,7 @@ StreamGenerator(weights=(2, 5, 0.9))
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.png)
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 
-### DISCO
+### Dynamically Imbalanced Stream with COncepts (DISCO)
 ```python
 StreamGenerator(
     weights=(2, 5, 0.9), n_drifts=3, concept_sigmoid_spacing=5,
