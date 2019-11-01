@@ -5,7 +5,6 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from ..utils import bac, f_score, geometric_mean_score
 
 METRICS = (accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score)
-METRICS = (accuracy_score, bac)
 
 
 class TestThenTrainEvaluator:

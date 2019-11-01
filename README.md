@@ -36,7 +36,7 @@ The above animation contains the scatter plot of a two-dimensional stationary st
 
 ```python
 stream = StreamGenerator(
-  n_classes=3,
+  n_classes=2,
   n_features=2,
   n_informative=2,
   n_redundant=0,
@@ -63,7 +63,7 @@ The most commonly studied nature of data streams is their variability in time. R
 #### Sudden drift
 
 ```python
-StreamGenerator(n_drifts=1)
+StreamGenerator(n_classes=3, n_drifts=1)
 ```
 
 ![plots/1_sudden.png](plots/1_sudden.png)
@@ -71,7 +71,9 @@ StreamGenerator(n_drifts=1)
 
 #### Gradual drift
 ```python
-StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5)
+StreamGenerator(
+    n_classes=3, n_drifts=1, concept_sigmoid_spacing=5
+)
 ```
 
 ![plots/2_gradual.png](plots/2_gradual.png)
@@ -81,32 +83,57 @@ StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5)
 #### Incremental drift
 ```python
 StreamGenerator(
-  n_drifts=1, concept_sigmoid_spacing=5, incremental=True
+    n_classes=3, n_drifts=1, concept_sigmoid_spacing=5, incremental=True
 )
 ```
 ![plots/3_incremental.png](plots/3_incremental.png)
 ![plots/3_gradual.png](plots/3_gradual.gif)
 
 #### Reocurring gradual drift
+```python
+StreamGenerator(
+    n_classes=3, n_drifts=2, concept_sigmoid_spacing=5, reocurring=True
+)
+```
 ![plots/4_reocurring.png](plots/4_reocurring.png)
 ![plots/4_reocurring.png](plots/4_reocurring.gif)
 
 #### Non-reocurring gradual drift
+```python
+StreamGenerator(
+    n_classes=3, n_drifts=2, concept_sigmoid_spacing=5
+)
+```
 ![plots/5_nonreocurring.png](plots/5_nonreocurring.png)
 
 ### Class imbalance
+```python
+StreamGenerator()
+```
 ![plots/6_static_imbalanced.png](plots/6_balanced.png)
 ![plots/6_static_imbalanced.png](plots/6_balanced.gif)
 
 #### Stationary imbalanced stream
+```python
+StreamGenerator(weights=[0.3, 0.7])
+```
 ![plots/6_static_imbalanced.png](plots/7_static_imbalanced.png)
 ![plots/6_static_imbalanced.png](plots/7_static_imbalanced.gif)
 
 #### Dynamically imbalanced stream
+```python
+StreamGenerator(weights=(2, 5, 0.9))
+```
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.png)
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 
 ### DISCO
+```python
+StreamGenerator(
+    weights=(2, 5, 0.9), n_drifts=3, concept_sigmoid_spacing=5,
+    reocurring=True, incremental=True
+    )
+```
 ![plots/9_first.png](plots/9_first.png)
 ![plots/8_it_all.png](plots/9_disco.gif)
 
