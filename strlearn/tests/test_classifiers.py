@@ -1,12 +1,13 @@
-"""Basic tests."""
-import sys
+"""Classifier tests."""
 
+import sys
 import strlearn as sl
 
 sys.path.insert(0, "../..")
 
 
 def test_ACS_TestThanTrain():
+    "Bare ACS for TTT"
     stream = sl.streams.StreamGenerator()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
@@ -14,6 +15,7 @@ def test_ACS_TestThanTrain():
 
 
 def test_ACS_Prequential():
+    "Bare ACS for Prequential"
     stream = sl.streams.StreamGenerator()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
     evaluator = sl.evaluators.PrequentialEvaluator()

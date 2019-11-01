@@ -1,19 +1,12 @@
-"""Basic tests."""
-import sys
+"""Ensemble tests."""
 
+import sys
 import strlearn as sl
 
 sys.path.insert(0, "../..")
 
-
-"""Basic tests."""
-import sys
-
-import strlearn as sl
-
-sys.path.insert(0, "../..")
-
-def test_ACS():
+def test_CBE():
+    "Bare CBE"
     stream = sl.streams.StreamGenerator()
     clf = sl.ensembles.ChunkBasedEnsemble()
     evaluator = sl.evaluators.TestThenTrainEvaluator()

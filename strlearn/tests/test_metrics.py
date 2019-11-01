@@ -1,6 +1,6 @@
-"""Metrics tests."""
-import sys
+"""Metric tests."""
 
+import sys
 import strlearn as sl
 from sklearn.datasets import make_classification
 
@@ -8,6 +8,7 @@ sys.path.insert(0, "../..")
 
 
 def test_precision_recall():
+    'Calculating matrics'
     chunk_size = 100
     n_chunks = 10
     X, y = make_classification(n_samples=chunk_size * n_chunks,
