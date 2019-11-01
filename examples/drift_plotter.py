@@ -32,9 +32,9 @@ mcargs = {
 streams = {
     "0_stationary": StreamGenerator(**mcargs),
     "1_sudden": StreamGenerator(n_drifts=1, **mcargs),
-    "2_incremental": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
-    "3_gradual": StreamGenerator(
-        n_drifts=1, concept_sigmoid_spacing=5, gradual=True, **mcargs
+    "2_gradual": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
+    "3_incremental": StreamGenerator(
+        n_drifts=1, concept_sigmoid_spacing=5, incremental=True, **mcargs
     ),
     "4_reocurring": StreamGenerator(
         n_drifts=2, concept_sigmoid_spacing=5, reocurring=True, **mcargs
@@ -56,7 +56,7 @@ streams.update(
             n_drifts=3,
             concept_sigmoid_spacing=5,
             reocurring=True,
-            gradual=True
+            incremental=True
         ),
     }
 )
@@ -119,7 +119,7 @@ for sid, stream_name in enumerate(streams):
         pass
     elif sid < 6:
         ax = fig.add_subplot(gs[1, :])
-        if not stream.gradual:
+        if not stream.incremental:
             ax.set_title("Concept presence", fontsize=8)
             ax.plot(a, c="red", ls=":", label="A")
             if stream.n_drifts > 0:
@@ -132,7 +132,7 @@ for sid, stream_name in enumerate(streams):
             ax.set_ylim(-10, stream.chunk_size + 10)
             ax.set_yticks([0, 250, 500])
         else:
-            ax.set_title("Gradual drift", fontsize=8)
+            ax.set_title("Incremental drift", fontsize=8)
             # ax.plot(stream.a_ind)
             # ax.plot(stream.b_ind)
             ax.set_xlim(0, mcargs["n_chunks"] * mcargs["chunk_size"])
@@ -214,4 +214,4 @@ for sid, stream_name in enumerate(streams):
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
 
-    plt.savefig("plots/%s.png" % stream_name)
+    plt.savefig("../plots/%s.png" % stream_name)

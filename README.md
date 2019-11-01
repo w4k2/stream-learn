@@ -69,25 +69,25 @@ StreamGenerator(n_drifts=1)
 ![plots/1_sudden.png](plots/1_sudden.png)
 ![plots/1_sudden.png](plots/1_sudden.gif)
 
-#### Incremental drift
+#### Gradual drift
 ```python
 StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5)
 ```
 
-![plots/2_incremental.png](plots/2_incremental.png)
+![plots/2_incremental.png](plots/2_gradual.png)
 ![plots/2_incremental.png](plots/2_incremental.gif)
 
 
-#### Gradual drift
+#### Incremental drift
 ```python
 StreamGenerator(
-  n_drifts=1, concept_sigmoid_spacing=5, gradual=True
+  n_drifts=1, concept_sigmoid_spacing=5, incremental=True
 )
 ```
-![plots/2_incremental.png](plots/3_gradual.png)
+![plots/2_incremental.png](plots/3_incremental.png)
 ![plots/3_gradual.png](plots/3_gradual.gif)
 
-#### Reocurring drift
+#### Reocurring gradual drift
 ![plots/3_reocurring.png](plots/4_reocurring.png)
 ![plots/3_reocurring.png](plots/4_reocurring.gif)
 

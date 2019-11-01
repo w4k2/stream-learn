@@ -33,9 +33,9 @@ mcargs = {
 streams = {
     "0_stationary": StreamGenerator(**mcargs),
     "1_sudden": StreamGenerator(n_drifts=1, **mcargs),
-    "2_incremental": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
-    "3_gradual": StreamGenerator(
-        n_drifts=1, concept_sigmoid_spacing=5, gradual=True, **mcargs
+    "2_gradual": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
+    "3_incremental": StreamGenerator(
+        n_drifts=1, concept_sigmoid_spacing=5, incremental=True, **mcargs
     ),
     "4_reocurring": StreamGenerator(
         n_drifts=2, concept_sigmoid_spacing=5, reocurring=True, **mcargs
@@ -57,7 +57,7 @@ streams.update(
             n_drifts=4,
             concept_sigmoid_spacing=5,
             reocurring=True,
-            gradual=True
+            incremental=True
         ),
     }
 )

@@ -53,7 +53,7 @@ class StreamGenerator:
         n_classes=2,
         reocurring=False,
         weights=None,
-        gradual=False,
+        incremental=False,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -67,7 +67,7 @@ class StreamGenerator:
         self.reocurring = reocurring
         self.n_samples = self.n_chunks * self.chunk_size
         self.weights = weights
-        self.gradual = gradual
+        self.incremental = incremental
         self.classes = [label for label in range(self.n_classes)]
 
     def is_dry(self):
@@ -139,8 +139,8 @@ class StreamGenerator:
             # Szum
             self.concept_noise = np.random.rand(self.n_samples)
 
-            # Gradualny
-            if self.gradual:
+            # Inkrementalny
+            if self.incremental:
 
                 self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
                 self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
@@ -159,7 +159,7 @@ class StreamGenerator:
                 b = b * (self.concept_probabilities)
                 c = a + b
 
-            # Inkrementalny
+            # Gradualny
             else:
                 # Selekcja klas
                 self.concept_selector = (
@@ -214,7 +214,7 @@ class StreamGenerator:
         # Przypisanie klas i etykiet
         if self.n_drifts > 0:
             # Jeśli dryfy, przypisz koncepty
-            if self.gradual:
+            if self.incremental:
                 self.concepts = c
             else:
                 self.concepts = np.choose(self.concept_selector, self.concepts)
