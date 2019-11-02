@@ -5,24 +5,21 @@ Weighted Aging Ensemble.
 
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-# from sklearn.utils import check_random_state
-# from sklearn.utils.multiclass import unique_labels
-# from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn import base
 from sklearn import neighbors
 import numpy as np
 from ..ensembles import pruning
-import warnings
 
-warnings.simplefilter('always')
+WEIGHT_CALCULATION = (
+    "same_for_each",
+    "proportional_to_accuracy",
+    "kuncheva",
+    "pta_related_to_whole",
+    "bell_curve",
+)
 
-WEIGHT_CALCULATION = ('same_for_each', 'proportional_to_accuracy', 'kuncheva',
-                      'pta_related_to_whole',
-                      'bell_curve')
-
-AGING_METHOD = ('weights_proportional', 'constant',
-                'gaussian')
+AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 
 
 class WAE(BaseEstimator, ClassifierMixin):
@@ -39,10 +36,16 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     """
 
-    def __init__(self, ensemble_size=20, theta=.1,
-                 post_pruning=False, pruning_criterion='accuracy',
-                 weight_calculation_method='kuncheva',
-                 aging_method='weights_proportional', rejuvenation_power=0.):
+    def __init__(
+        self,
+        ensemble_size=20,
+        theta=0.1,
+        post_pruning=False,
+        pruning_criterion="accuracy",
+        weight_calculation_method="kuncheva",
+        aging_method="weights_proportional",
+        rejuvenation_power=0.0,
+    ):
         """Initialization."""
         self.pruning_criterion = pruning_criterion
         self.ensemble_size = ensemble_size
@@ -58,8 +61,9 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def _prune(self):
         X, y = self.previous_X, self.previous_y
-        pruner = pruning.OneOffPruner(self.ensemble_support_matrix(X),
-                                      y, self.pruning_criterion)
+        pruner = pruning.OneOffPruner(
+            self.ensemble_support_matrix(X), y, self.pruning_criterion
+        )
         self._filter_ensemble(pruner.best_permutation)
 
     def _filter_ensemble(self, combination):
@@ -70,7 +74,7 @@ class WAE(BaseEstimator, ClassifierMixin):
     # Fitting
     def fit(self, X, y):
         """Fitting."""
-        if not hasattr(self, '_base_clf'):
+        if not hasattr(self, "_base_clf"):
             self.set_base_clf()
 
         X, y = check_X_y(X, y)
@@ -91,7 +95,7 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        if not hasattr(self, '_base_clf'):
+        if not hasattr(self, "_base_clf"):
             self.set_base_clf()
         X, y = check_X_y(X, y)
         self.X_ = X
@@ -107,10 +111,7 @@ class WAE(BaseEstimator, ClassifierMixin):
 
         """Partial fitting"""
         if self.age_ > 0:
-            self.overall_accuracy = self.score(
-                self.previous_X,
-                self.previous_y
-            )
+            self.overall_accuracy = self.score(self.previous_X, self.previous_y)
 
         # Pre-pruning
         if len(self.ensemble_) > self.ensemble_size and not self.post_pruning:
@@ -142,52 +143,59 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def _accuracies(self):
         return np.array(
-            [m_clf.score(self.previous_X, self.previous_y)
-             for m_clf in self.ensemble_])
+            [m_clf.score(self.previous_X, self.previous_y) for m_clf in self.ensemble_]
+        )
 
     def _set_weights(self):
         if self.age_ > 0:
-            if self.weight_calculation_method == 'same_for_each':
+            if self.weight_calculation_method == "same_for_each":
                 self.weights_ = np.ones(len(self.ensemble_))
 
-            elif self.weight_calculation_method == 'kuncheva':
+            elif self.weight_calculation_method == "kuncheva":
                 accuracies = self._accuracies()
                 self.weights_ = np.log(accuracies / (1.0000001 - accuracies))
                 self.weights_[self.weights_ < 0] = 0
 
-            elif self.weight_calculation_method == 'pta_related_to_whole':
+            elif self.weight_calculation_method == "pta_related_to_whole":
                 accuracies = self._accuracies()
                 self.weights_ = accuracies / self.overall_accuracy
                 self.weights_[self.weights_ < self.theta] = 0
 
-            elif self.weight_calculation_method == 'bell_curve':
+            elif self.weight_calculation_method == "bell_curve":
                 accuracies = self._accuracies()
-                self.weights_ = 1./(2. * np.pi) * np.exp(
-                    (self.overall_accuracy - accuracies)/2.)
+                self.weights_ = (
+                    1.0
+                    / (2.0 * np.pi)
+                    * np.exp((self.overall_accuracy - accuracies) / 2.0)
+                )
                 self.weights_[self.weights_ < self.theta] = 0
 
         self.weights_ = np.nan_to_num(self.weights_)
 
     def _aging(self):
         if self.age_ > 0:
-            if self.aging_method == 'weights_proportional':
+            if self.aging_method == "weights_proportional":
                 accuracies = self._accuracies()
                 self.weights_ = accuracies / np.sqrt(self.iterations_)
 
-            elif self.aging_method == 'constant':
+            elif self.aging_method == "constant":
                 self.weights_ -= self.theta * self.iterations_
                 self.weights_[self.weights_ < self.theta] = 0
 
-            elif self.aging_method == 'gaussian':
-                self.weights_ = 1. / (2. * np.pi) * \
-                    np.exp((self.iterations_ * self.weights_) / 2.)
+            elif self.aging_method == "gaussian":
+                self.weights_ = (
+                    1.0
+                    / (2.0 * np.pi)
+                    * np.exp((self.iterations_ * self.weights_) / 2.0)
+                )
 
     def _rejuvenate(self):
         if self.rejuvenation_power > 0 and len(self.weights_) > 0:
             w = np.sum(self.weights_) / len(self.weights_)
             mask = self.weights_ > w
             self.iterations_[mask] -= self.rejuvenation_power * (
-                self.weights_[mask] - w)
+                self.weights_[mask] - w
+            )
             # TODO do przemyslenia
 
     def _extinct(self):
@@ -197,17 +205,17 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def ensemble_support_matrix(self, X):
         """ESM."""
-        return np.array([member_clf.predict_proba(X)
-                         for member_clf in self.ensemble_])
+        return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
 
     def predict_proba(self, X):
         """Aposteriori probabilities."""
         # Check is fit had been called
-        check_is_fitted(self, 'classes_')
+        check_is_fitted(self, "classes_")
 
         # Weight support before acumulation
-        weighted_support = self.ensemble_support_matrix(X) * self.weights_[
-            :, np.newaxis, np.newaxis]
+        weighted_support = (
+            self.ensemble_support_matrix(X) * self.weights_[:, np.newaxis, np.newaxis]
+        )
 
         # Acumulate supports
         acumulated_weighted_support = np.sum(weighted_support, axis=0)
@@ -216,12 +224,12 @@ class WAE(BaseEstimator, ClassifierMixin):
     def predict(self, X):
         """Hard decision."""
         # Check is fit had been called
-        check_is_fitted(self, 'classes_')
+        check_is_fitted(self, "classes_")
 
         # Input validation
         X = check_array(X)
         if X.shape[1] != self.X_.shape[1]:
-            raise ValueError('number of features does not match')
+            raise ValueError("number of features does not match")
 
         supports = self.predict_proba(X)
         prediction = np.argmax(supports, axis=1)
