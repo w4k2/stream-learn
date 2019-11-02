@@ -127,7 +127,7 @@ StreamGenerator(weights=(2, 5, 0.9))
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.png)
 ![plots/7_dynamic_imbalanced.png](plots/8_dynamic_imbalanced.gif)
 
-### Dynamically Imbalanced Stream with COncepts (DISCO)
+### Dynamically Imbalanced Stream with Concept Oscillation (DISCO)
 ```python
 StreamGenerator(
     weights=(2, 5, 0.9), n_drifts=3, concept_sigmoid_spacing=5,
