@@ -47,8 +47,7 @@ stream-learn API
    :toctree: generated/
    :template: class.rst
 
-   classifiers.TestThenTrainEvaluator
-   classifiers.PrequentialEvaluator
+   classifiers.AccumulatedSamplesClassifier
 
 :mod:`strlearn.ensembles`: Ensembles
 ====================================================
