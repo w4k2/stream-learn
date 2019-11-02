@@ -2,6 +2,22 @@
 stream-learn API
 ######################
 
+:mod:`strlearn.streams`: Streams
+====================================================
+
+.. automodule:: strlearn.streams
+    :no-members:
+    :no-inherited-members:
+
+.. currentmodule:: strlearn
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   streams.StreamGenerator
+   streams.ARFFParser
+
 :mod:`strlearn.evaluators`: Evaluators
 ====================================================
 
@@ -18,6 +34,21 @@ stream-learn API
    evaluators.TestThenTrainEvaluator
    evaluators.PrequentialEvaluator
 
+:mod:`strlearn.classifiers`: Classifiers
+====================================================
+
+.. automodule:: strlearn.classifiers
+    :no-members:
+    :no-inherited-members:
+
+.. currentmodule:: strlearn
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   classifiers.TestThenTrainEvaluator
+   classifiers.PrequentialEvaluator
 
 :mod:`strlearn.ensembles`: Ensembles
 ====================================================
@@ -32,4 +63,5 @@ stream-learn API
    :toctree: generated/
    :template: class.rst
 
-   ensembles.DumbEnsemble
+   ensembles.ChunkBasedEnsemble
+   ensembles.WAE
