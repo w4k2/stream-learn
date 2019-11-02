@@ -1,10 +1,9 @@
 """Test Than Train evaluator."""
 
 import numpy as np
-from sklearn.metrics import accuracy_score, roc_auc_score
-from ..utils import bac, f_score, geometric_mean_score
-
-METRICS = (accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score)
+from sklearn.metrics import accuracy_score
+from ..utils import bac
+from sklearn.base import ClassifierMixin
 
 
 class TestThenTrainEvaluator:
@@ -23,7 +22,7 @@ class TestThenTrainEvaluator:
     def __init__(self, cut=0):
         self.cut = cut
 
-    def process(self, clf, stream):
+    def process(self, stream, clfs, metrics=(accuracy_score, bac)):
         """
         Perform learning procedure on data stream.
 
@@ -60,27 +59,37 @@ class TestThenTrainEvaluator:
         [0.885      0.8854889  0.88546135 0.8854889  0.87830688]
         [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
         """
-        self.clf = clf
+        if isinstance(clfs, ClassifierMixin):
+            self.clfs = [clfs]
+        else:
+            self.clfs = clfs
         self.stream = stream
+        self.metrics = metrics
 
         self.scores_ = np.zeros(
-            (((stream.n_chunks - 1) if self.cut == 0 else self.cut), len(METRICS))
+            (
+                len(self.clfs),
+                ((stream.n_chunks - 1) if self.cut == 0 else self.cut),
+                len(self.metrics),
+            )
         )
 
-        self.classes_ = np.array(range(stream.n_classes))
+        self.classes_ = stream.classes  # np.array(range(stream.n_classes))
 
         while True:
             X, y = stream.get_chunk()
-            # print("CHUNK %i" % stream.chunk_id)
 
+            # Test
             if stream.previous_chunk is not None:
-                y_pred = self.clf.predict(X)
+                for clfid, clf in enumerate(self.clfs):
+                    y_pred = clf.predict(X)
 
-                self.scores_[stream.chunk_id - 1] = [
-                    metric(y, y_pred) for metric in METRICS
-                ]
+                    self.scores_[clfid, stream.chunk_id - 1] = [
+                        metric(y, y_pred) for metric in self.metrics
+                    ]
 
-            clf.partial_fit(X, y, self.classes_)
+            # Train
+            [clf.partial_fit(X, y, self.classes_) for clf in self.clfs]
 
             if self.cut > 0 and stream.chunk_id == self.cut:
                 break

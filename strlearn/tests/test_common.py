@@ -11,4 +11,4 @@ def test_mlp_drifted():
     stream = sl.streams.StreamGenerator(n_drifts=1)
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
-    evaluator.process(clf, stream)
+    evaluator.process(stream, clf)

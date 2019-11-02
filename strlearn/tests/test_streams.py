@@ -30,14 +30,14 @@ def test_generator_drifted():
     stream = sl.streams.StreamGenerator(n_drifts=1)
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
-    evaluator.process(clf, stream)
+    evaluator.process(stream, clf)
 
 
 def test_generator_stationary():
     stream = sl.streams.StreamGenerator(n_drifts=0)
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
-    evaluator.process(clf, stream)
+    evaluator.process(stream, clf)
 
 
 # def test_arff_parser():

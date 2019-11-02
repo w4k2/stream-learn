@@ -22,10 +22,11 @@ class PrequentialEvaluator:
     ----------
 
     """
+
     def __init__(self):
         pass
 
-    def process(self, clf, stream, interval=100):
+    def process(self, stream, clf, interval=100):
         """
         Perform learning procedure on data stream.
 

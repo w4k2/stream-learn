@@ -70,7 +70,7 @@ class StreamGenerator:
         self.n_samples = self.n_chunks * self.chunk_size
         self.weights = weights
         self.incremental = incremental
-        self.classes = [label for label in range(self.n_classes)]
+        self.classes = np.array(range(self.n_classes))
 
     def is_dry(self):
         """Checking if we have reached the end of the stream."""
