@@ -58,7 +58,15 @@ What's very important, contrary to the typical call to `make_classification()`, 
 
 ### Streams containing concept drifts
 
-The most commonly studied nature of data streams is their variability in time. Responsible for this is the phenomenon of the *concept drift*, where class distributions change over time with different dynamics, which necessitates the rebuilding of already fitted classification models. The `stream-learn` package tries to meet the need to synthesize all basic variations of this phenomenon.
+The most commonly studied nature of data streams is their variability in time. 
+Responsible for this is the phenomenon of the *concept drift*, where class distributions 
+change over time with different dynamics, which necessitates the rebuilding of already 
+fitted classification models. The `stream-learn` package tries to meet the need to synthesize 
+all basic variations of this phenomenon.
+
+Concept probabilities are created based on sigmoid function, which is generated using `concept_sigmoid_spacing` 
+parameter, which determines the function shape and how sudden the change of concept is. The higher the value, 
+the more sudden the drift.
 
 #### Gradual drift
 ```python

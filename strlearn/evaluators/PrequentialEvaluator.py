@@ -20,7 +20,29 @@ class PrequentialEvaluator:
 
     Attributes
     ----------
+    classes_ : array-like, shape (n_classes, )
+        The class labels.
+    scores_ : array-like, shape (stream.n_chunks, 5)
+        Values of accuracy_score, roc_auc_score,
+        geometric_mean_score, bac and f_score for
+        each processed data chunk.
 
+    Examples
+    --------
+    >>> import strlearn as sl
+    >>> stream = sl.streams.StreamGenerator()
+    >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
+    >>> evaluator = sl.evaluators.PrequentialEvaluator()
+     >>> evaluator.process(clf, stream, interval=50)
+    >>> print(evaluator.scores_)
+    ...
+    [[0.95       0.9483469  0.94805282 0.9483469  0.95412844]
+    [0.96       0.95728313 0.95696445 0.95728313 0.96460177]
+    [0.96       0.95858586 0.95848154 0.95858586 0.96396396]
+    ...
+    [0.92       0.91987179 0.91986621 0.91987179 0.91666667]
+    [0.91       0.91065705 0.91050889 0.91065705 0.90816327]
+    [0.925      0.92567027 0.9250634  0.92567027 0.92610837]]
     """
 
     def __init__(self):
@@ -39,32 +61,6 @@ class PrequentialEvaluator:
         interval: integer, optional (default=100)
             The number of instances by which the sliding window
             moves before the next evaluation and training steps.
-
-        Attributes
-        ----------
-        classes_ : array-like, shape (n_classes, )
-            The class labels.
-        scores_ : array-like, shape (stream.n_chunks, 5)
-            Values of accuracy_score, roc_auc_score,
-            geometric_mean_score, bac and f_score for
-            each processed data chunk.
-
-        Examples
-        --------
-        >>> import strlearn as sl
-        >>> stream = sl.streams.StreamGenerator()
-        >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
-        >>> evaluator = sl.evaluators.PrequentialEvaluator()
-        >>> evaluator.process(clf, stream, interval=50)
-        >>> print(evaluator.scores_)
-        ...
-       [[0.95       0.9483469  0.94805282 0.9483469  0.95412844]
-        [0.96       0.95728313 0.95696445 0.95728313 0.96460177]
-        [0.96       0.95858586 0.95848154 0.95858586 0.96396396]
-        ...
-        [0.92       0.91987179 0.91986621 0.91987179 0.91666667]
-        [0.91       0.91065705 0.91050889 0.91065705 0.90816327]
-        [0.925      0.92567027 0.9250634  0.92567027 0.92610837]]
         """
         self.clf = clf
         self.stream = stream
