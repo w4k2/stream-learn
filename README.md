@@ -69,7 +69,7 @@ two new attributes of data stream:
 **Not yet implemented**
 
 Additionally, data streams may contain noise which, while not considered as concept drift, 
-provides additional challenge during the data stream classification and data stream classifiers 
+provides additional challenge during the data stream analysis and data stream classifiers 
 should be robust to it. The `StreamGenerator`class implements noise by inverting the class labels 
 of a given percentage of incoming instances in the data stream. This percentage can be defined by 
 a `y_flip` parameter.
