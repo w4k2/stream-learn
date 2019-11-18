@@ -4,7 +4,6 @@ from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
-from skmultiflow.trees import HoeffdingTree
 from sklearn.neural_network import MLPClassifier
 
 
