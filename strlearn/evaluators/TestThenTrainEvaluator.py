@@ -44,7 +44,7 @@ class TestThenTrainEvaluator:
     def __init__(self, cut=0):
         self.cut = cut
 
-    def process(self, stream, clfs, metrics=(bac, geometric_mean_score, recall)):
+    def process(self, stream, clfs, metrics=(accuracy_score, bac)):
         """
         Perform learning procedure on data stream.
 
