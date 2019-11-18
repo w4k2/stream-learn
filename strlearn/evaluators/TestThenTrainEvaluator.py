@@ -2,7 +2,7 @@
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from ..utils import bac
+from ..utils import bac, geometric_mean_score, recall
 from sklearn.base import ClassifierMixin
 
 
@@ -44,7 +44,7 @@ class TestThenTrainEvaluator:
     def __init__(self, cut=0):
         self.cut = cut
 
-    def process(self, stream, clfs, metrics=(accuracy_score, bac)):
+    def process(self, stream, clfs, metrics=(bac, geometric_mean_score, recall)):
         """
         Perform learning procedure on data stream.
 
