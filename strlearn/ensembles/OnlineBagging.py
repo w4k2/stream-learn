@@ -53,28 +53,7 @@ class OnlineBagging(BaseEstimator, ClassifierMixin):
         self.weights = np.asarray(self.weights).T
 
 
-        # TO JEST ZLE
-        # self.weights = np.asarray([[ np.random.poisson(1, 1)[0] for i in range(self.ensemble_size)] for j in range(self.X_.shape[0])])
-
-
         for w, base_model in enumerate(self.ensemble_):
-            bm_weights = self.weights[w]
-
-            y_b = np.array([])
-            X_b = np.array([]).reshape(0, self.X_.shape[1])
-
-            for i in range(1, np.max(bm_weights)+1):
-                mask = bm_weights >= i
-                X_b = np.concatenate((X_b, self.X_[mask, :]), axis=0)
-                y_b = np.concatenate((y_b, self.y_[mask]))
-
-            # print(X_b, y_b)
-            # print(X_b.shape, y_b.shape)
-
-            #print(X_b.shape, y_b.shape)
-
-            # exit()
-
             base_model.partial_fit(self.X_, self.y_, self.classes_, sample_weight=self.weights[w])
 
         return self

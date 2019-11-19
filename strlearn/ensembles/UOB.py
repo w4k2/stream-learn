@@ -65,8 +65,6 @@ class UOB(BaseEstimator, ClassifierMixin):
 
         self.last_instance_sizes = self.current_tdcs_
 
-        print(self.chunk_tdcs)
-
         # improved UOB
         self.weights = []
         for instance, label in enumerate(self.y_):
