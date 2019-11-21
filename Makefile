@@ -16,6 +16,7 @@ clean:
 	rm -rf examples/.ipynb_checkpoints
 
 docs: clean install
+	cp -rf ./plots ./doc/ 
 	cd doc && make
 
 test-code:

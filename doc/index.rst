@@ -8,6 +8,7 @@ Welcome to stream-learn documentation!
    :caption: Getting Started
 
    install
+   streams
 
 .. toctree::
    :maxdepth: 2
