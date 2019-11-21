@@ -32,6 +32,8 @@ class StreamGenerator:
         the more sudden the drift is.
     n_classes : integer, optional (default=2)
         The number of classes in the generated data stream.
+    y_flip: integer or tuple (default=0.01)
+        Label noise for whole dataset or separate classes.
     reocurring : boolean, optional (default=False)
         Determines if the streams can go back to
         the previously encountered concepts.
@@ -73,6 +75,7 @@ class StreamGenerator:
         reocurring=False,
         weights=None,
         incremental=False,
+        y_flip=0.01,
         **kwargs,
     ):
         # Wyższy spacing, bardziej nagły
@@ -87,6 +90,7 @@ class StreamGenerator:
         self.n_samples = self.n_chunks * self.chunk_size
         self.weights = weights
         self.incremental = incremental
+        self.y_flip = y_flip
         self.classes = np.array(range(self.n_classes))
 
     def is_dry(self):
@@ -160,7 +164,7 @@ class StreamGenerator:
 
             # Inkrementalny
             if self.incremental:
-
+                # Something
                 self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
                 self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
 
@@ -241,8 +245,23 @@ class StreamGenerator:
             # Jeśli nie, przecież jest jeden, więc spłaszcz
             self.concepts = np.squeeze(self.concepts)
 
+        # Assign objects to real classes
         X = np.choose(self.class_selector, self.concepts).T
-        y = self.class_selector
+
+        # Prepare label noise
+        print(type(self.y_flip))
+        if isinstance(self.y_flip, float):
+            # Global label noise
+            flip_noise = np.random.rand(self.n_samples)
+            print(flip_noise, flip_noise.shape)
+            y = np.copy(self.class_selector)
+            y[flip_noise < self.y_flip] += 1
+            y = np.mod(y, self.n_classes)
+
+            # print(self.n_classes)
+
+        # exit()
+        # y = self.class_selector
 
         return X, y
 

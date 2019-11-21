@@ -61,6 +61,8 @@ streams.update(
     }
 )
 
+streams = {"fliptest": StreamGenerator(**mcargs, y_flip=0.0)}
+
 
 for sid, stream_name in enumerate(streams):
     print(sid, stream_name)
