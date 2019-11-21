@@ -52,14 +52,10 @@ def test_generator_nonuniform_flip():
 def test_wrong_flip_tuple():
     with pytest.raises(Exception):
         stream = sl.streams.StreamGenerator(y_flip=(.1, .9, .5))
-        while stream.get_chunk():
-            pass
 
 def test_wrong_flip_type():
     with pytest.raises(Exception):
         stream = sl.streams.StreamGenerator(y_flip="life is strange")
-        while stream.get_chunk():
-            pass
 
 def test_generators_drying():
     stream = sl.streams.StreamGenerator()
