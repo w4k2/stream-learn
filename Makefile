@@ -16,7 +16,7 @@ clean:
 	rm -rf examples/.ipynb_checkpoints
 
 docs: clean install
-	cp -rf ./plots ./doc/ 
+	cp -rf ./plots ./doc/
 	cd doc && make
 
 test-code:
@@ -36,7 +36,7 @@ code-analysis:
 	pylint -E strlearn/ -d E1103,E0611,E1101
 
 upload:
-	python setup.py sdist upload -r pypi
+	twine upload dist/*
 	pip install --upgrade stream-learn
 
 install: clean
