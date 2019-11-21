@@ -63,4 +63,8 @@ stream-learn API
    :template: class.rst
 
    ensembles.ChunkBasedEnsemble
+   ensembles.OnlineBagging
+   ensembles.OOB
+   ensembles.SampleWeightedMetaEstimator
+   ensembles.UOB
    ensembles.WAE
