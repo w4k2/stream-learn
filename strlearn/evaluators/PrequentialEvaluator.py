@@ -5,6 +5,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from ..utils import bac, f_score, geometric_mean_score
 from sklearn.base import ClassifierMixin
 
+
 class PrequentialEvaluator:
     """
     Prequential data stream evaluator.
@@ -61,7 +62,6 @@ class PrequentialEvaluator:
             moves before the next evaluation and training steps.
         """
 
-
         if isinstance(clfs, ClassifierMixin):
             self.clfs = [clfs]
         else:
@@ -83,6 +83,9 @@ class PrequentialEvaluator:
         i = 0
         while True:
             stream.get_chunk()
+            a, _ = stream.current_chunk
+            # break
+
             if stream.previous_chunk is not None:
                 X_p, y_p = stream.previous_chunk
                 X_c, y_c = stream.current_chunk
@@ -90,7 +93,7 @@ class PrequentialEvaluator:
                 X = np.concatenate((X_p, X_c), axis=0)
                 y = np.concatenate((y_p, y_c), axis=0)
 
-                for interval_id in range(intervals_per_chunk):
+                for interval_id in range(1, intervals_per_chunk + 1):
                     start = interval_id * interval
                     end = start + self.stream.chunk_size
 

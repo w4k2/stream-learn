@@ -55,13 +55,17 @@ class TestThenTrainEvaluator:
         stream : object
             Data stream as an object.
         """
+        # Verify if pool of classifiers or one
         if isinstance(clfs, ClassifierMixin):
             self.clfs = [clfs]
         else:
             self.clfs = clfs
+
+        # Assign parameters
         self.stream = stream
         self.metrics = metrics
 
+        # Prepare scores table
         self.scores_ = np.zeros(
             (
                 len(self.clfs),
@@ -70,7 +74,7 @@ class TestThenTrainEvaluator:
             )
         )
 
-        self.classes_ = stream.classes  # np.array(range(stream.n_classes))
+        self.classes_ = stream.classes
 
         while True:
             X, y = stream.get_chunk()
