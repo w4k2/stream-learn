@@ -61,14 +61,10 @@ streams.update(
     }
 )
 
-streams = {"fliptest": StreamGenerator(**mcargs, y_flip=0.0)}
-
 
 for sid, stream_name in enumerate(streams):
     print(sid, stream_name)
     stream = streams[stream_name]
-    if sid == 9:
-        continue
 
     checkpoints = np.linspace(0, stream.n_chunks - 1, 8).astype(int)
 

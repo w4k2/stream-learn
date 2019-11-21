@@ -31,9 +31,15 @@ mcargs = {
 }
 
 streams = {
-    "9_first": StreamGenerator(n_drifts=3, concept_sigmoid_spacing=5, reocurring=True, incremental=True,
-                               weights=(2, 5, 0.9), **mcargs),
-    "9_second": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs)
+    "9_first": StreamGenerator(
+        n_drifts=3,
+        concept_sigmoid_spacing=5,
+        reocurring=True,
+        incremental=True,
+        weights=(2, 5, 0.9),
+        **mcargs
+    ),
+    "9_second": StreamGenerator(n_drifts=1, concept_sigmoid_spacing=5, **mcargs),
 }
 
 for stream_name in streams:

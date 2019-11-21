@@ -249,20 +249,24 @@ class StreamGenerator:
         X = np.choose(self.class_selector, self.concepts).T
 
         # Prepare label noise
-        print(type(self.y_flip))
+        y = np.copy(self.class_selector)
         if isinstance(self.y_flip, float):
             # Global label noise
             flip_noise = np.random.rand(self.n_samples)
-            print(flip_noise, flip_noise.shape)
-            y = np.copy(self.class_selector)
             y[flip_noise < self.y_flip] += 1
-            y = np.mod(y, self.n_classes)
+        elif isinstance(self.y_flip, tuple):
+            if len(self.y_flip) == self.n_classes:
+                for i, val in enumerate(self.y_flip):
+                    mask = self.class_selector == i
+                    y[(np.random.rand(self.n_samples) < val) & mask] += 1
+            else:
+                raise Exception(
+                    "y_flip tuple should have as many values as classes in problem"
+                )
+        else:
+            raise Exception("y_flip should be float or tuple")
 
-            # print(self.n_classes)
-
-        # exit()
-        # y = self.class_selector
-
+        y = np.mod(y, self.n_classes)
         return X, y
 
     def get_chunk(self):

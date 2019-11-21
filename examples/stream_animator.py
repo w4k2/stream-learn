@@ -44,7 +44,7 @@ streams = {
         n_drifts=2, concept_sigmoid_spacing=5, reocurring=False, **mcargs
     ),
 }
-streams={}
+# streams={}
 mcargs.update({"n_classes": 2, "random_state": 5})
 streams.update(
     {
@@ -74,14 +74,14 @@ for stream_name in tqdm(streams):
         if i in checkpoints:
             index = np.where(checkpoints == i)[0][0]
 
-            plt.figure(figsize=(2,2))
+            plt.figure(figsize=(2, 2))
             plt.title("chunk %i" % i, fontsize=8)
-            #ax = fig.add_subplot(gs[2, index])
+            # ax = fig.add_subplot(gs[2, index])
             plt.scatter(X[:, 0], X[:, 1], c=y, s=10, alpha=0.5, cmap="brg")
             plt.xlim(-5, 5)
             plt.ylim(-5, 5)
-            #ax.set_xticks([])
-            #ax.set_yticks([])
+            # ax.set_xticks([])
+            # ax.set_yticks([])
             plt.axis("off")
             plt.grid(color="r", linestyle="-", linewidth=2)
             plt.tight_layout()
