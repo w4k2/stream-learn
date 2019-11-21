@@ -52,7 +52,7 @@ def test_UOB():
 def test_pp_WAE():
     """Post pruned WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(post_pruning=True)
+    clf = sl.ensembles.WAE(post_pruning=True, ensemble_size=5)
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
 

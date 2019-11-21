@@ -48,6 +48,7 @@ stream-learn API
    :template: class.rst
 
    classifiers.AccumulatedSamplesClassifier
+   classifiers.SampleWeightedMetaEstimator
 
 :mod:`strlearn.ensembles`: Ensembles
 ====================================================
@@ -65,6 +66,5 @@ stream-learn API
    ensembles.ChunkBasedEnsemble
    ensembles.OnlineBagging
    ensembles.OOB
-   ensembles.SampleWeightedMetaEstimator
    ensembles.UOB
    ensembles.WAE
