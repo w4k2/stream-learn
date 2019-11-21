@@ -4,8 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/w4k2/stream-learn/badge.svg?branch=master)](https://coveralls.io/github/w4k2/stream-learn?branch=master)
 [![CircleCI Status](https://circleci.com/gh/w4k2/stream-learn.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/w4k2/stream-learn/tree/master)
 
-stream-learn is a Python package equipped with a procedures to process data streams using estimators
-with API compatible with scikit-learn.
+stream-learn is a Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.
 
 ## Documentation
 
@@ -22,7 +21,17 @@ pip install stream-learn
 ## Example usage
 
 ```python
-WRONG
+import strlearn as sl
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
+
+stream = sl.streams.StreamGenerator(n_chunks=250, n_drifts=1)
+clf = GaussianNB()
+evaluator = sl.evaluators.TestThenTrainEvaluator()
+
+evaluator.process(stream, clf)
+
+print(evaluator.scores_)
 ```
 
 <!--
