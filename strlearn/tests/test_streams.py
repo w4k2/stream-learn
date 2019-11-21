@@ -1,6 +1,6 @@
 """Basic tests."""
 import sys
-
+import pytest
 import strlearn as sl
 import numpy as np
 
@@ -29,8 +29,8 @@ def test_generator_incremental_reocurring():
     while stream.get_chunk():
         pass
 
-def test_generator_gradual_reocurring():
-    stream = sl.streams.StreamGenerator(n_drifts=2, reocurring=True)
+def test_generator_gradual_nonreocurring():
+    stream = sl.streams.StreamGenerator(n_drifts=2, reocurring=False)
     while stream.get_chunk():
         pass
 
@@ -48,6 +48,18 @@ def test_generator_nonuniform_flip():
     stream = sl.streams.StreamGenerator(y_flip=(.1, .9))
     while stream.get_chunk():
         pass
+
+def test_wrong_flip_tuple():
+    with pytest.raises(Exception):
+        stream = sl.streams.StreamGenerator(y_flip=(.1, .9, .5))
+        while stream.get_chunk():
+            pass
+
+def test_wrong_flip_type():
+    with pytest.raises(Exception):
+        stream = sl.streams.StreamGenerator(y_flip="life is strange")
+        while stream.get_chunk():
+            pass
 
 def test_generators_drying():
     stream = sl.streams.StreamGenerator()
