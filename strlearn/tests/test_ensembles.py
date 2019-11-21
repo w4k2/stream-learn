@@ -26,6 +26,29 @@ def test_WAE():
     evaluator.process(stream, clf)
 
 
+def test_OOB():
+    """Bare WAE."""
+    stream = get_stream()
+    clf = sl.ensembles.OOB()
+    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator.process(stream, clf)
+
+def test_OB():
+    """Bare WAE."""
+    stream = get_stream()
+    clf = sl.ensembles.OnlineBagging()
+    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator.process(stream, clf)
+
+def test_UOB():
+    """Bare WAE."""
+    stream = get_stream()
+    clf = sl.ensembles.UOB()
+    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator.process(stream, clf)
+
+
+
 def test_pp_WAE():
     """Post pruned WAE."""
     stream = get_stream()
