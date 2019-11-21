@@ -3,9 +3,7 @@
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score
 from ..utils import bac, f_score, geometric_mean_score
-
-METRICS = (accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score)
-
+from sklearn.base import ClassifierMixin
 
 class PrequentialEvaluator:
     """
@@ -48,7 +46,7 @@ class PrequentialEvaluator:
     def __init__(self):
         pass
 
-    def process(self, stream, clf, interval=100):
+    def process(self, stream, clfs, interval=100, metrics=(accuracy_score, bac)):
         """
         Perform learning procedure on data stream.
 
@@ -62,15 +60,25 @@ class PrequentialEvaluator:
             The number of instances by which the sliding window
             moves before the next evaluation and training steps.
         """
-        self.clf = clf
+
+
+        if isinstance(clfs, ClassifierMixin):
+            self.clfs = [clfs]
+        else:
+            self.clfs = clfs
         self.stream = stream
         self.interval = interval
-        self.classes_ = np.array(range(stream.n_classes))
+        self.metrics = metrics
 
         intervals_per_chunk = int(self.stream.chunk_size / self.interval)
         self.scores_ = np.zeros(
-            ((stream.n_chunks - 1) * intervals_per_chunk, len(METRICS))
+            (
+                len(self.clfs),
+                ((stream.n_chunks - 1) * intervals_per_chunk),
+                len(self.metrics),
+            )
         )
+        self.classes_ = stream.classes
 
         i = 0
         while True:
@@ -86,18 +94,19 @@ class PrequentialEvaluator:
                     start = interval_id * interval
                     end = start + self.stream.chunk_size
 
-                    y_pred = clf.predict(X[start:end])
+                    for clfid, clf in enumerate(self.clfs):
+                        y_pred = clf.predict(X[start:end])
 
-                    self.scores_[i] = [
-                        metric(y[start:end], y_pred) for metric in METRICS
-                    ]
+                        self.scores_[clfid, i] = [
+                            metric(y[start:end], y_pred) for metric in self.metrics
+                        ]
 
-                    clf.partial_fit(X[start:end], y[start:end])
+                    [clf.partial_fit(X[start:end], y[start:end]) for clf in self.clfs]
 
                     i += 1
             else:
                 X_train, y_train = stream.current_chunk
-                clf.partial_fit(X_train, y_train, self.classes_)
+                [clf.partial_fit(X_train, y_train, self.classes_) for clf in self.clfs]
 
             if stream.is_dry():
                 break
