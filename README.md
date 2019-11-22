@@ -23,7 +23,6 @@ pip install stream-learn
 ```python
 import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
 
 stream = sl.streams.StreamGenerator(n_chunks=250, n_drifts=1)
 clf = GaussianNB()
