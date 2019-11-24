@@ -110,7 +110,7 @@ class OALE(BaseEstimator, ClassifierMixin):
             .predict_proba(x)
 
     def _update_classifier(self, x, y, clf):
-        y = [y] if not isinstance(y, np.ndarray) else y
+        y = [y] if not isinstance(y, np.ndarray) else y # TODO(bgulowaty): rework required
         x = np.array(x)
         x = np.array([x]) if x.ndim == 1 else x
         try:
