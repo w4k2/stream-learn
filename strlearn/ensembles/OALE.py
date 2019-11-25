@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import numpy as np
 from attr import attrib, attrs
@@ -7,7 +7,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.naive_bayes import GaussianNB
 from sklearn.utils import check_X_y, check_array
 
-from strlearn.base.ClassifierSupplier import ClassifierSupplier
+from strlearn.base import ClassifierSupplier
 from strlearn.base.exceptions import BaseClassifierDoesNotSupportPartialFitting
 from strlearn.base.types import Classifier
 from strlearn.ensembles.voting.SupportsExtractor import SupportsExtractor
@@ -37,17 +37,17 @@ class OALE(BaseEstimator, ClassifierMixin):
     _dynamic_clf_weights: List[float] = attrib(factory=list, init=False)
     _dynamic_clfs: List[Classifier] = attrib(factory=list, init=False)
 
-    def partial_fit(self, X, y, classes=None):
-        X, y = check_X_y(X, y)
+    def partial_fit(self, x, y, classes=None):
+        x, y = check_X_y(x, y)
 
         self._classes = classes
         if self._classes is None:
             self._classes, _ = np.unique(y, return_inverse=True)
 
-        for x_single, y_single in zip(X, y):
-            self._partial_fit(x_single, y_single, classes)
+        for x_single, y_single in zip(x, y):
+            self._partial_fit(x_single, y_single)
 
-    def _partial_fit(self, x_new, y_new, classes=None):
+    def _partial_fit(self, x_new, y_new):
 
         new_instance = (x_new, y_new)
         self._processed_instances += 1
@@ -110,15 +110,19 @@ class OALE(BaseEstimator, ClassifierMixin):
             .predict_proba(x)
 
     def _update_classifier(self, x, y, clf):
-        y = [y] if not isinstance(y, np.ndarray) else y # TODO(bgulowaty): rework required
-        x = np.array(x)
+        def is_collection(arr):
+            return isinstance(arr, Union[np.ndarray, List].__args__)
+
+        y = np.array([y]) if not is_collection(y) else y
+        x = np.array([x]) if not is_collection(x) else x  # TODO(bgulowaty): extract this
         x = np.array([x]) if x.ndim == 1 else x
+
         try:
             clf.partial_fit(x, y, self._classes)
         except Exception as e:
             raise BaseClassifierDoesNotSupportPartialFitting(e)
 
-    def _random_strategy(self, x):
+    def _random_strategy(self):
         if self._random_strategy_threshold <= np.random.uniform():
             return True
         return False
@@ -185,7 +189,7 @@ class OALE(BaseEstimator, ClassifierMixin):
         labeling = self._uncertainty_strategy(x)
 
         if labeling is False:
-            labeling = self._random_strategy(x)
+            labeling = self._random_strategy()
 
         if labeling is True:
             self._update_stable_classifier(x, y)

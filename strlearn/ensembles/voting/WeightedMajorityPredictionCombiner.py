@@ -13,7 +13,7 @@ class WeightedMajorityPredictionCombiner(BaseEnsemblePredictionCombiner):
     _classes = attrib()
 
     def get_supports(self, x):
-        return SupportsExtractor(self._ensemble, self._weights).extract(x)
+        return SupportsExtractor(self._ensemble, self._weights, self._classes).extract(x)
 
     def predict(self, x):
         x = check_array(x)
