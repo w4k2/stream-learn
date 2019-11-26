@@ -1,8 +1,7 @@
 from .ChunkBasedEnsemble import ChunkBasedEnsemble
-from .OALE import OALE
-from .OOB import OOB
-from .OnlineBagging import OnlineBagging
-from .UOB import UOB
 from .WAE import WAE
+from .OnlineBagging import OnlineBagging
+from.OOB import OOB
+from .UOB import UOB
 
-__all__ = ["ChunkBasedEnsemble", "WAE", "OnlineBagging", "OOB", "UOB", "OALE"]
+__all__ = ["ChunkBasedEnsemble", "WAE", "OnlineBagging", "OOB", "UOB"]
