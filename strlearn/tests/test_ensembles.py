@@ -121,11 +121,3 @@ def test_pp_WAE_rejuvenation():
     clf = sl.ensembles.WAE(rejuvenation_power=0.5, post_pruning=True)
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
-
-
-def test_OALE():
-    """Bare OALE."""
-    stream = get_stream()
-    clf = sl.ensembles.OALE()
-    evaluator = sl.evaluators.TestThenTrainEvaluator()
-    evaluator.process(stream, clf)
