@@ -1,7 +1,6 @@
 """Ensemble tests."""
 
 import sys
-
 import strlearn as sl
 
 sys.path.insert(0, "../..")
