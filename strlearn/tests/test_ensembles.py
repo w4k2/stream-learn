@@ -1,6 +1,7 @@
 """Ensemble tests."""
 
 import sys
+
 import strlearn as sl
 
 sys.path.insert(0, "../..")
@@ -33,6 +34,7 @@ def test_OOB():
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
 
+
 def test_OB():
     """Bare WAE."""
     stream = get_stream()
@@ -40,13 +42,13 @@ def test_OB():
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
 
+
 def test_UOB():
     """Bare WAE."""
     stream = get_stream()
     clf = sl.ensembles.UOB()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
-
 
 
 def test_pp_WAE():
@@ -117,5 +119,13 @@ def test_pp_WAE_rejuvenation():
     """Post pruning with rejuvenation WAE."""
     stream = get_stream()
     clf = sl.ensembles.WAE(rejuvenation_power=0.5, post_pruning=True)
+    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator.process(stream, clf)
+
+
+def test_OALE():
+    """Bare OALE."""
+    stream = get_stream()
+    clf = sl.ensembles.OALE()
     evaluator = sl.evaluators.TestThenTrainEvaluator()
     evaluator.process(stream, clf)
