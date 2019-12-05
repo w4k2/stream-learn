@@ -88,6 +88,22 @@ def test_generator_stationary():
     evaluator.process(stream, clf)
 
 
+def test_generator_str():
+    stream = sl.streams.StreamGenerator()
+    clf = MLPClassifier()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, clf)
+    print(evaluator.scores_)
+    assert str(stream) == "gr_css999_rs1410_nd0_ln1_d0_50000"
+
+    stream = sl.streams.StreamGenerator(y_flip=(0.5, 0.5))
+    clf = MLPClassifier()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, clf)
+    print(evaluator.scores_)
+    assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
+
+
 """
 def test_arff_parser():
     stream = sl.streams.ARFFParser("strlearn/streams/Agrawal")
