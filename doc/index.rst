@@ -30,9 +30,9 @@ Welcome to stream-learn documentation!
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: Tutorial - Examples
+   :caption: Other informations
 
-   auto_examples/index
+   about
 
 
 `Getting started <install.html>`_
