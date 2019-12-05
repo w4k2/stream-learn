@@ -1,2 +1,2 @@
-from .PrequentialEvaluator import PrequentialEvaluator
-from .TestThenTrainEvaluator import TestThenTrainEvaluator
+from .Prequential import Prequential
+from .TestThenTrain import TestThenTrain

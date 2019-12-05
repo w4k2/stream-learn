@@ -36,14 +36,10 @@ code-analysis:
 	pylint -E strlearn/ -d E1103,E0611,E1101
 
 upload:
+	python setup.py sdist bdist_wheel
 	twine upload dist/*
 	pip install --upgrade stream-learn
 
 install: clean
 	python setup.py clean
 	python setup.py develop
-	#pip uninstall stream-learn --yes
-	#python setup.py install --record files.txt
-	#cat files.txt | xargs rm -rf
-	#rm files.txt
-	#python setup.py install --force

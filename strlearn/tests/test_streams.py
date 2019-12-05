@@ -19,45 +19,54 @@ def test_generator_same():
         assert np.array_equal(X_one, X_two)
         assert np.array_equal(y_one, y_two)
 
+
 def test_generator_incremental():
     stream = sl.streams.StreamGenerator(n_drifts=1, incremental=True)
     while stream.get_chunk():
         pass
+
 
 def test_generator_incremental_reocurring():
     stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, reocurring=True)
     while stream.get_chunk():
         pass
 
+
 def test_generator_gradual_nonreocurring():
     stream = sl.streams.StreamGenerator(n_drifts=2, reocurring=False)
     while stream.get_chunk():
         pass
 
+
 def test_generator_static_balance():
-    stream = sl.streams.StreamGenerator(weights=[.1, .9])
+    stream = sl.streams.StreamGenerator(weights=[0.1, 0.9])
     while stream.get_chunk():
         pass
+
 
 def test_generator_dynamic_balance():
-    stream = sl.streams.StreamGenerator(weights=(2, 5, .9))
+    stream = sl.streams.StreamGenerator(weights=(2, 5, 0.9))
     while stream.get_chunk():
         pass
 
+
 def test_generator_nonuniform_flip():
-    stream = sl.streams.StreamGenerator(y_flip=(.1, .9))
+    stream = sl.streams.StreamGenerator(y_flip=(0.1, 0.9))
     while stream.get_chunk():
         pass
+
 
 def test_wrong_flip_tuple():
     with pytest.raises(Exception):
-        stream = sl.streams.StreamGenerator(y_flip=(.1, .9, .5))
+        stream = sl.streams.StreamGenerator(y_flip=(0.1, 0.9, 0.5))
         stream.get_chunk()
+
 
 def test_wrong_flip_type():
     with pytest.raises(Exception):
         stream = sl.streams.StreamGenerator(y_flip="life is strange")
         stream.get_chunk()
+
 
 def test_generators_drying():
     stream = sl.streams.StreamGenerator()
@@ -68,19 +77,21 @@ def test_generators_drying():
 def test_generator_drifted():
     stream = sl.streams.StreamGenerator(n_drifts=1)
     clf = MLPClassifier()
-    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
 
 def test_generator_stationary():
     stream = sl.streams.StreamGenerator(n_drifts=0)
     clf = MLPClassifier()
-    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
 
-# def test_arff_parser():
-#     stream = sl.streams.ARFFParser("strlearn/streams/Agrawal")
-#     clf = MLPClassifier()
-#     evaluator = sl.evaluators.TestThenTrainEvaluator()
-#     evaluator.process(clf, stream)
+"""
+def test_arff_parser():
+    stream = sl.streams.ARFFParser("strlearn/streams/Agrawal")
+    clf = MLPClassifier()
+    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator.process(clf, stream)
+"""

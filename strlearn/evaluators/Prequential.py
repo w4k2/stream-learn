@@ -6,7 +6,7 @@ from ..utils import bac, f_score, geometric_mean_score
 from sklearn.base import ClassifierMixin
 
 
-class PrequentialEvaluator:
+class Prequential:
     """
     Prequential data stream evaluator.
 

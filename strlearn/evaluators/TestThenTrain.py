@@ -6,7 +6,7 @@ from ..utils import bac, geometric_mean_score, recall
 from sklearn.base import ClassifierMixin
 
 
-class TestThenTrainEvaluator:
+class TestThenTrain:
     """
     Test Than Train data stream evaluator.
 

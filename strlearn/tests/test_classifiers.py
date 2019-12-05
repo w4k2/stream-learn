@@ -14,7 +14,7 @@ def test_ACS_TestThanTrain():
     "Bare ACS for TTT"
     stream = get_stream()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
-    evaluator = sl.evaluators.TestThenTrainEvaluator()
+    evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
 
@@ -22,5 +22,5 @@ def test_ACS_Prequential():
     "Bare ACS for Prequential"
     stream = get_stream()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
-    evaluator = sl.evaluators.PrequentialEvaluator()
+    evaluator = sl.evaluators.Prequential()
     evaluator.process(stream, clf)
