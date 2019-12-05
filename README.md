@@ -22,15 +22,36 @@ pip install stream-learn
 
 ```python
 import strlearn as sl
-from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 
-stream = sl.streams.StreamGenerator(n_chunks=250, n_drifts=1)
-clf = GaussianNB()
-evaluator = sl.evaluators.TestThenTrainEvaluator()
+# Initialize scikit-learn classifier with partial_fit() function
+clf = MLPClassifier()
 
+# Declare data stream
+stream = sl.streams.StreamGenerator(n_chunks=10, n_drifts=1)
+
+# Select vector of metrics
+metrics = [sl.utils.metrics.bac, sl.utils.metrics.f_score]
+
+# Initialize evaluator with given metrics
+evaluator = sl.evaluators.TestThenTrain(metrics)
+
+# Run evaluator over stream with classifier
 evaluator.process(stream, clf)
+```
 
-print(evaluator.scores_)
+```python
+>>> print(evaluator.scores)
+[[[0.29730274 0.29145729]
+  [0.34494021 0.36097561]
+  [0.43464118 0.44878049]
+  [0.42579578 0.36666667]
+  [0.45569557 0.4171123 ]
+  [0.47020869 0.44791667]
+  [0.4645207  0.46534653]
+  [0.525      0.5177665 ]
+  [0.4893617  0.46875   ]]]
+
 ```
 
 <!--

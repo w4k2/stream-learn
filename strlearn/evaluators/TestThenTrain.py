@@ -65,7 +65,7 @@ class TestThenTrain:
         self.stream_ = stream
 
         # Prepare scores table
-        self.scores_ = np.zeros(
+        self.scores = np.zeros(
             (len(self.clfs_), ((self.stream_.n_chunks - 1)), len(self.metrics))
         )
 
@@ -77,7 +77,7 @@ class TestThenTrain:
                 for clfid, clf in enumerate(self.clfs_):
                     y_pred = clf.predict(X)
 
-                    self.scores_[clfid, stream.chunk_id - 1] = [
+                    self.scores[clfid, stream.chunk_id - 1] = [
                         metric(y, y_pred) for metric in self.metrics
                     ]
 

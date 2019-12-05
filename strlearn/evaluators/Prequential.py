@@ -72,7 +72,7 @@ class Prequential:
         self.interval_ = interval
 
         intervals_per_chunk = int(self.stream_.chunk_size / self.interval_)
-        self.scores_ = np.zeros(
+        self.scores = np.zeros(
             (
                 len(self.clfs),
                 ((stream.n_chunks - 1) * intervals_per_chunk),
@@ -100,7 +100,7 @@ class Prequential:
                     for clfid, clf in enumerate(self.clfs):
                         y_pred = clf.predict(X[start:end])
 
-                        self.scores_[clfid, i] = [
+                        self.scores[clfid, i] = [
                             metric(y[start:end], y_pred) for metric in self.metrics
                         ]
 

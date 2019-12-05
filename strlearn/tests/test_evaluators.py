@@ -18,7 +18,7 @@ def test_TTT_single_clf():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
-    assert evaluator.scores_.shape == (1, stream.n_chunks - 1, 2)
+    assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
 
 
 def test_TTT_custom_metrics():
@@ -28,7 +28,7 @@ def test_TTT_custom_metrics():
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clf)
 
-    assert evaluator.scores_.shape == (1, stream.n_chunks - 1, len(metrics))
+    assert evaluator.scores.shape == (1, stream.n_chunks - 1, len(metrics))
 
 
 def test_TTT_multiple_clfs():
@@ -41,7 +41,7 @@ def test_TTT_multiple_clfs():
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clfs)
 
-    assert evaluator.scores_.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
+    assert evaluator.scores.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
 
 
 def test_P_multiple_clfs():
@@ -54,7 +54,7 @@ def test_P_multiple_clfs():
     evaluator = sl.evaluators.Prequential(metrics=metrics)
     evaluator.process(stream, clfs)
 
-    assert evaluator.scores_.shape == (
+    assert evaluator.scores.shape == (
         len(clfs),
         (stream.n_chunks - 1) * 2,
         len(metrics),
