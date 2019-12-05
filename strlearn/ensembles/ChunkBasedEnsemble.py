@@ -1,12 +1,12 @@
 """Chunk based ensemble."""
 
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.base import ClassifierMixin, clone
+from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
-from sklearn.naive_bayes import GaussianNB
 
 
-class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
+class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
     """
     Chunk based ensemble classifier.
 
@@ -15,7 +15,7 @@ class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
 
     Parameters
     ----------
-    ensemble_size : integer, optional (default=5)
+    n_estimators : integer, optional (default=5)
         The maximum number of estimators trained using consecutive data chunks
         and maintained in the ensemble.
 
@@ -44,13 +44,10 @@ class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self, ensemble_size=5):
+    def __init__(self, base_estimator=None, n_estimators=10):
         """Initialization."""
-        self.ensemble_size = ensemble_size
-
-    def set_base_clf(self, base_clf=GaussianNB):
-        """Establishing base classifier."""
-        self._base_clf = base_clf
+        self.base_estimator = base_estimator
+        self.n_estimators = n_estimators
 
     def fit(self, X, y):
         """Fitting."""
@@ -61,8 +58,7 @@ class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
         X, y = check_X_y(X, y)
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
+        if not hasattr(self, "ensemble_"):
             self.ensemble_ = []
 
         # Check feature consistency
@@ -76,9 +72,9 @@ class ChunkBasedEnsemble(BaseEstimator, ClassifierMixin):
         if self.classes_ is None:
             self.classes_, _ = np.unique(y, return_inverse=True)
 
-        self.ensemble_.append(self._base_clf().fit(self.X_, self.y_))
+        self.ensemble_.append(clone(self.base_estimator).fit(self.X_, self.y_))
 
-        if len(self.ensemble_) > self.ensemble_size:
+        if len(self.ensemble_) > self.n_estimators:
             del self.ensemble_[0]
 
         return self

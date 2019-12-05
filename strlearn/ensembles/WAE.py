@@ -3,7 +3,8 @@ Weighted Aging Ensemble.
 
 """
 
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.base import ClassifierMixin, clone
+from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn import base
@@ -22,7 +23,7 @@ WEIGHT_CALCULATION = (
 AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 
 
-class WAE(BaseEstimator, ClassifierMixin):
+class WAE(BaseEnsemble, ClassifierMixin):
     """
     Weighted Aging Ensemble.
 
@@ -38,7 +39,8 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def __init__(
         self,
-        ensemble_size=20,
+        base_estimator=None,
+        n_estimators=10,
         theta=0.1,
         post_pruning=False,
         pruning_criterion="accuracy",
@@ -47,17 +49,14 @@ class WAE(BaseEstimator, ClassifierMixin):
         rejuvenation_power=0.0,
     ):
         """Initialization."""
+        self.base_estimator = base_estimator
         self.pruning_criterion = pruning_criterion
-        self.ensemble_size = ensemble_size
+        self.n_estimators = n_estimators
         self.theta = theta
         self.post_pruning = post_pruning
         self.weight_calculation_method = weight_calculation_method
         self.aging_method = aging_method
         self.rejuvenation_power = rejuvenation_power
-
-    def set_base_clf(self, base_clf=neighbors.KNeighborsClassifier()):
-        """Establish base classifier."""
-        self._base_clf = base_clf
 
     def _prune(self):
         X, y = self.previous_X, self.previous_y
@@ -74,9 +73,6 @@ class WAE(BaseEstimator, ClassifierMixin):
     # Fitting
     def fit(self, X, y):
         """Fitting."""
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
-
         X, y = check_X_y(X, y)
         self.X_ = X
         self.y_ = y
@@ -95,8 +91,6 @@ class WAE(BaseEstimator, ClassifierMixin):
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
         X, y = check_X_y(X, y)
         self.X_ = X
         self.y_ = y
@@ -114,12 +108,12 @@ class WAE(BaseEstimator, ClassifierMixin):
             self.overall_accuracy = self.score(self.previous_X, self.previous_y)
 
         # Pre-pruning
-        if len(self.ensemble_) > self.ensemble_size and not self.post_pruning:
+        if len(self.ensemble_) > self.n_estimators and not self.post_pruning:
             self._prune()
 
         # Preparing and training new candidate
         self.classes_ = classes
-        candidate_clf = base.clone(self._base_clf)
+        candidate_clf = base.clone(self.base_estimator)
         candidate_clf.fit(X, y)
         self.ensemble_.append(candidate_clf)
         self.iterations_ = np.append(self.iterations_, [1])
@@ -130,7 +124,7 @@ class WAE(BaseEstimator, ClassifierMixin):
         self._extinct()
 
         # Post-pruning
-        if len(self.ensemble_) > self.ensemble_size and self.post_pruning:
+        if len(self.ensemble_) > self.n_estimators and self.post_pruning:
             self._prune()
 
         # Weights normalization

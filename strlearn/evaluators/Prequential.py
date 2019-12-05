@@ -1,8 +1,8 @@
 """Prequential evaluator."""
 
 import numpy as np
-from sklearn.metrics import accuracy_score, roc_auc_score
-from ..utils import bac, f_score, geometric_mean_score
+from sklearn.metrics import accuracy_score
+from ..utils import bac
 from sklearn.base import ClassifierMixin
 
 

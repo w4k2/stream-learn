@@ -2,6 +2,7 @@
 
 import sys
 import strlearn as sl
+from sklearn.naive_bayes import GaussianNB
 
 sys.path.insert(0, "../..")
 
@@ -13,7 +14,7 @@ def get_stream():
 def test_CBE():
     "Bare CBE"
     stream = get_stream()
-    clf = sl.ensembles.ChunkBasedEnsemble()
+    clf = sl.ensembles.ChunkBasedEnsemble(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -21,7 +22,7 @@ def test_CBE():
 def test_WAE():
     """Bare WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE()
+    clf = sl.ensembles.WAE(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -53,7 +54,7 @@ def test_UOB():
 def test_pp_WAE():
     """Post pruned WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(post_pruning=True, ensemble_size=5)
+    clf = sl.ensembles.WAE(GaussianNB(), post_pruning=True, n_estimators=5)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -61,7 +62,7 @@ def test_pp_WAE():
 def test_WAE_wcm1():
     """Various weight computation methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(weight_calculation_method="same_for_each")
+    clf = sl.ensembles.WAE(GaussianNB(), weight_calculation_method="same_for_each")
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -69,7 +70,9 @@ def test_WAE_wcm1():
 def test_WAE_wcm2():
     """Various weight computation methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(weight_calculation_method="proportional_to_accuracy")
+    clf = sl.ensembles.WAE(
+        GaussianNB(), weight_calculation_method="proportional_to_accuracy"
+    )
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -77,7 +80,9 @@ def test_WAE_wcm2():
 def test_WAE_wcm3():
     """Various weight computation methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(weight_calculation_method="pta_related_to_whole")
+    clf = sl.ensembles.WAE(
+        GaussianNB(), weight_calculation_method="pta_related_to_whole"
+    )
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -85,7 +90,7 @@ def test_WAE_wcm3():
 def test_WAE_wcm4():
     """Various weight computation methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(weight_calculation_method="bell_curve")
+    clf = sl.ensembles.WAE(GaussianNB(), weight_calculation_method="bell_curve")
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -93,7 +98,7 @@ def test_WAE_wcm4():
 def test_WAE_am2():
     """Various aging methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(aging_method="constant")
+    clf = sl.ensembles.WAE(GaussianNB(), aging_method="constant")
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -101,7 +106,7 @@ def test_WAE_am2():
 def test_WAE_am3():
     """Various aging methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(aging_method="gaussian")
+    clf = sl.ensembles.WAE(GaussianNB(), aging_method="gaussian")
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -109,7 +114,7 @@ def test_WAE_am3():
 def test_WAE_rejuvenation():
     """Rejuvenation of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(rejuvenation_power=0.5)
+    clf = sl.ensembles.WAE(GaussianNB(), rejuvenation_power=0.5)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -117,6 +122,6 @@ def test_WAE_rejuvenation():
 def test_pp_WAE_rejuvenation():
     """Post pruning with rejuvenation WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(rejuvenation_power=0.5, post_pruning=True)
+    clf = sl.ensembles.WAE(GaussianNB(), rejuvenation_power=0.5, post_pruning=True)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
