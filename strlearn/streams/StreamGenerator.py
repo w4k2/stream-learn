@@ -91,7 +91,7 @@ class StreamGenerator:
         self.weights = weights
         self.incremental = incremental
         self.y_flip = y_flip
-        self.classes = np.array(range(self.n_classes))
+        self.classes_ = np.array(range(self.n_classes))
 
     def is_dry(self):
         """Checking if we have reached the end of the stream."""

@@ -41,10 +41,10 @@ class TestThenTrain:
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self, cut=0):
-        self.cut = cut
+    def __init__(self, metrics=(accuracy_score, bac)):
+        self.metrics = metrics
 
-    def process(self, stream, clfs, metrics=(accuracy_score, bac)):
+    def process(self, stream, clfs):
         """
         Perform learning procedure on data stream.
 
@@ -57,31 +57,24 @@ class TestThenTrain:
         """
         # Verify if pool of classifiers or one
         if isinstance(clfs, ClassifierMixin):
-            self.clfs = [clfs]
+            self.clfs_ = [clfs]
         else:
-            self.clfs = clfs
+            self.clfs_ = clfs
 
         # Assign parameters
-        self.stream = stream
-        self.metrics = metrics
+        self.stream_ = stream
 
         # Prepare scores table
         self.scores_ = np.zeros(
-            (
-                len(self.clfs),
-                ((stream.n_chunks - 1) if self.cut == 0 else self.cut),
-                len(self.metrics),
-            )
+            (len(self.clfs_), ((self.stream_.n_chunks - 1)), len(self.metrics))
         )
-
-        self.classes_ = stream.classes
 
         while True:
             X, y = stream.get_chunk()
 
             # Test
             if stream.previous_chunk is not None:
-                for clfid, clf in enumerate(self.clfs):
+                for clfid, clf in enumerate(self.clfs_):
                     y_pred = clf.predict(X)
 
                     self.scores_[clfid, stream.chunk_id - 1] = [
@@ -89,10 +82,7 @@ class TestThenTrain:
                     ]
 
             # Train
-            [clf.partial_fit(X, y, self.classes_) for clf in self.clfs]
-
-            if self.cut > 0 and stream.chunk_id == self.cut:
-                break
+            [clf.partial_fit(X, y, self.stream_.classes_) for clf in self.clfs_]
 
             if stream.is_dry():
                 break

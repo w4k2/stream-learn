@@ -136,3 +136,4 @@ doc/_build
 doc/generated
 doc/sphinxext
 plots/keyframes
+work.py

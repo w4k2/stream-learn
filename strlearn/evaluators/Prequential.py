@@ -44,10 +44,10 @@ class Prequential:
     [0.925      0.92567027 0.9250634  0.92567027 0.92610837]]
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, metrics=(accuracy_score, bac)):
+        self.metrics = metrics
 
-    def process(self, stream, clfs, interval=100, metrics=(accuracy_score, bac)):
+    def process(self, stream, clfs, interval=100):
         """
         Perform learning procedure on data stream.
 
@@ -66,11 +66,12 @@ class Prequential:
             self.clfs = [clfs]
         else:
             self.clfs = clfs
-        self.stream = stream
-        self.interval = interval
-        self.metrics = metrics
 
-        intervals_per_chunk = int(self.stream.chunk_size / self.interval)
+        # Assign parameters
+        self.stream_ = stream
+        self.interval_ = interval
+
+        intervals_per_chunk = int(self.stream_.chunk_size / self.interval_)
         self.scores_ = np.zeros(
             (
                 len(self.clfs),
@@ -78,7 +79,6 @@ class Prequential:
                 len(self.metrics),
             )
         )
-        self.classes_ = stream.classes
 
         i = 0
         while True:
@@ -95,7 +95,7 @@ class Prequential:
 
                 for interval_id in range(1, intervals_per_chunk + 1):
                     start = interval_id * interval
-                    end = start + self.stream.chunk_size
+                    end = start + self.stream_.chunk_size
 
                     for clfid, clf in enumerate(self.clfs):
                         y_pred = clf.predict(X[start:end])
@@ -109,7 +109,10 @@ class Prequential:
                     i += 1
             else:
                 X_train, y_train = stream.current_chunk
-                [clf.partial_fit(X_train, y_train, self.classes_) for clf in self.clfs]
+                [
+                    clf.partial_fit(X_train, y_train, self.stream_.classes_)
+                    for clf in self.clfs
+                ]
 
             if stream.is_dry():
                 break
