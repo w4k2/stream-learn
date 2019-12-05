@@ -2,4 +2,11 @@
 Evaluators
 ################
 
-Something
+Test-Then-Train Evaluator
+=================
+
+Prequential Evaluator
+=================
+
+Metrics
+=================
