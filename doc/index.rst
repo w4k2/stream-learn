@@ -8,8 +8,17 @@ Welcome to stream-learn documentation!
    :caption: Getting Started
 
    install
+   quickstart
+
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: User guide
+
    streams
    evaluators
+   ensembles
 
 .. toctree::
    :maxdepth: 2
