@@ -53,7 +53,7 @@ release = strlearn.__version__
 
 # -- Options for HTML output ----------------------------------------------
 # html_theme_path = [alabaster.get_path()]
-# html_theme = 'alabaster'
+html_theme = "alabaster"
 """
 html_theme_options = {
     'logo': 'logo.png',
