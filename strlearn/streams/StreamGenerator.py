@@ -216,9 +216,11 @@ class StreamGenerator:
                 accumulator += treshold
         # If dynamic balance is given
         else:
-            self.n_balance_drifts, self.class_sigmoid_spacing, self.balance_amplitude = (
-                self.weights
-            )
+            (
+                self.n_balance_drifts,
+                self.class_sigmoid_spacing,
+                self.balance_amplitude,
+            ) = self.weights
 
             period, self.class_probabilities = self._sigmoid(
                 self.class_sigmoid_spacing, self.n_balance_drifts
@@ -299,3 +301,30 @@ class StreamGenerator:
             return self.current_chunk
         else:
             return None
+
+    def __str__(self):
+        if type(self.y_flip) == tuple:
+            return "%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
+                "gr" if self.incremental == False else "inc",
+                999
+                if self.concept_sigmoid_spacing is None
+                else self.concept_sigmoid_spacing,
+                self.random_state,
+                self.n_drifts,
+                int(self.y_flip[0] * 100),
+                int(self.y_flip[1] * 100),
+                50 if self.weights == None else (self.weights[0] * 100),
+                int(self.chunk_size * self.n_chunks),
+            )
+        else:
+            return "%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
+                "gr" if self.incremental == False else "inc",
+                999
+                if self.concept_sigmoid_spacing is None
+                else self.concept_sigmoid_spacing,
+                self.random_state,
+                self.n_drifts,
+                int(self.y_flip * 100),
+                self.weights[0] * 100,
+                int(self.chunk_size * self.n_chunks),
+            )
