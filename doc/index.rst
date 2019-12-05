@@ -9,6 +9,7 @@ Welcome to stream-learn documentation!
 
    install
    streams
+   evaluators
 
 .. toctree::
    :maxdepth: 2
