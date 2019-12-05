@@ -9,6 +9,22 @@ import sphinx_rtd_theme
 html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
+html_logo = "_static/logo2.png"
+
+html_theme_options = {
+    "logo_only": False,
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": True,
+    "style_nav_header_background": "#AF2624",
+    # Toc options
+    # "collapse_navigation": True,
+    # "sticky_navigation": True,
+    # "navigation_depth": 4,
+    # "includehidden": True,
+    # "titles_only": False,
+}
+
 sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("sphinxext"))
 
@@ -20,7 +36,7 @@ extensions = [
     "sphinx.ext.autosummary",
     # "numpydoc",
     # "sphinx.ext.ifconfig",
-    # "sphinx.ext.viewcode",
+    "sphinx.ext.viewcode",
     # "sphinx_gallery.gen_gallery",
 ]
 
@@ -52,18 +68,6 @@ release = strlearn.__version__
 
 
 # -- Options for HTML output ----------------------------------------------
-"""
-html_theme_options = {
-    'logo': 'logo.png',
-    'logo_name': True,
-    'description': 'Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.',
-    'github_button': True,
-    'travis_button': False,
-    'show_powered_by': False,
-    'github_user': 'w4k2',
-    'github_repo': 'stream-learn',
-}
-"""
 html_static_path = ["_static"]
 htmlhelp_basename = "stream-learndoc"
 
