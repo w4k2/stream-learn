@@ -1,27 +1,20 @@
 """Online Bagging."""
 
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
+from sklearn.base import ClassifierMixin, clone
+from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
 
 
-class OnlineBagging(BaseEstimator, ClassifierMixin):
+class OnlineBagging(BaseEnsemble, ClassifierMixin):
     """
 
     """
 
-    def __init__(self, ensemble_size=5):
+    def __init__(self, base_estimator=None, n_estimators=10):
         """Initialization."""
-        self.ensemble_size = ensemble_size
-
-    def set_base_clf(self, base_clf=GaussianNB):
-        """Establishing base classifier."""
-        self._base_clf = base_clf
-        self.ensemble_ = []
-        for size in range(self.ensemble_size):
-            self.ensemble_.append(self._base_clf())
+        self.base_estimator = base_estimator
+        self.n_estimators = n_estimators
 
     def fit(self, X, y):
         """Fitting."""
@@ -31,8 +24,11 @@ class OnlineBagging(BaseEstimator, ClassifierMixin):
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
         X, y = check_X_y(X, y)
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
+
+        if not hasattr(self, "ensemble_"):
+            self.ensemble_ = [
+                clone(self.base_estimator) for i in range(self.n_estimators)
+            ]
 
         # Check feature consistency
         if hasattr(self, "X_"):
@@ -47,14 +43,17 @@ class OnlineBagging(BaseEstimator, ClassifierMixin):
 
         self.weights = []
         for instance in range(self.X_.shape[0]):
-            K = np.asarray([np.random.poisson(1, 1)[0] for i in range(self.ensemble_size)])
+            K = np.asarray(
+                [np.random.poisson(1, 1)[0] for i in range(self.n_estimators)]
+            )
             self.weights.append(K)
 
         self.weights = np.asarray(self.weights).T
 
-
         for w, base_model in enumerate(self.ensemble_):
-            base_model.partial_fit(self.X_, self.y_, self.classes_, sample_weight=self.weights[w])
+            base_model.partial_fit(
+                self.X_, self.y_, self.classes_, sample_weight=self.weights[w]
+            )
 
         return self
 

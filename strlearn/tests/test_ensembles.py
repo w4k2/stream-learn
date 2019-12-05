@@ -30,7 +30,7 @@ def test_WAE():
 def test_OOB():
     """Bare WAE."""
     stream = get_stream()
-    clf = sl.ensembles.OOB()
+    clf = sl.ensembles.OOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -38,7 +38,7 @@ def test_OOB():
 def test_OB():
     """Bare WAE."""
     stream = get_stream()
-    clf = sl.ensembles.OnlineBagging()
+    clf = sl.ensembles.OnlineBagging(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -46,7 +46,7 @@ def test_OB():
 def test_UOB():
     """Bare WAE."""
     stream = get_stream()
-    clf = sl.ensembles.UOB()
+    clf = sl.ensembles.UOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 

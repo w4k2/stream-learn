@@ -3,25 +3,19 @@
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
-from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import BaseEnsemble
 
 
-class OOB(BaseEstimator, ClassifierMixin):
+class OOB(BaseEnsemble, ClassifierMixin):
     """
 
     """
 
-    def __init__(self, ensemble_size=5, time_decay_factor=0.9):
+    def __init__(self, base_estimator=None, n_estimators=5, time_decay_factor=0.9):
         """Initialization."""
-        self.ensemble_size = ensemble_size
+        self.base_estimator = base_estimator
+        self.n_estimators = n_estimators
         self.time_decay_factor = time_decay_factor
-
-    def set_base_clf(self, base_clf=GaussianNB):
-        """Establishing base classifier."""
-        self._base_clf = base_clf
-        self.ensemble_ = []
-        for size in range(self.ensemble_size):
-            self.ensemble_.append(self._base_clf())
 
     def fit(self, X, y):
         """Fitting."""
@@ -31,8 +25,10 @@ class OOB(BaseEstimator, ClassifierMixin):
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
         X, y = check_X_y(X, y)
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
+        if not hasattr(self, "ensemble_"):
+            self.ensemble_ = [
+                clone(self.base_estimator) for i in range(self.n_estimators)
+            ]
 
         # Check feature consistency
         if hasattr(self, "X_"):
@@ -55,11 +51,19 @@ class OOB(BaseEstimator, ClassifierMixin):
 
         for iteration, label in enumerate(self.y_):
             if label == 0:
-                self.current_tdcs_[0, 0] = (self.current_tdcs_[0, 0]*self.time_decay_factor) + (1-self.time_decay_factor)
-                self.current_tdcs_[0, 1] = self.current_tdcs_[0, 1] * self.time_decay_factor
+                self.current_tdcs_[0, 0] = (
+                    self.current_tdcs_[0, 0] * self.time_decay_factor
+                ) + (1 - self.time_decay_factor)
+                self.current_tdcs_[0, 1] = (
+                    self.current_tdcs_[0, 1] * self.time_decay_factor
+                )
             else:
-                self.current_tdcs_[0, 1] = (self.current_tdcs_[0, 1]*self.time_decay_factor) + (1-self.time_decay_factor)
-                self.current_tdcs_[0, 0] = self.current_tdcs_[0, 0] * self.time_decay_factor
+                self.current_tdcs_[0, 1] = (
+                    self.current_tdcs_[0, 1] * self.time_decay_factor
+                ) + (1 - self.time_decay_factor)
+                self.current_tdcs_[0, 0] = (
+                    self.current_tdcs_[0, 0] * self.time_decay_factor
+                )
 
             self.chunk_tdcs[iteration] = self.current_tdcs_
 
@@ -68,22 +72,36 @@ class OOB(BaseEstimator, ClassifierMixin):
         # improved OOB
         self.weights = []
         for instance, label in enumerate(self.y_):
-            if label == 1 and self.chunk_tdcs[instance][1] < self.chunk_tdcs[instance][0]:
+            if (
+                label == 1
+                and self.chunk_tdcs[instance][1] < self.chunk_tdcs[instance][0]
+            ):
                 lmbda = self.chunk_tdcs[instance][0] / self.chunk_tdcs[instance][1]
-                K = np.asarray([np.random.poisson(lmbda, 1)[0] for i in range(self.ensemble_size)])
-            elif label == 0 and self.chunk_tdcs[instance][0] < self.chunk_tdcs[instance][1]:
+                K = np.asarray(
+                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                )
+            elif (
+                label == 0
+                and self.chunk_tdcs[instance][0] < self.chunk_tdcs[instance][1]
+            ):
                 lmbda = self.chunk_tdcs[instance][1] / self.chunk_tdcs[instance][0]
-                K = np.asarray([np.random.poisson(lmbda, 1)[0] for i in range(self.ensemble_size)])
+                K = np.asarray(
+                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                )
             else:
                 lmbda = 1
-                K = np.asarray([np.random.poisson(lmbda, 1)[0] for i in range(self.ensemble_size)])
+                K = np.asarray(
+                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                )
 
             self.weights.append(K)
 
         self.weights = np.asarray(self.weights).T
 
         for w, base_model in enumerate(self.ensemble_):
-            base_model.partial_fit(self.X_, self.y_, self.classes_, sample_weight=self.weights[w])
+            base_model.partial_fit(
+                self.X_, self.y_, self.classes_, sample_weight=self.weights[w]
+            )
 
         return self
 
