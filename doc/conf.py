@@ -52,8 +52,6 @@ release = strlearn.__version__
 
 
 # -- Options for HTML output ----------------------------------------------
-# html_theme_path = [alabaster.get_path()]
-html_theme = "alabaster"
 """
 html_theme_options = {
     'logo': 'logo.png',
@@ -69,22 +67,7 @@ html_theme_options = {
 html_static_path = ["_static"]
 htmlhelp_basename = "stream-learndoc"
 
-"""
-def generate_example_rst(app, what, name, obj, options, lines):
-    # generate empty examples files, so that we don't get
-    # inclusion errors if there are no examples for a class / module
-    examples_path = os.path.join(app.srcdir, "modules", "generated",
-                                 "%s.examples" % name)
-    if not os.path.exists(examples_path):
-        # touch file
-        open(examples_path, 'w').close()
-"""
-
 
 def setup(app):
     pass
     # app.connect('autodoc-process-docstring', generate_example_rst)
-
-
-# Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {'http://docs.python.org/': None}
