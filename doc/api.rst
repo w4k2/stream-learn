@@ -1,5 +1,5 @@
 ######################
-stream-learn API
+API
 ######################
 
 :mod:`strlearn.streams`: Streams

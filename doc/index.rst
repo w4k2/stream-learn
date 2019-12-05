@@ -10,7 +10,6 @@ Welcome to stream-learn documentation!
    install
    quickstart
 
-
 .. toctree::
    :maxdepth: 2
    :hidden:
@@ -19,6 +18,7 @@ Welcome to stream-learn documentation!
    streams
    evaluators
    ensembles
+   classifiers
 
 .. toctree::
    :maxdepth: 2
