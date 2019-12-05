@@ -42,3 +42,20 @@ def test_TTT_multiple_clfs():
     evaluator.process(stream, clfs)
 
     assert evaluator.scores_.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
+
+
+def test_P_multiple_clfs():
+    stream = get_stream()
+    clfs = [
+        sl.classifiers.AccumulatedSamplesClassifier(),
+        sl.classifiers.AccumulatedSamplesClassifier(),
+    ]
+    metrics = [accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score]
+    evaluator = sl.evaluators.Prequential(metrics=metrics)
+    evaluator.process(stream, clfs)
+
+    assert evaluator.scores_.shape == (
+        len(clfs),
+        (stream.n_chunks - 1) * 2,
+        len(metrics),
+    )
