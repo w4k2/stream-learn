@@ -1,5 +1,5 @@
 ################
-Streams
+Data Streams
 ################
 
 A key element of the `stream-learn` package is a data stream generator that allows to prepare a

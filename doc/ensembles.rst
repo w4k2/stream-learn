@@ -1,5 +1,5 @@
 ################
-Ensembles
+Classifier Ensembles
 ################
 
 Something

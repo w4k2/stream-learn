@@ -1,5 +1,5 @@
 ################
-Evaluators
+Stream Evaluators
 ################
 
 Test-Then-Train Evaluator
