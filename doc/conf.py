@@ -15,27 +15,18 @@ sys.path.insert(0, os.path.abspath("sphinxext"))
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
+    # "sphinx.ext.intersphinx",
+    # "sphinx.ext.todo",
     "sphinx.ext.autosummary",
-    "numpydoc",
-    "sphinx.ext.ifconfig",
-    "sphinx.ext.viewcode",
-    "sphinx_gallery.gen_gallery",
+    # "numpydoc",
+    # "sphinx.ext.ifconfig",
+    # "sphinx.ext.viewcode",
+    # "sphinx_gallery.gen_gallery",
 ]
 
-
-# this is needed for some reason...
-# see https://github.com/numpy/numpydoc/issues/69
 numpydoc_show_class_members = False
 
 autodoc_default_flags = ["members", "inherited-members"]
-# sphinx_gallery_conf = {
-# path to your examples scripts
-#    'examples_dirs' : '../examples',
-# path where to save gallery generated examples
-#    'gallery_dirs'  : 'auto_examples'
-# }
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -43,16 +34,15 @@ templates_path = ["_templates"]
 # generate autosummary even if no references
 autosummary_generate = True
 
-
 # Generate the plots for the gallery
-plot_gallery = False
+# plot_gallery = False
 
 # The master toctree document.
 master_doc = "index"
 
 # General information about the project.
 project = u"stream-learn"
-copyright = u"2018, Paweł Ksieniewicz"
+copyright = u"2019, P. Ksieniewicz, P. Zyblewski"
 
 version = strlearn.__version__
 release = strlearn.__version__
