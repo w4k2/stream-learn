@@ -26,7 +26,7 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
     >>> evaluator.process(clf, stream)
     >>> print(evaluator.scores_)
     ...
-   [[0.92       0.91879699 0.91848191 0.91879699 0.92523364]
+    [[0.92       0.91879699 0.91848191 0.91879699 0.92523364]
     [0.945      0.94648779 0.94624912 0.94648779 0.94240838]
     [0.92       0.91936979 0.91936231 0.91936979 0.9047619 ]
     ...
@@ -34,6 +34,7 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
     [0.885      0.8854889  0.88546135 0.8854889  0.87830688]
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
+
     def __init__(self):
         """Initialization."""
         pass

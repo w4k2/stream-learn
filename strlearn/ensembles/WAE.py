@@ -24,19 +24,6 @@ AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 
 
 class WAE(BaseEnsemble, ClassifierMixin):
-    """
-    Weighted Aging Ensemble.
-
-    lorem ipsum
-
-    References
-    ----------
-    .. [1] A. Kasprzak, M. Wozniak, "Modifications of the Weighted Aged
-    Ensemble algorithm applied to the data stream classification - experimental
-    analysis of chosen characteristics"
-
-    """
-
     def __init__(
         self,
         base_estimator=None,

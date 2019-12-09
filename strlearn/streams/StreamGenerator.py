@@ -13,11 +13,9 @@ import matplotlib.pyplot as plt
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
 
-    Read more in the :ref:`User Guide <streams>`.
-
     Parameters
     ----------
-    
+
     n_chunks : integer, optional (default=250)
         The number of data chunks, that the stream
         is composed of.

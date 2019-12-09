@@ -35,7 +35,7 @@ class ARFFParser:
     >>> stream.reset()
     >>> print(evaluator.scores_)
     ...
-   [[0.855      0.80815508 0.79478582 0.80815508 0.89679715]
+    [[0.855      0.80815508 0.79478582 0.80815508 0.89679715]
     [0.795      0.75827674 0.7426779  0.75827674 0.84644195]
     [0.8        0.75313899 0.73559983 0.75313899 0.85507246]
     ...
@@ -48,7 +48,7 @@ class ARFFParser:
         """Initializer."""
         # Read file.
         self.name = path
-        self.path =  path
+        self.path = path
         self._f = open(path, "r")
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
@@ -66,7 +66,7 @@ class ARFFParser:
             pos = self._f.tell()
             if line == "@data":
                 line = self._f.readline()
-                if line not in ['\n', '\r\n']:
+                if line not in ["\n", "\r\n"]:
                     self._f.seek(pos)
                 break
 
@@ -130,9 +130,8 @@ class ARFFParser:
                 line = self.a_line[:-1]
             elements = line.split(",")
 
-
             # Get class
-            if elements[-1] == '':
+            if elements[-1] == "":
                 y.append(elements[-2])
             else:
                 y.append(elements[-1])

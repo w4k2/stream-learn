@@ -15,6 +15,7 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
 
     Parameters
     ----------
+    
     n_estimators : integer, optional (default=5)
         The maximum number of estimators trained using consecutive data chunks
         and maintained in the ensemble.
@@ -35,7 +36,7 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
     >>> evaluator.process(clf, stream)
     >>> print(evaluator.scores_)
     ...
-   [[0.92       0.91879699 0.91848191 0.91879699 0.92523364]
+    [[0.92       0.91879699 0.91848191 0.91879699 0.92523364]
     [0.945      0.94648779 0.94624912 0.94648779 0.94240838]
     [0.925      0.92364329 0.92360881 0.92364329 0.91017964]
     ...

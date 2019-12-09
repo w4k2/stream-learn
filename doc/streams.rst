@@ -92,7 +92,7 @@ Gradual drift
 Unlike sudden drifts, gradual ones are associated with a slower change rate, which can be noticed
 during a longer observation of the data stream. This kind of drift refers to the transition phase
 where the probability of getting instances from the first concept decreases while the probability
-of sampling from the next concept increases. The `StreamGenerator`class simulates gradual drift by
+of sampling from the next concept increases. The ``StreamGenerator`` class simulates gradual drift by
 comparing the concept probabilities with the generated random noise and, depending on the result,
 selecting which concept is active at a given time.
 
@@ -104,7 +104,7 @@ selecting which concept is active at a given time.
   )
 
 .. image:: plots/2_gradual.png
-.. image:: plots/2_incremental.png
+.. image:: plots/3_incremental.png
 
 Incremental (Stepwise) drift
 ----------------------------
@@ -123,7 +123,7 @@ is described by the `concept_sigmoid_spacing` parameter.
 
 
 .. image:: plots/3_incremental.png
-.. image:: plots/3_gradual.png
+.. image:: plots/2_gradual.png
 
 Recurrent gradual drift
 -----------------------
