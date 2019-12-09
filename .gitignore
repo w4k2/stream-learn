@@ -134,6 +134,6 @@ animate.sh
 *.lprof
 doc/_build
 doc/generated
-doc/sphinxext
+doc/auto_examples
 plots/keyframes
 work.py
