@@ -18,7 +18,7 @@ clean:
 docs: clean install
 	cp -rf ./plots ./doc/
 	cd doc && make html
-	cd doc && make latex
+	# cd doc && make latex
 
 test-code:
 	py.test strlearn
