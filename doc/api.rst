@@ -31,8 +31,8 @@ API
    :toctree: generated/
    :template: class.rst
 
-   evaluators.TestThenTrainEvaluator
-   evaluators.PrequentialEvaluator
+   evaluators.TestThenTrain
+   evaluators.Prequential
 
 :mod:`strlearn.classifiers`: Classifiers
 ====================================================

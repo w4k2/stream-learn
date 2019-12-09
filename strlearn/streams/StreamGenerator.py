@@ -11,12 +11,13 @@ import matplotlib.pyplot as plt
 
 
 class StreamGenerator:
-    """
-    Data streams generator for both stationary
-    and drifting data streams.
+    """ Data streams generator for both stationary and drifting data streams.
+
+    Read more in the :ref:`User Guide <streams>`.
 
     Parameters
     ----------
+    
     n_chunks : integer, optional (default=250)
         The number of data chunks, that the stream
         is composed of.
@@ -47,21 +48,25 @@ class StreamGenerator:
 
     Examples
     --------
-    Data stream with 2 gradual non-recurring drifts and 20% of minority class.
-    >>> import strlearn as sl
-    >>> stream = sl.streams.StreamGenerator(n_drifts=2, weights=[0.2, 0.8], concept_sigmoid_spacing=5)
-    >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
-    >>> evaluator = sl.evaluators.PrequentialEvaluator()
-    >>> evaluator.process(clf, stream)
-    >>> print(evaluator.scores_)
-    ...
-    [[0.955      0.93655817 0.93601827 0.93655817 0.97142857]
-     [0.94       0.91397849 0.91275313 0.91397849 0.96129032]
-     [0.9        0.85565271 0.85234488 0.85565271 0.93670886]
-     ...
-     [0.815      0.72584133 0.70447376 0.72584133 0.8802589 ]
-     [0.83       0.69522145 0.65223303 0.69522145 0.89570552]
-     [0.845      0.67267706 0.61257135 0.67267706 0.90855457]]
+
+    Examples:
+
+    Data stream with 2 gradual non-recurring drifts and 20% of minority class.::
+
+        >>> import strlearn as sl
+        >>> stream = sl.streams.StreamGenerator(n_drifts=2, weights=[0.2, 0.8], concept_sigmoid_spacing=5)
+        >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
+        >>> evaluator = sl.evaluators.PrequentialEvaluator()
+        >>> evaluator.process(clf, stream)
+        >>> print(evaluator.scores_)
+
+        [[0.955      0.93655817 0.93601827 0.93655817 0.97142857]
+         [0.94       0.91397849 0.91275313 0.91397849 0.96129032]
+         [0.9        0.85565271 0.85234488 0.85565271 0.93670886]
+         ...
+         [0.815      0.72584133 0.70447376 0.72584133 0.8802589 ]
+         [0.83       0.69522145 0.65223303 0.69522145 0.89570552]
+         [0.845      0.67267706 0.61257135 0.67267706 0.90855457]]
     """
 
     def __init__(

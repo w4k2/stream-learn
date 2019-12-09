@@ -21,7 +21,7 @@ stream may be generated with a clean generator call, without any additional para
 
   StreamGenerator()
 
-.. image:: plots/0_stationary.gif
+.. image:: plots/0_stationary.png
 
 The above animation contains the scatter plot of a two-dimensional stationary stream with the problem of
 three classes. The `StreamGenerator` class in the initializer accepts almost all standard attributes of
@@ -84,7 +84,7 @@ StreamGenerator(n_classes=3, n_drifts=1)
 ```
 
 .. image:: plots/1_sudden.png
-.. image:: plots/1_sudden.gif
+.. image:: plots/1_sudden.png
 
 Gradual drift
 -------------
@@ -104,7 +104,7 @@ selecting which concept is active at a given time.
   )
 
 .. image:: plots/2_gradual.png
-.. image:: plots/2_incremental.gif
+.. image:: plots/2_incremental.png
 
 Incremental (Stepwise) drift
 ----------------------------
@@ -123,7 +123,7 @@ is described by the `concept_sigmoid_spacing` parameter.
 
 
 .. image:: plots/3_incremental.png
-.. image:: plots/3_gradual.gif
+.. image:: plots/3_gradual.png
 
 Recurrent gradual drift
 -----------------------
@@ -139,7 +139,7 @@ and analyzed as recurrent drifts. ...
   )
 
 .. image:: plots/4_reocurring.png
-.. image:: plots/4_reocurring.gif
+.. image:: plots/4_reocurring.png
 
 Non-reocurring gradual drift
 ----------------------------
@@ -152,7 +152,7 @@ Non-reocurring gradual drift
   )
 
 .. image:: plots/5_nonreocurring.png
-.. image:: plots/5_nonreocurring.gif
+.. image:: plots/5_nonreocurring.png
 
 Class imbalance
 ===============
@@ -163,7 +163,7 @@ Class imbalance
   StreamGenerator()
 
 .. image:: plots/6_balanced.png
-.. image:: plots/6_balanced.gif
+.. image:: plots/6_balanced.png
 
 
 Stationary imbalanced stream
@@ -175,7 +175,7 @@ Stationary imbalanced stream
   StreamGenerator(weights=[0.3, 0.7])
 
 .. image:: plots/7_static_imbalanced.png
-.. image:: plots/7_static_imbalanced.gif
+.. image:: plots/7_static_imbalanced.png
 
 Dynamically imbalanced stream
 -----------------------------
@@ -185,7 +185,7 @@ Dynamically imbalanced stream
   StreamGenerator(weights=(2, 5, 0.9))
 
 .. image:: plots/8_dynamic_imbalanced.png
-.. image:: plots/8_dynamic_imbalanced.gif
+.. image:: plots/8_dynamic_imbalanced.png
 
 Dynamically Imbalanced Stream with Concept Oscillation (DISCO)
 ==============================================================
@@ -199,4 +199,4 @@ Dynamically Imbalanced Stream with Concept Oscillation (DISCO)
 
 
 .. image:: plots/9_first.png
-.. image:: plots/9_disco.gif
+.. image:: plots/9_disco.png
