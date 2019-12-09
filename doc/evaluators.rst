@@ -4,9 +4,11 @@ Stream Evaluators
 
 Test-Then-Train Evaluator
 =========================
+.. image:: plots/evaluators_ttt.png
 
 Prequential Evaluator
 =====================
+.. image:: plots/evaluators_pr.png
 
 Metrics
 =======
