@@ -5,7 +5,7 @@ import sphinx_rtd_theme
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('sphinxext'))
+sys.path.insert(0, os.path.abspath("sphinxext"))
 from github_link import make_linkcode_resolve
 import sphinx_gallery
 
@@ -18,34 +18,34 @@ import sphinx_gallery
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.linkcode',
-    'sphinxcontrib.bibtex',
-    'numpydoc',
-    'sphinx_issues',
-    'sphinx_gallery.gen_gallery',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "sphinxcontrib.bibtex",
+    "numpydoc",
+    "sphinx_issues",
+    "sphinx_gallery.gen_gallery",
 ]
 
 # this is needed for some reason...
 # see https://github.com/numpy/numpydoc/issues/69
 numpydoc_show_class_members = False
 
-extensions.append('sphinx.ext.imgmath')
-imgmath_image_format = 'svg'
+extensions.append("sphinx.ext.imgmath")
+imgmath_image_format = "svg"
 
-autodoc_default_flags = ['members', 'inherited-members']
+autodoc_default_flags = ["members", "inherited-members"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # generate autosummary even if no references
 autosummary_generate = True
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -54,7 +54,7 @@ source_suffix = '.rst'
 plot_gallery = True
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
 project = "stream-learn"
@@ -67,6 +67,7 @@ html_logo = "_static/logo.png"
 #
 # The short X.Y version.
 from strlearn import __version__
+
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
@@ -83,7 +84,7 @@ release = __version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', '_templates']
+exclude_patterns = ["_build", "_templates"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -101,10 +102,10 @@ add_function_parentheses = False
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # Custom style
-html_style = 'css/stream-learn.css'
+html_style = "css/stream-learn.css"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -116,12 +117,16 @@ html_style = 'css/stream-learn.css'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {"style_nav_header_background": "#AF2624","display_version": True,"logo_only": False}
+html_theme_options = {
+    "style_nav_header_background": "#AF2624",
+    "display_version": True,
+    "logo_only": False,
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
@@ -145,7 +150,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -194,17 +199,15 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'imbalanced-learndoc'
+htmlhelp_basename = "strlearn-learndoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
 }
@@ -213,13 +216,18 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'stream-learn.tex', 'stream-learn Documentation',
-     'P. Ksieniewicz, P. Zyblewski', 'manual'),
+    (
+        "index",
+        "stream-learn.tex",
+        "stream-learn Documentation",
+        "P. Ksieniewicz, P. Zyblewski",
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = '_static/logo.png'
+latex_logo = "_static/logo.png"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -236,21 +244,19 @@ latex_logo = '_static/logo.png'
 
 # intersphinx configuration
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/{.major}'.format(
-        sys.version_info), None),
-    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
-    'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
-    'matplotlib': ('https://matplotlib.org/', None),
-    'sklearn': ('http://scikit-learn.org/stable', None)
+    "python": ("https://docs.python.org/{.major}".format(sys.version_info), None),
+    "numpy": ("https://docs.scipy.org/doc/numpy/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "matplotlib": ("https://matplotlib.org/", None),
+    "sklearn": ("http://scikit-learn.org/stable", None),
 }
 
 # sphinx-gallery configuration
 sphinx_gallery_conf = {
-    'doc_module': 'imblearn',
-    'backreferences_dir': os.path.join('generated'),
-    'show_memory': True,
-    'reference_url': {
-        'imblearn': None}
+    "doc_module": "strlearn",
+    "backreferences_dir": os.path.join("generated"),
+    "show_memory": True,
+    "reference_url": {"strlearn": None},
 }
 
 # -- Options for manual page output ---------------------------------------
@@ -261,8 +267,15 @@ sphinx_gallery_conf = {
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'stream-learn', 'stream-learn Documentation',
-              ['P. Ksieniewicz, P. Zyblewski'], 1)]
+man_pages = [
+    (
+        "index",
+        "stream-learn",
+        "stream-learn Documentation",
+        ["P. Ksieniewicz, P. Zyblewski"],
+        1,
+    )
+]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -273,9 +286,14 @@ man_pages = [('index', 'stream-learn', 'stream-learn Documentation',
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'stream-learn', 'stream-learn Documentation',
-     'P. Ksieniewicz, P. Zyblewski',
-     'Description.', 'Miscellaneous'),
+    (
+        "index",
+        "stream-learn",
+        "stream-learn Documentation",
+        "P. Ksieniewicz, P. Zyblewski",
+        "Description.",
+        "Miscellaneous",
+    ),
 ]
 
 
@@ -291,9 +309,9 @@ texinfo_documents = [
 
 # Config for sphinx_issues
 
-issues_uri = 'https://github.com/scikit-learn-contrib/imbalanced-learn/issues/{issue}'
-issues_github_path = 'scikit-learn-contrib/imbalanced-learn'
-issues_user_uri = 'https://github.com/{user}'
+issues_uri = "https://github.com/w4k2/stream-learn/issues/{issue}"
+issues_github_path = "w4k2/stream-learn"
+issues_user_uri = "https://github.com/{user}"
 
 
 # Temporary work-around for spacing problem between parameter and parameter
@@ -303,7 +321,7 @@ issues_user_uri = 'https://github.com/{user}'
 # In an ideal world, this would get fixed in this PR:
 # https://github.com/readthedocs/sphinx_rtd_theme/pull/747/files
 def setup(app):
-    app.add_javascript('js/copybutton.js')
+    app.add_javascript("js/copybutton.js")
     app.add_stylesheet("basic.css")
     # app.connect('autodoc-process-docstring', generate_example_rst)
 
@@ -321,7 +339,9 @@ def setup(app):
 # texinfo_no_detailmenu = False
 
 # The following is used by sphinx.ext.linkcode to provide links to github
-linkcode_resolve = make_linkcode_resolve('imblearn',
-                                         'https://github.com/scikit-learn-contrib/'
-                                         'imbalanced-learn/blob/{revision}/'
-                                         '{package}/{path}#L{lineno}')
+linkcode_resolve = make_linkcode_resolve(
+    "strlearn",
+    "https://github.com/w4k2/"
+    "stream-learn/blob/{revision}/"
+    "{package}/{path}#L{lineno}",
+)
