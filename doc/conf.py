@@ -252,11 +252,17 @@ intersphinx_mapping = {
 }
 
 # sphinx-gallery configuration
+"""
 sphinx_gallery_conf = {
     "doc_module": "strlearn",
     "backreferences_dir": os.path.join("generated"),
     "show_memory": True,
     "reference_url": {"strlearn": None},
+}
+"""
+sphinx_gallery_conf = {
+    "examples_dirs": "../examples",  # path to your example scripts
+    "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
 }
 
 # -- Options for manual page output ---------------------------------------

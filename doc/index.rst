@@ -26,6 +26,7 @@ Welcome to stream-learn documentation!
    :caption: Documentation
 
    api
+   auto_examples/index
 
 .. toctree::
    :maxdepth: 2
@@ -33,6 +34,7 @@ Welcome to stream-learn documentation!
    :caption: Other informations
 
    about
+
 
 
 `Getting started <install.html>`_
