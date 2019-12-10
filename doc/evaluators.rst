@@ -11,6 +11,12 @@ Test-Then-Train Evaluator
 =========================
 .. :cite:`Gama2010`
 
+The ``TestThenTrain`` class implements the `Test-Then-Train` evaluation procedure,
+in which each individual data chunk is first used to test the classifier before
+it is used for updating the existing model using its ``partial_fit`` function.
+
+
+
 .. image:: plots/evaluators_ttt.png
     :width: 800px
     :align: center
@@ -32,6 +38,14 @@ Test-Then-Train Evaluator
 Prequential Evaluator
 =====================
 .. :cite:`Gama2013`
+
+The `Prequential` procedure of assessing the predictive performance of stream
+learning algorithms is implemented by the ``Prequential`` class. This estimation
+technique is based on a forgetting mechanism in the form of a sliding window
+instead of a separate data chunks. Window moves by a fixed number of instances
+determined by the ``interval`` parameter for the ``process`` function. After each
+step, samples that are currently in the window are used to test the classifier
+and then for updating the model.
 
 .. image:: plots/evaluators_pr.png
     :width: 800px
