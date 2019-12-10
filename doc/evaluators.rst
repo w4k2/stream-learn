@@ -2,9 +2,14 @@
 Stream Evaluators
 #################
 
+To estimate prediction measures in the context of data streams with
+strict computational requirements and concept drifts, the ``evaluators`` module
+of the ``stream-learn`` package implements two main estimation techniques
+described in the literature in their block-based versions.
+
 Test-Then-Train Evaluator
 =========================
-:cite:`Gama2010`
+.. :cite:`Gama2010`
 
 .. image:: plots/evaluators_ttt.png
     :width: 800px
@@ -13,10 +18,20 @@ Test-Then-Train Evaluator
 .. code-block:: python
 
   from strlearn.evaluators import TestThenTrain
+  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.utils.metrics import bac, f_score
+  from strlearn.streams import StreamGenerator
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  clf = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  evaluator = TestThenTrain(metrics=(bac, f_score))
+
+  evaluator.process(stream, clf)
 
 Prequential Evaluator
 =====================
-:cite:`Gama2013`
+.. :cite:`Gama2013`
 
 .. image:: plots/evaluators_pr.png
     :width: 800px
@@ -25,11 +40,21 @@ Prequential Evaluator
 .. code-block:: python
 
   from strlearn.evaluators import Prequential
+  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.utils.metrics import bac, f_score
+  from strlearn.streams import StreamGenerator
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  clf = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  evaluator = TestThenTrain(metrics=(bac, f_score))
+
+  evaluator.process(stream, clf, interval=100)
 
 Metrics
 =======
 To improve the computational performance of presented evaluators, the
-``stream-learn`` package has its own implementation of metrics for classification
+``stream-learn`` package uses its own implementations of metrics for classification
 of imbalanced binary problems, which can be found in the ``utils.metrics`` module.
 All implemented metrics are based on the confusion matrix.
 
@@ -38,7 +63,7 @@ All implemented metrics are based on the confusion matrix.
 
 Recall / True positive rate
 ---------------------------
-:cite:`Powers2011`
+.. :cite:`Powers2011`
 
 .. code-block:: python
 
@@ -49,7 +74,7 @@ Recall / True positive rate
 
 Precision / Positive predictive value
 -------------------------------------
-:cite:`Powers2011`
+.. :cite:`Powers2011`
 
 .. code-block:: python
 
@@ -60,7 +85,7 @@ Precision / Positive predictive value
 
 F1 score
 --------
-:cite:`Sasaki2007`
+.. :cite:`Sasaki2007`
 
 .. code-block:: python
 
@@ -71,7 +96,7 @@ F1 score
 
 Balanced accuracy (BAC)
 -----------------------
-:cite:`Brodersen2010,Kelleher2015`
+.. :cite:`Brodersen2010,Kelleher2015`
 
 .. code-block:: python
 
@@ -84,7 +109,7 @@ Balanced accuracy (BAC)
 
 Geometric mean score (G-mean)
 -----------------------------
-:cite:`Barandela2003,Kubat1997`
+.. :cite:`Barandela2003,Kubat1997`
 
 .. code-block:: python
 
@@ -95,6 +120,6 @@ Geometric mean score (G-mean)
 
 References
 ----------
-.. bibliography:: ../references.bib
-    :list: enumerated
-    :all:
+.. bibliography:: ../references_evaluators.bib
+  :list: enumerated
+  :all:
