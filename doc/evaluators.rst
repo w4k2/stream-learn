@@ -13,13 +13,26 @@ Test-Then-Train Evaluator
 
 The ``TestThenTrain`` class implements the `Test-Then-Train` evaluation procedure,
 in which each individual data chunk is first used to test the classifier before
-it is used for updating the existing model using its ``partial_fit`` function.
-
-
+it is used for updating the existing model.
 
 .. image:: plots/evaluators_ttt.png
     :width: 800px
     :align: center
+
+The performance metrics returned by the evaluator are determined by the
+``metrics`` parameter which accepts a tuple containing the names of preferred
+measures and can be specified during initialization.
+
+Processing of the data stream is started by calling the ``process()`` function
+which accepts two parameters (i.e. ``stream`` and ``clfs``) responsible for
+defining the data stream and classifier, or a tuple of classifiers, employing
+the ``partial_fit()`` function. The size of each data chunk is determined by
+the ``chunk_size`` parameter from the ``StreamGenerator`` class. The results
+of evaluation can be accessed using the ``scores`` attribute, which is a
+three-dimensional array of shape (n_classifiers, n_chunks, n_metrics).
+
+
+**Example**
 
 .. code-block:: python
 
@@ -29,11 +42,12 @@ it is used for updating the existing model using its ``partial_fit`` function.
   from strlearn.streams import StreamGenerator
   from sklearn.naive_bayes import GaussianNB
 
-  stream = StreamGenerator()
+  stream = StreamGenerator(chunk_size=200, n_chunks=250)
   clf = ChunkBasedEnsemble(base_estimator=GaussianNB())
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf)
+  print(evaluator.scores)
 
 Prequential Evaluator
 =====================
@@ -43,13 +57,20 @@ The `Prequential` procedure of assessing the predictive performance of stream
 learning algorithms is implemented by the ``Prequential`` class. This estimation
 technique is based on a forgetting mechanism in the form of a sliding window
 instead of a separate data chunks. Window moves by a fixed number of instances
-determined by the ``interval`` parameter for the ``process`` function. After each
+determined by the ``interval`` parameter for the ``process()`` function. After each
 step, samples that are currently in the window are used to test the classifier
 and then for updating the model.
 
 .. image:: plots/evaluators_pr.png
     :width: 800px
     :align: center
+
+Similar to the ``TestThenTrain`` evaluator, the object of the ``Prequential``
+class can be initialized with a ``metrics`` parameter containing metrics names
+and the size of the sliding window is equal to the ``chunk_size`` parameter from
+the instance of ``StreamGenerator`` class.
+
+**Example**
 
 .. code-block:: python
 
@@ -64,6 +85,7 @@ and then for updating the model.
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf, interval=100)
+  print(evaluator.scores)
 
 Metrics
 =======
