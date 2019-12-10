@@ -33,8 +33,6 @@ Precision / Positive predictive value
 
 F1 score
 -------
-cos tam :cite:`Strunk1979` i dalej
-
 
 .. math::
    F1 = 2 * \frac{Precision * Recall}{Precision + Recall}
@@ -49,6 +47,8 @@ Balanced accuracy (BAC)
 
 Geometric mean score (G-mean)
 -----------------------------
+:cite:`Barandela2003,Kubat1997`
+
 
 .. math::
     Gmean = \sqrt{Recall * Specificity}
@@ -56,3 +56,5 @@ Geometric mean score (G-mean)
 References
 ----------
 .. bibliography:: ../references.bib
+    :list: enumerated
+    :all:
