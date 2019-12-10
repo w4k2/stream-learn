@@ -33,6 +33,8 @@ Precision / Positive predictive value
 
 F1 score
 -------
+cos tam :cite:`Strunk1979` i dalej
+
 
 .. math::
    F1 = 2 * \frac{Precision * Recall}{Precision + Recall}
@@ -50,3 +52,7 @@ Geometric mean score (G-mean)
 
 .. math::
     Gmean = \sqrt{Recall * Specificity}
+
+References
+----------
+.. bibliography:: ../references.bib
