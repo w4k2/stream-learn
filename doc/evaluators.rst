@@ -59,7 +59,7 @@ Precision / Positive predictive value
    Precision = \frac{tp}{tp + fp}
 
 F1 score
--------
+--------
 :cite:`Sasaki2007`
 
 .. code-block:: python

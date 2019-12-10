@@ -30,7 +30,7 @@ extensions = [
     "sphinx.ext.mathjax",
 ]
 
-mathjax_path="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?..."
+mathjax_path="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js"
 
 # this is needed for some reason...
 # see https://github.com/numpy/numpydoc/issues/69
