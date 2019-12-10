@@ -27,6 +27,7 @@ extensions = [
     "numpydoc",
     "sphinx_issues",
     "sphinx_gallery.gen_gallery",
+    "sphinx.ext.mathjax",
 ]
 
 # this is needed for some reason...
