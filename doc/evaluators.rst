@@ -97,62 +97,92 @@ All implemented metrics are based on the confusion matrix.
 .. image:: plots/confusion_matrix.png
     :align: center
 
-Recall / True positive rate
----------------------------
+Recall
+------
 .. :cite:`Powers2011`
+
+Recall (also known as sensitivity or true positive rate) represents the
+classifier's ability to find all the positive data samples in the dataset
+(e.g. the minority class instances) and is denoted as
+
+.. math::
+   Recall = \frac{tp}{tp + fn}
+
+**Example**
 
 .. code-block:: python
 
   from strlearn.utils.metrics import recall
 
-.. math::
-   Recall = \frac{tp}{tp + fn}
-
-Precision / Positive predictive value
--------------------------------------
+Precision
+---------
 .. :cite:`Powers2011`
+
+Precision (also called positive predictive value) expresses the probability
+of correct detection of positive samples and is denoted as
+
+.. math::
+   Precision = \frac{tp}{tp + fp}
+
+**Example**
 
 .. code-block:: python
 
   from strlearn.utils.metrics import precision
 
-.. math::
-   Precision = \frac{tp}{tp + fp}
-
 F1 score
 --------
 .. :cite:`Sasaki2007`
+
+The F1 score can be interpreted as a harmonic mean of precision and
+recall taking both metrics into account and punishing extreme values.
+The formula for the F1 score is
+
+.. math::
+   F1 = 2 * \frac{Precision * Recall}{Precision + Recall}
+
+**Example**
 
 .. code-block:: python
 
   from strlearn.utils.metrics import f_score
 
-.. math::
-   F1 = 2 * \frac{Precision * Recall}{Precision + Recall}
-
 Balanced accuracy (BAC)
 -----------------------
 .. :cite:`Brodersen2010,Kelleher2015`
 
-.. code-block:: python
-
-  from strlearn.utils.metrics import bac
+The balanced accuracy for the multiclass problems is defined as the average of
+recall obtained on each class. For binary problems it is denoted by the average
+of recall and specificity (also called true negative rate).
 
 .. math::
     Specificity = \frac{tn}{tn + fp}
 .. math::
     BAC = \frac{Recall * Specificity}{2}
 
+**Example**
+
+.. code-block:: python
+
+  from strlearn.utils.metrics import bac
+
 Geometric mean score (G-mean)
 -----------------------------
 .. :cite:`Barandela2003,Kubat1997`
 
-.. code-block:: python
-
-  from strlearn.utils.metrics import geometric_mean_score
+The geometric mean (G-mean) tries to maximize the accuracy on each of the
+classes while keeping these accuracies balanced. For N-class problems it is
+a N root of the product of class-wise recall. For binary classification
+G-mean is denoted as the squared root of the product of the recall and specificity.
 
 .. math::
     Gmean = \sqrt{Recall * Specificity}
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.utils.metrics import geometric_mean_score
 
 References
 ----------
