@@ -2,8 +2,6 @@
 Data Streams
 ############
 
-ZDEFINIOWAĆ ``CONCEPT``.
-
 A key element of the ``stream-learn`` package is a generator that allows to prepare a replicable (according to the given ``random_state`` value) classification dataset with class distribution changing over the course of stream, with base concepts build on a default class distributions for the ``scikit-learn`` package from the ``make_classification()`` function. These types of distributions try to reproduce the rules for generating the ``Madelon`` set. The ``StreamGenerator`` is capable of preparing any variation of the data stream known in the general taxonomy of data streams.
 
 Stationary stream
@@ -59,7 +57,6 @@ This type of drift occurs when the concept from which the data stream is generat
 
   StreamGenerator(n_drifts=1)
 
-
 .. image:: _static/sudden.png
 
 Gradual drift
@@ -88,7 +85,6 @@ The incremental drift occurs when we are dealing with a series of barely noticea
   StreamGenerator(
       n_drifts=1, concept_sigmoid_spacing=5, incremental=True
   )
-
 
 .. image:: _static/incremental.png
 
@@ -154,7 +150,6 @@ A less common type of *imbalanced data*, impossible to obtain in static datasets
 .. code-block:: python
 
   StreamGenerator(weights=(2, 5, 0.9))
-
 
 .. image:: _static/dynamic-imbalanced.png
 
