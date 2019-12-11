@@ -26,14 +26,14 @@ def test_generator_incremental():
         pass
 
 
-def test_generator_incremental_reocurring():
-    stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, reocurring=True)
+def test_generator_incremental_recurring():
+    stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, recurring=True)
     while stream.get_chunk():
         pass
 
 
-def test_generator_gradual_nonreocurring():
-    stream = sl.streams.StreamGenerator(n_drifts=2, reocurring=False)
+def test_generator_gradual_nonrecurring():
+    stream = sl.streams.StreamGenerator(n_drifts=2, recurring=False)
     while stream.get_chunk():
         pass
 

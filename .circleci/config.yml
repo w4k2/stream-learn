@@ -32,7 +32,9 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            cd doc
-            make html 2>&1 | tee ~/log.txt
+            cd doc && make html 2>&1 | tee ~/log.txt
+          	cp -rf ./examples/*.png ./doc/_static
+            cd doc && make html 2>&1 | tee ~/log.txt
+
       - run: bash ci_scripts/circleci/push_doc.sh
       - run: ls doc
