@@ -134,3 +134,21 @@ stream = sl.streams.StreamGenerator(**concept_kwargs, weights=(2, 5, 0.9))
 plot_stream(
     stream, "dynamic-imbalanced", "Data stream with dynamically imbalanced drift"
 )
+
+##############################################################################
+# DISCO
+#
+# inne
+
+stream = sl.streams.StreamGenerator(
+    **concept_kwargs,
+    weights=(2, 5, 0.9),
+    n_drifts=3,
+    concept_sigmoid_spacing=5,
+    recurring=True,
+    incremental=True
+)
+
+plot_stream(
+    stream, "disco", "Dynamically Imbalanced Stream with Concept Oscillation (DISCO)"
+)
