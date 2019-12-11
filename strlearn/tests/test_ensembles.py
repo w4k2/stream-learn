@@ -10,6 +10,22 @@ sys.path.insert(0, "../..")
 def get_stream():
     return sl.streams.StreamGenerator(n_chunks=10)
 
+def test_ensembles_fit():
+    clf1 = sl.ensembles.ChunkBasedEnsemble(GaussianNB())
+    clf2 = sl.ensembles.WAE(GaussianNB())
+    clf3 = sl.ensembles.OOB(GaussianNB())
+    clf4 = sl.ensembles.OnlineBagging(GaussianNB())
+    clf5 = sl.ensembles.UOB(GaussianNB())
+
+    clfs = (clf1, clf2, clf3, clf4, clf5)
+
+    stream = get_stream()
+    X, y = stream.get_chunk()
+
+    for clf in clfs:
+        clf.fit(X, y)
+
+    clf.fit(X, y)
 
 def test_CBE():
     "Bare CBE"
@@ -17,7 +33,6 @@ def test_CBE():
     clf = sl.ensembles.ChunkBasedEnsemble(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
-
 
 def test_WAE():
     """Bare WAE."""
@@ -34,7 +49,6 @@ def test_OOB():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
-
 def test_OB():
     """Bare WAE."""
     stream = get_stream()
@@ -42,14 +56,12 @@ def test_OB():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
-
 def test_UOB():
     """Bare WAE."""
     stream = get_stream()
     clf = sl.ensembles.UOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
-
 
 def test_pp_WAE():
     """Post pruned WAE."""

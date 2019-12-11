@@ -64,7 +64,7 @@ class WAE(BaseEnsemble, ClassifierMixin):
         self.X_ = X
         self.y_ = y
 
-        candidate_clf = base.clone(self._base_clf)
+        candidate_clf = base.clone(self.base_estimator)
         candidate_clf.fit(X, y)
 
         self.ensemble_ = [candidate_clf]
