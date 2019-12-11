@@ -95,26 +95,25 @@ The incremental drift occurs when we are dealing with a series of barely noticea
 Recurrent drift
 -----------------------
 
-Situations when previous concepts reappear after some time are separately treated
-and analyzed as recurrent drifts. ...
-
+The cyclic repetition of class distributions is a completely different property of concept drifts. If after another drift, the concept earlier present in the stream returns, we are dealing with a *recurrent drift*. We can get this kind of data stream by setting the ``recurring`` flag in the generator.
 
 .. code-block:: python
 
   StreamGenerator(
-      n_drifts=2, concept_sigmoid_spacing=5, reocurring=True
+      n_drifts=2, recurring=True
   )
 
 .. image:: _static/recurring.png
 
-Non-reocurring gradual drift
-----------------------------
+Non-recurring gradual drift
+---------------------------
 
+The default mode of consecutive concept occurences is a non-recurring drift, where in each concept drift we are generating a completely new, previously unseen  class distribution.
 
 .. code-block:: python
 
   StreamGenerator(
-      n_classes=3, n_drifts=2, concept_sigmoid_spacing=5
+      n_drifts=2
   )
 
 .. image:: _static/nonrecurring.png
