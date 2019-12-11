@@ -2,8 +2,6 @@
 Data Streams
 ############
 
-ZDEFINIOWAĆ ``CONCEPT``.
-
 A key element of the ``stream-learn`` package is a generator that allows to prepare a replicable (according to the given ``random_state`` value) classification dataset with class distribution changing over the course of stream, with base concepts build on a default class distributions for the ``scikit-learn`` package from the ``make_classification()`` function. These types of distributions try to reproduce the rules for generating the ``Madelon`` set. The ``StreamGenerator`` is capable of preparing any variation of the data stream known in the general taxonomy of data streams.
 
 Stationary stream
@@ -59,7 +57,6 @@ This type of drift occurs when the concept from which the data stream is generat
 
   StreamGenerator(n_drifts=1)
 
-
 .. image:: _static/sudden.png
 
 Gradual drift
@@ -89,32 +86,30 @@ The incremental drift occurs when we are dealing with a series of barely noticea
       n_drifts=1, concept_sigmoid_spacing=5, incremental=True
   )
 
-
 .. image:: _static/incremental.png
 
 Recurrent drift
 -----------------------
 
-Situations when previous concepts reappear after some time are separately treated
-and analyzed as recurrent drifts. ...
-
+The cyclic repetition of class distributions is a completely different property of concept drifts. If after another drift, the concept earlier present in the stream returns, we are dealing with a *recurrent drift*. We can get this kind of data stream by setting the ``recurring`` flag in the generator.
 
 .. code-block:: python
 
   StreamGenerator(
-      n_drifts=2, concept_sigmoid_spacing=5, reocurring=True
+      n_drifts=2, recurring=True
   )
 
 .. image:: _static/recurring.png
 
-Non-reocurring gradual drift
-----------------------------
+Non-recurring drift
+---------------------------
 
+The default mode of consecutive concept occurences is a non-recurring drift, where in each concept drift we are generating a completely new, previously unseen  class distribution.
 
 .. code-block:: python
 
   StreamGenerator(
-      n_classes=3, n_drifts=2, concept_sigmoid_spacing=5
+      n_drifts=2
   )
 
 .. image:: _static/nonrecurring.png
@@ -122,8 +117,19 @@ Non-reocurring gradual drift
 Class imbalance
 ===============
 
+Another area of data stream properties, different from the concept drift phenomenon, is the a priori probability of problem classes. By default, a balanced stream is generated, i.e. one in which patterns of all classes are present in a similar number.
+
+.. code-block:: python
+
+  StreamGenerator()
+
+.. image:: _static/stationary.png
+
+
 Stationary imbalanced stream
 ----------------------------
+
+The basic type of problem in which we are dealing with disturbed class distribution is a *dataset imbalanced stationary*, where the classes maintain a predetermined proportion in each chunk of data stream. To acquire this type of a stream, one should pass the ``list`` to the ``weights`` parameter of the generator (i) consisting of as many elements as the classes in the problem and (ii) adding to one.
 
 
 .. code-block:: python
@@ -135,9 +141,28 @@ Stationary imbalanced stream
 Dynamically imbalanced stream
 -----------------------------
 
+A less common type of *imbalanced data*, impossible to obtain in static datasets, is *data imbalanced dynamically*. In this case, the class distribution is not constant throughout the course of a stream, but changes over time, similar to changing the concept presence in gradual streams. To get this type of data stream, we pass a ``tuple`` of three numeric values to the ``weights`` parameter of the generator:
+
+- the number of cycles of distribution changes,
+- ``concept_sigmoid_spacing`` parameter, deciding about the dynamics of changes on the same principle as in gradual and incremental drifts,
+- range within which oscillation is to take place.
+
 .. code-block:: python
 
   StreamGenerator(weights=(2, 5, 0.9))
 
-
 .. image:: _static/dynamic-imbalanced.png
+
+Mixing drift properties
+=======================
+
+Of course, when generating data streams, we don't have to limit ourselves to just one modification of their properties. We can easily prepare a stream with many drifts, any dynamics of changes, a selected type of drift and a diverse, dynamic imbalanced ratio. The last example in this chapter of User Guide is such proposition, namely, DISCO (Dynamically Imbalanced Stream with Concept Oscillation).
+
+.. code-block:: python
+
+  StreamGenerator(
+      weights=(2, 5, 0.9), n_drifts=3, concept_sigmoid_spacing=5,
+      recurring=True, incremental=True
+  )
+
+.. image:: _static/disco.png

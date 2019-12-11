@@ -58,7 +58,9 @@ concept_kwargs = {
 
 ##############################################################################
 # Stationary stream
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs)
@@ -67,7 +69,9 @@ plot_stream(stream, "stationary", "Stationary stream")
 
 ##############################################################################
 # Sudden drift
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs, n_drifts=1)
@@ -76,7 +80,9 @@ plot_stream(stream, "sudden", "Stream with sudden drift")
 
 ##############################################################################
 # Gradual drift
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(
@@ -87,7 +93,9 @@ plot_stream(stream, "gradual", "Stream with gradual drift")
 
 ##############################################################################
 # Incremental drift
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(
@@ -98,7 +106,9 @@ plot_stream(stream, "incremental", "Stream with incremental drift")
 
 ##############################################################################
 # Recurrent
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs, n_drifts=2, recurring=True)
@@ -107,7 +117,9 @@ plot_stream(stream, "recurring", "Data stream with recurring drift")
 
 ##############################################################################
 # Non-recurrent
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs, n_drifts=2, recurring=False)
@@ -116,7 +128,9 @@ plot_stream(stream, "nonrecurring", "Data stream with non-recurring drift")
 
 ##############################################################################
 # Static-imbalanced
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs, weights=[0.3, 0.7])
@@ -126,11 +140,33 @@ plot_stream(stream, "static-imbalanced", "Data stream with statically imbalanced
 
 ##############################################################################
 # Dynamic-imbalanced
-#
+##############################################################################
+
+##############################################################################
 # inne
 
 stream = sl.streams.StreamGenerator(**concept_kwargs, weights=(2, 5, 0.9))
 
 plot_stream(
     stream, "dynamic-imbalanced", "Data stream with dynamically imbalanced drift"
+)
+
+##############################################################################
+# DISCO
+##############################################################################
+
+##############################################################################
+# inne
+
+stream = sl.streams.StreamGenerator(
+    **concept_kwargs,
+    weights=(2, 5, 0.9),
+    n_drifts=3,
+    concept_sigmoid_spacing=5,
+    recurring=True,
+    incremental=True
+)
+
+plot_stream(
+    stream, "disco", "Dynamically Imbalanced Stream with Concept Oscillation (DISCO)"
 )
