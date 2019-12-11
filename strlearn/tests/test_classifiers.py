@@ -24,3 +24,11 @@ def test_MetaEstimator_TestThanTrain():
     clf = sl.ensembles.OOB(base_estimator=base)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
+
+def test_MetaEstimator_fit():
+    "Bare ACS for TTT"
+    stream = get_stream()
+    X, y = stream.get_chunk()
+    clf = sl.classifiers.SampleWeightedMetaEstimator(base_classifier=GaussianNB())
+    clf.fit(X, y)
+    clf.predict(X)
