@@ -1,6 +1,6 @@
-###########
-Instalation
-###########
+############
+Installation
+############
 
 Prerequisites
 =============
