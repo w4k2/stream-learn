@@ -30,6 +30,14 @@ def test_TTT_custom_metrics():
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, len(metrics))
 
+def test_TTT_one_metric():
+    stream = get_stream()
+    clf = sl.classifiers.AccumulatedSamplesClassifier()
+    evaluator = sl.evaluators.TestThenTrain(metrics=accuracy_score)
+    evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (1, stream.n_chunks - 1, 1)
+
 
 def test_TTT_multiple_clfs():
     stream = get_stream()
@@ -58,4 +66,16 @@ def test_P_multiple_clfs():
         len(clfs),
         (stream.n_chunks - 1) * 2,
         len(metrics),
+    )
+
+def test_P_one_metric():
+    stream = get_stream()
+    clf = sl.classifiers.AccumulatedSamplesClassifier()
+    evaluator = sl.evaluators.Prequential(metrics=accuracy_score)
+    evaluator.process(stream, clf, interval=100)
+
+    assert evaluator.scores.shape == (
+        1,
+        (stream.n_chunks - 1) * 2,
+        1,
     )

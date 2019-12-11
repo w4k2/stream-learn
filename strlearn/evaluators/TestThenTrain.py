@@ -42,7 +42,10 @@ class TestThenTrain:
     """
 
     def __init__(self, metrics=(accuracy_score, bac)):
-        self.metrics = metrics
+        if isinstance(metrics, (list, tuple)):
+            self.metrics = metrics
+        else:
+            self.metrics = [metrics]
 
     def process(self, stream, clfs):
         """
