@@ -17,6 +17,7 @@ clean:
 
 docs: clean install
 	cp -rf ./plots ./doc/
+	cp -rf ./examples/*.png ./doc/_static
 	cd doc && make html
 	#cd doc && make latex
 

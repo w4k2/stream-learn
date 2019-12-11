@@ -33,7 +33,7 @@ class StreamGenerator:
         The number of classes in the generated data stream.
     y_flip: integer or tuple (default=0.01)
         Label noise for whole dataset or separate classes.
-    reocurring : boolean, optional (default=False)
+    recurring : boolean, optional (default=False)
         Determines if the streams can go back to
         the previously encountered concepts.
     weights : array-like, shape (n_classes, ) or tuple (only for 2 classes)
@@ -75,7 +75,7 @@ class StreamGenerator:
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
-        reocurring=False,
+        recurring=False,
         weights=None,
         incremental=False,
         y_flip=0.01,
@@ -89,7 +89,7 @@ class StreamGenerator:
         self.concept_sigmoid_spacing = concept_sigmoid_spacing
         self.n_classes = n_classes
         self.make_classification_kwargs = kwargs
-        self.reocurring = reocurring
+        self.recurring = recurring
         self.n_samples = self.n_chunks * self.chunk_size
         self.weights = weights
         self.incremental = incremental
@@ -151,7 +151,7 @@ class StreamGenerator:
                         np.diag(np.ones((self.n_classes, self.n_classes)))
                     )
                 ]
-                for i in range(self.n_drifts + 1 if not self.reocurring else 2)
+                for i in range(self.n_drifts + 1 if not self.recurring else 2)
             ]
         )
 
@@ -171,8 +171,8 @@ class StreamGenerator:
                 self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
                 self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
 
-                # Reocurring
-                if self.reocurring == False:
+                # Recurring
+                if self.recurring == False:
                     for i in range(0, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.a_ind[start:end] = i + ((i + 1) % 2)
@@ -192,8 +192,8 @@ class StreamGenerator:
                     self.concept_probabilities < self.concept_noise
                 ).astype(int)
 
-                # Reocurring drift
-                if self.reocurring == False:
+                # Recurring drift
+                if self.recurring == False:
                     for i in range(1, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.concept_selector[
