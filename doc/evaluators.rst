@@ -5,7 +5,7 @@ Stream Evaluators
 To estimate prediction measures in the context of data streams with
 strict computational requirements and concept drifts, the ``evaluators`` module
 of the ``stream-learn`` package implements two main estimation techniques
-described in the literature in their block-based versions.
+described in the literature in their batch-based versions.
 
 Test-Then-Train Evaluator
 =========================
