@@ -20,7 +20,7 @@ it is used for updating the existing model.
     :align: center
 
 The performance metrics returned by the evaluator are determined by the
-``metrics`` parameter which accepts a tuple containing the names of preferred
+``metrics`` parameter which accepts a tuple containing the functions of preferred quality
 measures and can be specified during initialization.
 
 Processing of the data stream is started by calling the ``process()`` function
