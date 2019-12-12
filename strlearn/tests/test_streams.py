@@ -7,6 +7,16 @@ import numpy as np
 sys.path.insert(0, "../..")
 from sklearn.neural_network import MLPClassifier
 
+import urllib2
+
+
+
+def test_download_arff():
+    filedata = urllib2.urlopen('http://i3.ytimg.com/vi/J---aiyznGQ/mqdefault.jpg')
+    datatowrite = filedata.read()
+    with open('Toyset.arff', 'wb') as f:
+        f.write(datatowrite)
+
 def test_generator_same():
     n_chunks = 10
     stream_one = sl.streams.StreamGenerator(random_state=5, n_chunks=n_chunks)
