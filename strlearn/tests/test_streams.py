@@ -3,19 +3,16 @@ import sys
 import pytest
 import strlearn as sl
 import numpy as np
+import requests
 
 sys.path.insert(0, "../..")
 from sklearn.neural_network import MLPClassifier
 
-import urllib2
-
-
-
 def test_download_arff():
-    filedata = urllib2.urlopen('http://i3.ytimg.com/vi/J---aiyznGQ/mqdefault.jpg')
-    datatowrite = filedata.read()
+    url = 'http://156.17.43.89/Toyset.arff'
+    r = requests.get(url)
     with open('Toyset.arff', 'wb') as f:
-        f.write(datatowrite)
+        f.write(r.content)
 
 def test_generator_same():
     n_chunks = 10
@@ -113,7 +110,7 @@ def test_generator_str():
     assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
 
 def test_arff_parser():
-    stream = sl.streams.ARFFParser("strlearn/streams/Agrawal.arff")
+    stream = sl.streams.ARFFParser("Toyset.arff")
     clf = MLPClassifier()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)

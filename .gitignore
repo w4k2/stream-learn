@@ -137,3 +137,4 @@ doc/generated
 doc/auto_examples
 plots/keyframes
 work.py
+*.arff
