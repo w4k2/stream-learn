@@ -76,8 +76,8 @@ class ARFFParser:
                     # Analyze classes
                     self.le = preprocessing.LabelEncoder()
                     self.le.fit(np.array(elements[2][1:-1].split(",")))
-                    self.classes = self.le.transform(self.le.classes_)
-                    self.n_classes = len(self.classes)
+                    self.classes_ = self.le.transform(self.le.classes_)
+                    self.n_classes = len(self.classes_)
                 else:
                     self.names.append(elements[1])
                     if elements[2][0] == "{":

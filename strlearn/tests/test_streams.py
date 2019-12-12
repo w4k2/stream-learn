@@ -7,7 +7,6 @@ import numpy as np
 sys.path.insert(0, "../..")
 from sklearn.neural_network import MLPClassifier
 
-
 def test_generator_same():
     n_chunks = 10
     stream_one = sl.streams.StreamGenerator(random_state=5, n_chunks=n_chunks)
@@ -103,11 +102,8 @@ def test_generator_str():
     print(evaluator.scores)
     assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
 
-
-"""
 def test_arff_parser():
-    stream = sl.streams.ARFFParser("strlearn/streams/Agrawal")
+    stream = sl.streams.ARFFParser("strlearn/streams/Agrawal.arff")
     clf = MLPClassifier()
-    evaluator = sl.evaluators.TestThenTrainEvaluator()
-    evaluator.process(clf, stream)
-"""
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, clf)

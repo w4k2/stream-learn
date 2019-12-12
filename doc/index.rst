@@ -40,10 +40,6 @@ Welcome to stream-learn documentation!
 `Getting started <install.html>`_
 ---------------------------------
 
-.. warning::
-
-   Some random warning!
-
 Information to install and usage of the package.
 
 `API Documentation <api.html>`_
@@ -58,5 +54,5 @@ all functions, and all parameters available for the algorithms.
 
 A set of examples illustrating the use of the different algorithms.
 
-See the `README <https://github.com/w4k2/stream-learn/blob/master/README.rst>`_
+See the `README <https://github.com/w4k2/stream-learn/blob/master/README.md>`_
 for more information.
