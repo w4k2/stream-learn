@@ -4,14 +4,17 @@ import pytest
 import strlearn as sl
 import numpy as np
 import requests
+from sklearn.metrics import accuracy_score
 
 sys.path.insert(0, "../..")
-from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 
 def test_download_arff():
     url = 'http://156.17.43.89/Toyset.arff'
     r = requests.get(url)
     with open('Toyset.arff', 'wb') as f:
+        f.write(r.content)
+    with open('Elec.arff', 'wb') as f:
         f.write(r.content)
 
 def test_generator_same():
@@ -82,28 +85,28 @@ def test_generators_drying():
 
 def test_generator_drifted():
     stream = sl.streams.StreamGenerator(n_drifts=1)
-    clf = MLPClassifier()
+    clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
 
 def test_generator_stationary():
     stream = sl.streams.StreamGenerator(n_drifts=0)
-    clf = MLPClassifier()
+    clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
 
 def test_generator_str():
     stream = sl.streams.StreamGenerator()
-    clf = MLPClassifier()
+    clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
     print(evaluator.scores)
     assert str(stream) == "gr_css999_rs1410_nd0_ln1_d0_50000"
 
     stream = sl.streams.StreamGenerator(y_flip=(0.5, 0.5))
-    clf = MLPClassifier()
+    clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
     print(evaluator.scores)
@@ -111,6 +114,17 @@ def test_generator_str():
 
 def test_arff_parser():
     stream = sl.streams.ARFFParser("Toyset.arff")
-    clf = MLPClassifier()
+    name = stream
+    print(name)
+    clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
+    stream.reset()
+
+    stream = sl.streams.ARFFParser("Elec.arff")
+    name = stream
+    print(name)
+    clf = GaussianNB()
+    evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
+    evaluator.process(stream, clf)
+    stream.reset()
