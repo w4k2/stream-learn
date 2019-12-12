@@ -26,7 +26,7 @@ test-code:
 
 test-coverage:
 	rm -rf coverage .coverage
-	py.test --cov=strlearn strlearn
+	py.test --cov-report term-missing --cov=strlearn strlearn
 
 test: clean test-coverage
 
