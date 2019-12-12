@@ -14,6 +14,9 @@ def test_download_arff():
     r = requests.get(url)
     with open('Toyset.arff', 'wb') as f:
         f.write(r.content)
+
+    url = 'http://156.17.43.89/Elec.arff'
+    r = requests.get(url)
     with open('Elec.arff', 'wb') as f:
         f.write(r.content)
 
