@@ -150,9 +150,6 @@ class ARFFParser:
             else:
                 # Catch dry stream with length dividable by chunk size
                 self.a_line = self._f.readline()
-                if not self.a_line:
-                    self.is_dry_ = True
-                    break
 
         y = self.le.transform(y)
         self.chunk_id += 1

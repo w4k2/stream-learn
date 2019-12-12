@@ -117,17 +117,20 @@ def test_generator_str():
 
 def test_arff_parser():
     stream = sl.streams.ARFFParser("Toyset.arff")
-    name = stream
-    print(name)
-    clf = GaussianNB()
-    evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, clf)
-    stream.reset()
-
-    stream = sl.streams.ARFFParser("Elec.arff")
-    name = stream
-    print(name)
+    assert str(stream) == "Toyset.arff"
     clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
     evaluator.process(stream, clf)
     stream.reset()
+
+    stream = sl.streams.ARFFParser("Elec.arff")
+    assert str(stream) == "Elec.arff"
+    clf = GaussianNB()
+    evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
+    evaluator.process(stream, clf)
+    stream.reset()
+
+# def test_arff_parser_dry():
+#     stream = sl.streams.ARFFParser("Toyset.arff")
+#     while stream.get_chunk():
+#         pass
