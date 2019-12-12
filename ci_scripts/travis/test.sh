@@ -15,6 +15,7 @@ run_tests(){
 
     # We need the setup.cfg for the nose settings
     cp setup.cfg $TEST_DIR
+    cp pytest.ini $TEST_DIR
     cd $TEST_DIR
 
     python --version
@@ -22,7 +23,7 @@ run_tests(){
     python -c "import scipy; print('scipy %s' % scipy.__version__)"
     python -c "import multiprocessing as mp; print('%d CPUs' % mp.cpu_count())"
 
-    py.test --cov=$MODULE -r sx --pyargs $MODULE
+    py.test --cov-report term-missing:skip-covered --cov=$MODULE -r sx --pyargs $MODULE
 
     # Test doc
     cd $OLDPWD
