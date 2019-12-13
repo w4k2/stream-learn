@@ -35,7 +35,7 @@ Welcome to stream-learn documentation!
 
    about
 
-.. image:: _static/incremental.png
+.. image:: _static/disco.png
 
 The ``stream-learn`` module is a set of tools necessary for processing data streams using ``scikit-learn`` estimators. The batch processing approach is used here, where the dataset is passed to the classifier in smaller, consecutive subsets called `chunks`. The module consists of five sub-modules:
 
