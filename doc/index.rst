@@ -46,7 +46,7 @@ The ``stream-learn`` module is a set of tools necessary for processing data stre
 - `evaluators <evaluators.html>`_ - containing classes for running experiments on stream data in accordance with the Test-Then-Train and Prequential methodology.
 - `classifiers <classifiers.html>`_ - containing sample stream classifiers,
 - `ensembles <ensembles.html>`_ - containing standard team models of stream data classification,
-- utils - containing typical classification quality metrics in data streams.
+- `utils <evaluators.html>`_ - containing typical classification quality metrics in data streams.
 
 You can read more about each module in the User Guide.
 
