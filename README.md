@@ -17,9 +17,7 @@ The `stream-learn` module is a set of tools necessary for processing data stream
 
 You can read more about each module in the [documentation page](https://w4k2.github.io/stream-learn/).
 
----
 
-![](https://w4k2.github.io/stream-learn/_images/disco.png)
 
 ## Quick start guide
 
@@ -104,12 +102,21 @@ plt.legend()
 
 ![](https://w4k2.github.io/stream-learn/_images/simplest.png)
 
+---
+
+
+<p align="center">
+  <a href="http://materializecss.com/">
+    <img src="/doc/_static/logo.png" width="150">
+  </a>
+  <p align="center" style="color:#AF2624">
+    <strong>Katedra Systemów i Sieci Komputerowych</strong>
+  </p>
+</p>
 
 
 
-
-
-
+![](https://w4k2.github.io/stream-learn/_images/disco.png)
 
 
 
