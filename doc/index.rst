@@ -35,6 +35,10 @@ Welcome to stream-learn documentation!
 
    about
 
+
+User Guide
+----------
+
 .. image:: _static/disco.png
 
 The ``stream-learn`` module is a set of tools necessary for processing data streams using ``scikit-learn`` estimators. The batch processing approach is used here, where the dataset is passed to the classifier in smaller, consecutive subsets called `chunks`. The module consists of five sub-modules:
@@ -50,19 +54,17 @@ You can read more about each module in the User Guide.
 `Getting started <install.html>`_
 ---------------------------------
 
-Information to install and usage of the package.
+A brief description of the installation process and basic usage of the module in a simple experiment.
 
 `API Documentation <api.html>`_
 -------------------------------
 
-The exact API of all functions and classes, as given in the
-docstring. The API documents expected types and allowed features for
-all functions, and all parameters available for the algorithms.
+Precise API description of all the classes and functions implemented in the module.
 
 `Examples <auto_examples/index.html>`_
 --------------------------------------
 
-A set of examples illustrating the use of the different algorithms.
+A set of examples illustrating the use of all module elements.
 
 See the `README <https://github.com/w4k2/stream-learn/blob/master/README.md>`_
 for more information.
