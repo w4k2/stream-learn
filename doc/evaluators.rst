@@ -32,7 +32,7 @@ of evaluation can be accessed using the ``scores`` attribute, which is a
 three-dimensional array of shape (n_classifiers, n_chunks, n_metrics).
 
 
-**Example**
+**Example -- single classifier**
 
 .. code-block:: python
 
@@ -47,6 +47,27 @@ three-dimensional array of shape (n_classifiers, n_chunks, n_metrics).
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf)
+  print(evaluator.scores)
+
+
+**Example -- multiple classifiers**
+
+.. code-block:: python
+
+  from strlearn.evaluators import TestThenTrain
+  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.utils.metrics import bac, f_score
+  from strlearn.streams import StreamGenerator
+  from sklearn.naive_bayes import GaussianNB
+  from sklearn.tree import DecisionTreeClassifier
+
+  stream = StreamGenerator(chunk_size=200, n_chunks=250)
+  clf1 = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  clf2 = ChunkBasedEnsemble(base_estimator=DecisionTreeClassifier())
+  clfs = (clf1, clf2)
+  evaluator = TestThenTrain(metrics=(bac, f_score))
+
+  evaluator.process(stream, clfs)
   print(evaluator.scores)
 
 Prequential Evaluator
@@ -70,7 +91,7 @@ class can be initialized with a ``metrics`` parameter containing metrics names
 and the size of the sliding window is equal to the ``chunk_size`` parameter from
 the instance of ``StreamGenerator`` class.
 
-**Example**
+**Example -- single classifer**
 
 .. code-block:: python
 
@@ -85,6 +106,27 @@ the instance of ``StreamGenerator`` class.
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf, interval=100)
+  print(evaluator.scores)
+
+
+**Example -- multiple classifiers**
+
+.. code-block:: python
+
+  from strlearn.evaluators import Prequential
+  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.utils.metrics import bac, f_score
+  from strlearn.streams import StreamGenerator
+  from sklearn.naive_bayes import GaussianNB
+  from sklearn.tree import DecisionTreeClassifier
+
+  stream = StreamGenerator(chunk_size=200, n_chunks=250)
+  clf1 = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  clf2 = ChunkBasedEnsemble(base_estimator=DecisionTreeClassifier())
+  clfs = (clf1, clf2)
+  evaluator = Prequential(metrics=(bac, f_score))
+
+  evaluator.process(stream, clfs, interval=100)
   print(evaluator.scores)
 
 Metrics

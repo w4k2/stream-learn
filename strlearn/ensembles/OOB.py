@@ -5,7 +5,6 @@ from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
 from sklearn.ensemble import BaseEnsemble
 
-
 class OOB(BaseEnsemble, ClassifierMixin):
     """
 

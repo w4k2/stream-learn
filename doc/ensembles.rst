@@ -48,7 +48,7 @@ The ``ChunkBasedEnsemble`` class implements a basic multi classifier approach fo
   from sklearn.naive_bayes import GaussianNB
 
   stream = StreamGenerator()
-  clf = ChunkBasedEnsemble(base_clf=GaussianNB(), n_estimators=5)
+  clf = ChunkBasedEnsemble(base_estimator=GaussianNB(), n_estimators=5)
   evaluator = TestThenTrain()
 
   evaluator.process(stream, clf)
@@ -70,18 +70,50 @@ chunk are individually and can therefore be used in an environment where data
 arrives in batches.
 
 
-
 Online Bagging (OB)
 -------------------
 
+`Online Bagging` is an ensemble learning algorithm for data streams classification, based on the concept of offline `Bagging`. It maintains a pool of base estimators and with the appearance of a new instance, each model is trained on it K times, where K comes from the `Poisson(λ= 1)` distribution. It is implemented in the ``OnlineBagging`` class which accepts ``base_estimator`` and ``n_estimators`` parameters, respectively responsible for the base classifier type and the fixed classifier pool size.
 
-Oversamping-Based Online Bagging (OOB)
---------------------------------------
+**Example**
 
+.. code-block:: python
 
-Undersampling-Based Online Bagging (UOB)
-----------------------------------------
+  from strlearn.evaluators import TestThenTrain
+  from strlearn.streams import StreamGenerator
+  from strlearn.ensembles import OnlineBagging
 
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  clf = OnlineBagging(base_estimator=GaussianNB(), n_estimators=5)
+  evaluator = TestThenTrain()
+
+  evaluator.process(stream, clf)
+  print(evaluator.scores)
+
+Oversamping-Based Online Bagging (OOB) & Undersampling-Based Online Bagging (UOB)
+-------------------------------------------------------------------------------------
+`Oversampling-Based Online Bagging` (implemented by the ``OOB`` class) and `Undersampling-Based Online Bagging` (implemented by the ``UOB`` class) are methods integrating resampling with `Online Bagging`. Resampling is based on the change in λ values for the Poisson distribution. `OOB` uses oversampling to increase the chance of training minority class instances, while UOB uses undersampling to reduce the chance of training majority class instances. Implementations refer to the improved versions of both algorithms in which the λ value depends on the size ratio between classes. When the problem becomes balanced, the methods are automatically reduced to online bagging. Both methods take the same parameters as the ``OnlineBagging`` class.
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.evaluators import TestThenTrain
+  from strlearn.streams import StreamGenerator
+  from strlearn.ensembles import OOB, UOB
+
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  oob = OOB(base_estimator=GaussianNB(), n_estimators=5)
+  uob = UOB(base_estimator=GaussianNB(), n_estimators=5)
+  clfs = (oob, uob)
+  evaluator = TestThenTrain()
+
+  evaluator.process(stream, clfs)
+  print(evaluator.scores)
 
 References
 ----------
