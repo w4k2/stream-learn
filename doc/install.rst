@@ -5,7 +5,7 @@ Installation
 Prerequisites
 =============
 
-The stream-learn package requires the following dependencies:
+The stream-learn package requires:
 
 * numpy
 * scipy
@@ -18,9 +18,8 @@ stream-learn is available on PyPi's reporitories, so you may install it using `p
 
   pip install -U stream-learn
 
-If you prefer, you can clone it and run the setup.py file. Use the following
-commands to get a copy from Github and install all dependencies::
+You can also install the module cloned from Github using the setup.py file if you have a strange, but perhaps legitimate need.::
 
   git clone https://github.com/w4k2/stream-learn.git
   cd stream-learn
-  pip install .
+  make install
