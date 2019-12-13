@@ -7,7 +7,6 @@ Welcome to stream-learn documentation!
    :hidden:
    :caption: Getting Started
 
-   install
    quickstart
 
 .. toctree::
@@ -51,8 +50,8 @@ The ``stream-learn`` module is a set of tools necessary for processing data stre
 
 You can read more about each module in the User Guide.
 
-`Getting started <install.html>`_
----------------------------------
+`Getting started <quickstart.html>`_
+------------------------------------
 
 A brief description of the installation process and basic usage of the module in a simple experiment.
 
