@@ -114,7 +114,7 @@ plt.legend()
 
 
 <p align="center">
-  <a href="http://materializecss.com/">
+  <a href="http://kssk.pwr.edu.pl/">
     <img src="/doc/_static/logo.png" width="150">
   </a>
   <p align="center" style="color:#AF2624">
