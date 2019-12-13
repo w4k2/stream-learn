@@ -5,65 +5,127 @@
 [![CircleCI Status](https://circleci.com/gh/w4k2/stream-learn.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/w4k2/stream-learn/tree/master)
 [![PyPI version](https://badge.fury.io/py/stream-learn.svg)](https://badge.fury.io/py/stream-learn)
 
-stream-learn is a Python package equipped with a procedures to process data streams using estimators with API compatible with scikit-learn.
 
-## Documentation
 
-API documentation with set of examples may be found on the [documentation page](https://w4k2.github.io/stream-learn/).
+The `stream-learn` module is a set of tools necessary for processing data streams using `scikit-learn` estimators. The batch processing approach is used here, where the dataset is passed to the classifier in smaller, consecutive subsets called `chunks`. The module consists of five sub-modules:
 
-## Installation
+- [`streams`](https://w4k2.github.io/stream-learn/streams.html) - containing a data stream generator that allows obtaining both stationary and dynamic distributions in accordance with various types of concept drift (also in the field of a priori probability, i.e. dynamically unbalanced data) and a parser of the standard ARFF file format.
+- [`evaluators`](https://w4k2.github.io/stream-learn/evaluators.html>) - containing classes for running experiments on stream data in accordance with the Test-Then-Train and Prequential methodology.
+- [`classifiers`](https://w4k2.github.io/stream-learn/classifiers.html) - containing sample stream classifiers,
+- [`ensembles`](https://w4k2.github.io/stream-learn/ensembles.html) - containing standard team models of stream data classification,
+- utils - containing typical classification quality metrics in data streams.
 
-stream-learn is available on the PyPi and you may install it with pip:
+You can read more about each module in the [documentation page](https://w4k2.github.io/stream-learn/).
 
+---
+
+![](https://w4k2.github.io/stream-learn/_images/disco.png)
+
+## Quick start guide
+
+### Installation
+
+To use the `stream-learn` package, it will be absolutely useful to install it. Fortunately, it is available in the *PyPI* repository, so you may install it using `pip`:
+
+```shell
+pip install -U stream-learn
 ```
-pip install stream-learn
+
+You can also install the module cloned from Github using the setup.py file if you have a strange, but perhaps legitimate need:
+
+```shell
+git clone https://github.com/w4k2/stream-learn.git
+cd stream-learn
+make install
 ```
 
-## Example usage
+### Preparing experiments
+
+In order to conduct experiments, a declaration of four elements is necessary. The first is the estimator, which must be compatible with the `scikit-learn` API and, in addition, implement the `partial_fit()` method, allowing you to re-fit the already built model. For example, we'll use the standard *Gaussian Naive Bayes* algorithm:
 
 ```python
-import strlearn as sl
-from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import GaussianNB
+clf = GaussianNB()
+```
 
-# Initialize list of scikit-learn classifiers with partial_fit() function
-clf = [MLPClassifier(), GaussianNB()]
+The next element is the data stream that we aim to process. In the example we will use a synthetic stream consisting of shocking number of 30 chunks and containing precisely one concept drift. We will prepare it using the `StreamGenerator()` class of the `stream-learn` module:
 
-# Declare data stream
-stream = sl.streams.StreamGenerator(n_chunks=10, n_drifts=1)
+```python
+from strlearn.streams import StreamGenerator
+stream = StreamGenerator(n_chunks=30, n_drifts=1)
+```
 
-# Select vector of metrics
-metrics = [sl.utils.metrics.bac, sl.utils.metrics.f_score]
+The third requirement of the experiment is to specify the metrics used in the evaluation of the methods. In the example, we will use the *accuracy* metric available in `scikit-learn` and the *balanced accuracy* from the `stream-learn` module:
 
-# Initialize evaluator with given metrics
-evaluator = sl.evaluators.TestThenTrain(metrics)
+```python
+from sklearn.metrics import accuracy_score
+from strlearn.utils.metrics import bac
+metrics = [accuracy_score, bac]
+```
 
-# Run evaluator over stream with classifier
+The last necessary element of processing is the evaluator, i.e. the method of conducting the experiment. For example, we will choose the *Test-Then-Train* paradigm, described in more detail in [User Guide](https://w4k2.github.io/stream-learn/evaluators.html). It is important to note, that we need to provide the metrics that we will use in processing at the point of initializing the evaluator. In the case of none metrics given, it will use default pair of *accuracy* and *balanced accuracy* scores:
+
+```python
+from strlearn.evaluators import TestThenTrain
+evaluator = TestThenTrain(metrics)
+```
+
+### Processing and understanding results
+
+Once all processing requirements have been met, we can proceed with the evaluation. To start processing, call the evaluator's process method, feeding it with the stream and classifier::
+
+```python
 evaluator.process(stream, clf)
 ```
 
-```python
->>> print(evaluator.scores)
-[[[0.29730274 0.29145729]
-  [0.34494021 0.36097561]
-  [0.43464118 0.44878049]
-  [0.42579578 0.36666667]
-  [0.45569557 0.4171123 ]
-  [0.47020869 0.44791667]
-  [0.4645207  0.46534653]
-  [0.525      0.5177665 ]
-  [0.4893617  0.46875   ]]
+The results obtained are stored in the `scores` atribute of evaluator. If we print it on the screen, we may be able to observe that it is a three-dimensional numpy array with dimensions `(1, 29, 2)`.
 
- [[0.87701288 0.88038278]
-  [0.90091448 0.9047619 ]
-  [0.89930938 0.9047619 ]
-  [0.85376189 0.82681564]
-  [0.61521152 0.60913706]
-  [0.64714185 0.61538462]
-  [0.64556129 0.62564103]
-  [0.74       0.74      ]
-  [0.80820955 0.80597015]]]
+- The first dimension is the **index of a classifier** submitted for processing. In the example above, we used only one model, but it is also possible to pass a tuple or list of classifiers that will be processed in parallel (See [User Guide](https://w4k2.github.io/stream-learn/evaluators.html)).
+- The second dimension specifies the **instance of evaluation**, which in the case of *Test-Then-Train* methodology directly means the index of the processed chunk.
+- The third dimension indicates the **metric** used in the processing.
+
+Using this knowledge, we may finally try to illustrate the results of our simple experiment in the form of a plot::
+
+```python
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6,3))
+
+for m, metric in enumerate(metrics):
+    plt.plot(evaluator.scores[0, :, m], label=metric.__name__)
+
+plt.title("Basic example of stream processing")
+plt.ylim(0, 1)
+plt.ylabel('Quality')
+plt.xlabel('Chunk')
+
+plt.legend()
 ```
+
+![](https://w4k2.github.io/stream-learn/_images/simplest.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!--
 
