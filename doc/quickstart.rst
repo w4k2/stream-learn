@@ -70,5 +70,4 @@ Using this knowledge, we may finally try to illustrate the results of our simple
 
 
 .. image:: _static/simplest.png
-    :width: 800px
     :align: center
