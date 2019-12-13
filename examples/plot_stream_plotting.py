@@ -17,6 +17,11 @@ pariatur ullamco, an export excepteur fidelissimae.
 import strlearn as sl
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
+
+cm = LinearSegmentedColormap.from_list(
+    "lokomotiv", colors=[(0.3, 0.7, 0.3), (0.7, 0.3, 0.3)]
+)
 
 n_chunks = 100
 chunks_plotted = np.linspace(0, n_chunks - 1, 8).astype(int)
@@ -30,7 +35,7 @@ def plot_stream(stream, filename="foo", title=""):
         X, y = stream.get_chunk()
         if i in chunks_plotted:
             ax[j].set_title("Chunk %i" % i)
-            ax[j].scatter(X[:, 0], X[:, 1], c=y, cmap="bwr", s=10, alpha=0.5)
+            ax[j].scatter(X[:, 0], X[:, 1], c=y, cmap=cm, s=10, alpha=0.5)
             ax[j].set_ylim(-4, 4)
             ax[j].set_xlim(-4, 4)
             ax[j].set(aspect="equal")

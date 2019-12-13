@@ -9,16 +9,18 @@ from sklearn.metrics import accuracy_score
 sys.path.insert(0, "../..")
 from sklearn.naive_bayes import GaussianNB
 
+
 def test_download_arff():
-    url = 'http://156.17.43.89/Toyset.arff'
+    url = "http://156.17.43.89/Toyset.arff"
     r = requests.get(url)
-    with open('Toyset.arff', 'wb') as f:
+    with open("Toyset.arff", "wb") as f:
         f.write(r.content)
 
-    url = 'http://156.17.43.89/Elec.arff'
+    url = "http://156.17.43.89/Elec.arff"
     r = requests.get(url)
-    with open('Elec.arff', 'wb') as f:
+    with open("Elec.arff", "wb") as f:
         f.write(r.content)
+
 
 def test_generator_same():
     n_chunks = 10
@@ -115,6 +117,7 @@ def test_generator_str():
     print(evaluator.scores)
     assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
 
+
 def test_arff_parser():
     stream = sl.streams.ARFFParser("Toyset.arff")
     assert str(stream) == "Toyset.arff"
@@ -129,8 +132,3 @@ def test_arff_parser():
     evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
     evaluator.process(stream, clf)
     stream.reset()
-
-# def test_arff_parser_dry():
-#     stream = sl.streams.ARFFParser("Toyset.arff")
-#     while stream.get_chunk():
-#         pass

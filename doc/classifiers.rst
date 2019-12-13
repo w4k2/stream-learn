@@ -2,6 +2,8 @@
 Classifiers
 ################
 
+https://scikit-learn.org/stable/modules/computing.html#incremental-learning
+
 In addition, the ``stream-learn`` library also implements a simple single
 classifier model implementing the ``partial_fit()`` method and a Meta estimator
 adapted to be used with some of the ensemble methods found in the ``ensembles``
