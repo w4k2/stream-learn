@@ -24,6 +24,9 @@ AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 
 
 class WAE(BaseEnsemble, ClassifierMixin):
+    """
+    Weighted Aging Ensemble.
+    """
     def __init__(
         self,
         base_estimator=None,
