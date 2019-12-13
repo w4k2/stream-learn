@@ -8,7 +8,7 @@ import numpy as np
 
 class UOB(BaseEnsemble, ClassifierMixin):
     """
-
+    Undersampling-Based Online Bagging.
     """
 
     def __init__(self, base_estimator=None, n_estimators=5, time_decay_factor=0.9):

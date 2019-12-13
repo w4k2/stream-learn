@@ -1,4 +1,4 @@
-"""Test Than Train evaluator."""
+"""Test-Than-Train data stream evaluator."""
 
 import numpy as np
 from sklearn.metrics import accuracy_score

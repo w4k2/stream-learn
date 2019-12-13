@@ -4,6 +4,9 @@ from sklearn.naive_bayes import GaussianNB
 import numpy as np
 
 class SampleWeightedMetaEstimator(BaseEstimator, ClassifierMixin):
+    """
+    Sample Weighted Meta Estimator.
+    """
     def __init__(self, base_classifier= GaussianNB()):
         self.base_classifier = base_classifier
 

@@ -8,7 +8,7 @@ import numpy as np
 
 class OnlineBagging(BaseEnsemble, ClassifierMixin):
     """
-
+    Online Bagging.
     """
 
     def __init__(self, base_estimator=None, n_estimators=10):
