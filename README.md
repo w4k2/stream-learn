@@ -10,7 +10,7 @@
 The `stream-learn` module is a set of tools necessary for processing data streams using `scikit-learn` estimators. The batch processing approach is used here, where the dataset is passed to the classifier in smaller, consecutive subsets called `chunks`. The module consists of five sub-modules:
 
 - [`streams`](https://w4k2.github.io/stream-learn/streams.html) - containing a data stream generator that allows obtaining both stationary and dynamic distributions in accordance with various types of concept drift (also in the field of a priori probability, i.e. dynamically unbalanced data) and a parser of the standard ARFF file format.
-- [`evaluators`](https://w4k2.github.io/stream-learn/evaluators.html>) - containing classes for running experiments on stream data in accordance with the Test-Then-Train and Prequential methodology.
+- [`evaluators`](https://w4k2.github.io/stream-learn/evaluators.html) - containing classes for running experiments on stream data in accordance with the Test-Then-Train and Prequential methodology.
 - [`classifiers`](https://w4k2.github.io/stream-learn/classifiers.html) - containing sample stream classifiers,
 - [`ensembles`](https://w4k2.github.io/stream-learn/ensembles.html) - containing standard team models of stream data classification,
 - utils - containing typical classification quality metrics in data streams.
