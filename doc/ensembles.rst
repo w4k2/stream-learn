@@ -35,6 +35,24 @@ equal to the size of the chunk.
 Chunk-Based Ensemble
 --------------------
 
+The ``ChunkBasedEnsemble`` class implements a basic multi classifier approach for data stream classification. This model takes the base classifier as the ``base_estimator`` parameter and the pool size as the ``n_estimators``. A single base classifier is trained on each observed data chunk and added to the ensemble. If the fixed pool size is exceeded, the oldest model is removed. The final decision is obtained by accumulating the supports of base classifiers.
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.evaluators import TestThenTrain
+  from strlearn.streams import StreamGenerator
+  from strlearn.ensembles import ChunkBasedEnsemble
+
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  clf = ChunkBasedEnsemble(base_clf=GaussianNB(), n_estimators=5)
+  evaluator = TestThenTrain()
+
+  evaluator.process(stream, clf)
+  print(evaluator.scores)
 
 Weighted Aging Ensemble (WAE)
 -----------------------------
