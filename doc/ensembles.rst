@@ -57,6 +57,36 @@ The ``ChunkBasedEnsemble`` class implements a basic multi classifier approach fo
 Weighted Aging Ensemble (WAE)
 -----------------------------
 
+The ``WAE`` class implements an algorithm called Weighted Aging Ensemble, which can adapt to changes in data stream class distribution. The method was inspired by Accuracy Weighted Ensemble (AWE) algorithm to which it introduces two main modifications: (I) classifier weights depend on the individual classifier accuracies and time they have been spending in the ensemble, (II) individual classifier are chosen on the basis on the non-pairwise diversity measure. The ``WAE`` class accepts the following parameters:
+
+- ``base_estimator`` -- Base classifier type.
+- ``n_estimators`` -- Fixed pool size.
+- ``theta`` -- Threshold for weight calculation method and aging procedure control.
+- ``post_pruning`` -- Whether the pruning is conducted before or after adding the classifier.
+- ``pruning_criterion`` -- accuracy.
+- ``weight_calculation_method`` -- same_for_each, proportional_to_accuracy, kuncheva, pta_related_to_whole, bell_curve,
+- ``aging_method`` -- weights_proportional, constant, gaussian.
+- ``rejuvenation_power`` -- Rejuvenation dynamics control of classifiers with high prediction accuracy.
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.evaluators import TestThenTrain
+  from strlearn.streams import StreamGenerator
+  from strlearn.ensembles import WAE
+
+  from sklearn.naive_bayes import GaussianNB
+
+  stream = StreamGenerator()
+  clf = sl.ensembles.WAE(
+        GaussianNB(), weight_calculation_method="proportional_to_accuracy"
+    )
+  evaluator = TestThenTrain()
+
+  evaluator.process(stream, clf)
+  print(evaluator.scores)
+
 
 Online Ensembles for Data Streams
 =================================
