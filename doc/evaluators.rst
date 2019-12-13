@@ -200,7 +200,7 @@ of recall and specificity (also called true negative rate).
 .. math::
     Specificity = \frac{tn}{tn + fp}
 .. math::
-    BAC = \frac{Recall * Specificity}{2}
+    BAC = \frac{Recall + Specificity}{2}
 
 **Example**
 
