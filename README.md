@@ -39,12 +39,16 @@ make install
 
 ### Preparing experiments
 
+#### 1. Classifier
+
 In order to conduct experiments, a declaration of four elements is necessary. The first is the estimator, which must be compatible with the `scikit-learn` API and, in addition, implement the `partial_fit()` method, allowing you to re-fit the already built model. For example, we'll use the standard *Gaussian Naive Bayes* algorithm:
 
 ```python
 from sklearn.naive_bayes import GaussianNB
 clf = GaussianNB()
 ```
+
+#### 2. Data Stream
 
 The next element is the data stream that we aim to process. In the example we will use a synthetic stream consisting of shocking number of 30 chunks and containing precisely one concept drift. We will prepare it using the `StreamGenerator()` class of the `stream-learn` module:
 
@@ -53,6 +57,8 @@ from strlearn.streams import StreamGenerator
 stream = StreamGenerator(n_chunks=30, n_drifts=1)
 ```
 
+#### 3. Metrics
+
 The third requirement of the experiment is to specify the metrics used in the evaluation of the methods. In the example, we will use the *accuracy* metric available in `scikit-learn` and the *balanced accuracy* from the `stream-learn` module:
 
 ```python
@@ -60,6 +66,8 @@ from sklearn.metrics import accuracy_score
 from strlearn.utils.metrics import bac
 metrics = [accuracy_score, bac]
 ```
+
+#### 4. Evaluator
 
 The last necessary element of processing is the evaluator, i.e. the method of conducting the experiment. For example, we will choose the *Test-Then-Train* paradigm, described in more detail in [User Guide](https://w4k2.github.io/stream-learn/evaluators.html). It is important to note, that we need to provide the metrics that we will use in processing at the point of initializing the evaluator. In the case of none metrics given, it will use default pair of *accuracy* and *balanced accuracy* scores:
 
