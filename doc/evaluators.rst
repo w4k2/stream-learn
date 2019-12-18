@@ -172,22 +172,38 @@ of correct detection of positive samples and is denoted as
 
   from strlearn.utils.metrics import precision
 
-F1 score
---------
-.. :cite:`Sasaki2007`
+F-beta score
+------------
+.. :cite:`BaezaYates1999`
 
-The F1 score can be interpreted as a harmonic mean of precision and
-recall taking both metrics into account and punishing extreme values.
-The formula for the F1 score is
+The F-beta score can be interpreted as a weighted harmonic mean of precision and
+recall taking both metrics into account and punishing extreme values. The ``beta`` parameter determines the recall's weight. ``beta`` < 1 gives more weight to precision, while ``beta`` > 1 prefers recall.
+The formula for the F-beta score is
 
 .. math::
-   F1 = 2 * \frac{Precision * Recall}{Precision + Recall}
+   F_\beta = (1+\beta^2) * \frac{Precision * Recall}{(\beta^2 * Precision) + Recall}
 
 **Example**
 
 .. code-block:: python
 
-  from strlearn.utils.metrics import f_score
+  from strlearn.utils.metrics import fbeta_score
+
+F1 score
+--------
+.. :cite:`Sasaki2007`
+
+The F1 score can be interpreted as a F-beta score, where :math:`\beta` parameter equals 1. It is a harmonic mean of precision and recall.
+The formula for the F1 score is
+
+.. math::
+   F_1 = 2 * \frac{Precision * Recall}{Precision + Recall}
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.utils.metrics import f1_score
 
 Balanced accuracy (BAC)
 -----------------------
@@ -208,8 +224,8 @@ of recall and specificity (also called true negative rate).
 
   from strlearn.utils.metrics import bac
 
-Geometric mean score (G-mean)
------------------------------
+Geometric mean score 1 (G-mean1)
+--------------------------------
 .. :cite:`Barandela2003,Kubat1997`
 
 The geometric mean (G-mean) tries to maximize the accuracy on each of the
@@ -218,13 +234,29 @@ a N root of the product of class-wise recall. For binary classification
 G-mean is denoted as the squared root of the product of the recall and specificity.
 
 .. math::
-    Gmean = \sqrt{Recall * Specificity}
+    Gmean1 = \sqrt{Recall * Specificity}
 
 **Example**
 
 .. code-block:: python
 
-  from strlearn.utils.metrics import geometric_mean_score
+  from strlearn.utils.metrics import geometric_mean_score_1
+
+Geometric mean score 2 (G-mean2)
+--------------------------------
+
+The alternative definition of G-mean measure. For binary classification
+G-mean is denoted as the squared root of the product of the recall and precision.
+
+.. math::
+    Gmean2 = \sqrt{Recall * Precision}
+
+**Example**
+
+.. code-block:: python
+
+  from strlearn.utils.metrics import geometric_mean_score_2
+
 
 References
 ----------
