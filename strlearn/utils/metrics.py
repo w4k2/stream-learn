@@ -61,7 +61,13 @@ def precision(y_true, y_pred):
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
     return np.nan_to_num(tp/(tp+fp))
 
-def f_score(y_true, y_pred):
+def fbeta_score(y_true, y_pred, beta):
+    pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
+    return np.nan_to_num((1+np.power(beta,2)) * pre * rec / (np.power(beta,2) * pre + rec))
+
+
+def f1_score(y_true, y_pred):
+    return fbeta_score(y_true, y_pred, 1)
     """
     Calculates the f1_score.
 
@@ -97,7 +103,7 @@ def bac(y_true, y_pred):
     spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
     return np.nan_to_num((rec+spe)/2)
 
-def geometric_mean_score(y_true, y_pred):
+def geometric_mean_score_1(y_true, y_pred):
     """
     Calculates the geometric mean score.
 
@@ -114,3 +120,22 @@ def geometric_mean_score(y_true, y_pred):
     """
     spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
     return np.nan_to_num(np.sqrt(rec*spe))
+
+
+def geometric_mean_score_2(y_true, y_pred):
+    """
+    Calculates the geometric mean score.
+
+    Parameters
+    ----------
+    y_true : array-like, shape (n_samples, )
+        Ground truth (correct) target values.
+    y_pred : array-like, shape (n_samples, )
+        Estimated targets as returned by a classifier.
+
+    Returns
+    -------
+    gmean : float
+    """
+    pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
+    return np.nan_to_num(np.sqrt(rec*pre))
