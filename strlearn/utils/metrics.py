@@ -2,6 +2,29 @@
 
 import numpy as np
 
+def binary_confusion_matrix(y_true, y_pred):
+    # tn, fp, fn, tp
+    return tuple([np.sum((y_pred == i%2) * (y_true == i//2)) for i in range(4)])
+
+def specificity(y_true, y_pred):
+    """
+    Calculates the specificity.
+
+    Parameters
+    ----------
+    y_true : array-like, shape (n_samples, )
+        Ground truth (correct) target values.
+    y_pred : array-like, shape (n_samples, )
+        Estimated targets as returned by a classifier.
+
+    Returns
+    -------
+    specificity : float
+    """
+    tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
+    return tn/(tn+fp)
+
+
 def recall(y_true, y_pred):
     """
     Calculates the recall.
@@ -17,19 +40,8 @@ def recall(y_true, y_pred):
     -------
     recall : float
     """
-    P = y_true == 1
-    N = y_true == 0
-
-    TP = np.sum(y_pred[P] == 1)
-    FP = np.sum(y_pred[P] == 0)
-
-    TN = np.sum(y_pred[N] == 0)
-    FN = np.sum(y_pred[N] == 1)
-
-    recall = TP / (TP + FP)
-
-    return np.nan_to_num(recall)
-
+    tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
+    return np.nan_to_num(tp/(tp+fn))
 
 def precision(y_true, y_pred):
     """
@@ -46,19 +58,8 @@ def precision(y_true, y_pred):
     -------
     precision : float
     """
-    P = y_true == 1
-    N = y_true == 0
-
-    TP = np.sum(y_pred[P] == 1)
-    FP = np.sum(y_pred[P] == 0)
-
-    TN = np.sum(y_pred[N] == 0)
-    FN = np.sum(y_pred[N] == 1)
-
-    precision = TP / (TP + FN)
-
-    return np.nan_to_num(precision)
-
+    tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
+    return np.nan_to_num(tp/(tp+fp))
 
 def f_score(y_true, y_pred):
     """
@@ -75,20 +76,8 @@ def f_score(y_true, y_pred):
     -------
     f1 : float
     """
-    P = y_true == 1
-    N = y_true == 0
-
-    TP = np.sum(y_pred[P] == 1)
-    FP = np.sum(y_pred[P] == 0)
-
-    TN = np.sum(y_pred[N] == 0)
-    FN = np.sum(y_pred[N] == 1)
-
-    recall = TP / (TP + FP)
-    precision = TP / (TP + FN)
-
-    f1 = (2 * (precision * recall)) / (precision + recall)
-    return np.nan_to_num(f1)
+    pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
+    return np.nan_to_num(2 * pre * rec / (pre + rec))
 
 def bac(y_true, y_pred):
     """
@@ -105,21 +94,8 @@ def bac(y_true, y_pred):
     -------
     bac : float
     """
-    P = y_true == 1
-    N = y_true == 0
-
-    TP = np.sum(y_pred[P] == 1)
-    FP = np.sum(y_pred[P] == 0)
-
-    TN = np.sum(y_pred[N] == 0)
-    FN = np.sum(y_pred[N] == 1)
-
-    recall_a = TP / (TP + FP)
-    recall_b = TN / (TN + FN)
-
-    bac = (recall_a + recall_b) / 2
-
-    return np.nan_to_num(bac)
+    spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
+    return np.nan_to_num((rec+spe)/2)
 
 def geometric_mean_score(y_true, y_pred):
     """
@@ -136,19 +112,5 @@ def geometric_mean_score(y_true, y_pred):
     -------
     gmean : float
     """
-
-    P = y_true == 1
-    N = y_true == 0
-
-    TP = np.sum(y_pred[P] == 1)
-    FP = np.sum(y_pred[P] == 0)
-
-    TN = np.sum(y_pred[N] == 0)
-    FN = np.sum(y_pred[N] == 1)
-
-    recall_a = TP / (TP + FP)
-    recall_b = TN / (TN + FN)
-
-    gmean = (recall_a * recall_b)**(1/2)
-
-    return np.nan_to_num(gmean)
+    spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
+    return np.nan_to_num(np.sqrt(rec*spe))
