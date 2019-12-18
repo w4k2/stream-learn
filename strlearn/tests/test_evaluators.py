@@ -3,7 +3,7 @@
 import sys
 import strlearn as sl
 from sklearn.metrics import accuracy_score, roc_auc_score
-from ..utils import bac, f_score, geometric_mean_score
+from ..utils import bac, f1_score, geometric_mean_score_1
 
 sys.path.insert(0, "../..")
 
@@ -24,7 +24,7 @@ def test_TTT_single_clf():
 def test_TTT_custom_metrics():
     stream = get_stream()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
-    metrics = [accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score]
+    metrics = [accuracy_score, roc_auc_score, geometric_mean_score_1, bac, f1_score]
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clf)
 
@@ -45,7 +45,7 @@ def test_TTT_multiple_clfs():
         sl.classifiers.AccumulatedSamplesClassifier(),
         sl.classifiers.AccumulatedSamplesClassifier(),
     ]
-    metrics = [accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score]
+    metrics = [accuracy_score, roc_auc_score, geometric_mean_score_1, bac, f1_score]
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clfs)
 
@@ -58,7 +58,7 @@ def test_P_multiple_clfs():
         sl.classifiers.AccumulatedSamplesClassifier(),
         sl.classifiers.AccumulatedSamplesClassifier(),
     ]
-    metrics = [accuracy_score, roc_auc_score, geometric_mean_score, bac, f_score]
+    metrics = [accuracy_score, roc_auc_score, geometric_mean_score_1, bac, f1_score]
     evaluator = sl.evaluators.Prequential(metrics=metrics)
     evaluator.process(stream, clfs)
 
