@@ -67,7 +67,6 @@ def fbeta_score(y_true, y_pred, beta):
 
 
 def f1_score(y_true, y_pred):
-    return fbeta_score(y_true, y_pred, 1)
     """
     Calculates the f1_score.
 
@@ -82,8 +81,7 @@ def f1_score(y_true, y_pred):
     -------
     f1 : float
     """
-    pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
-    return np.nan_to_num(2 * pre * rec / (pre + rec))
+    return fbeta_score(y_true, y_pred, 1)
 
 def bac(y_true, y_pred):
     """

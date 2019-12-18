@@ -30,7 +30,9 @@ def test_precision_recall():
 
             precision = sl.utils.metrics.precision(y_test, y_pred)
             recall = sl.utils.metrics.recall(y_test, y_pred)
-            gmean = sl.utils.metrics.geometric_mean_score_1(y_test, y_pred)
+            gmean1 = sl.utils.metrics.geometric_mean_score_1(y_test, y_pred)
+            gmean2 = sl.utils.metrics.geometric_mean_score_2(y_test, y_pred)
+            f1 = sl.utils.metrics.f1_score(y_test, y_pred)
 
         clf.partial_fit(chunk[0], chunk[1])
 
