@@ -90,7 +90,7 @@ def f1_score(y_true, y_pred):
     return fbeta_score(y_true, y_pred, 1)
 
 
-def bac(y_true, y_pred):
+def balanced_accuracy_score(y_true, y_pred):
     """
     Calculates the balanced accuracy score.
 
@@ -103,7 +103,7 @@ def bac(y_true, y_pred):
 
     Returns
     -------
-    bac : float
+    balanced_accuracy_score : float
     """
     spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
     return np.nan_to_num((rec + spe) / 2)

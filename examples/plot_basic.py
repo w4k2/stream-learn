@@ -19,7 +19,7 @@ clfs = [MLPClassifier(), GaussianNB()]
 stream = sl.streams.StreamGenerator(n_chunks=30, n_drifts=1)
 
 # Select vector of metrics
-metrics = [sl.metrics.bac, sl.metrics.f1_score]
+metrics = [sl.metrics.balanced_accuracy_score, sl.metrics.f1_score]
 
 # Initialize evaluator with given metrics
 evaluator = sl.evaluators.TestThenTrain(metrics)

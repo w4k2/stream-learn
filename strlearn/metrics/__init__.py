@@ -3,7 +3,7 @@ from .metrics import (
     f1_score,
     recall,
     precision,
-    bac,
+    balanced_accuracy_score,
     geometric_mean_score_1,
     geometric_mean_score_2,
     specificity,

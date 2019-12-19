@@ -2,7 +2,7 @@
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from ..metrics import bac
+from ..metrics import balanced_accuracy_score
 from sklearn.base import ClassifierMixin
 
 
@@ -44,7 +44,7 @@ class Prequential:
     [0.925      0.92567027 0.9250634  0.92567027 0.92610837]]
     """
 
-    def __init__(self, metrics=(accuracy_score, bac)):
+    def __init__(self, metrics=(accuracy_score, balanced_accuracy_score)):
         if isinstance(metrics, (list, tuple)):
             self.metrics = metrics
         else:

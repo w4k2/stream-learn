@@ -2,7 +2,7 @@
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from ..metrics import bac
+from ..metrics import balanced_accuracy_score
 from sklearn.base import ClassifierMixin
 
 
@@ -20,7 +20,7 @@ class TestThenTrain:
         The class labels.
     scores_ : array-like, shape (stream.n_chunks, 5)
         Values of accuracy_score, roc_auc_score,
-        geometric_mean_score, bac and f_score for
+        geometric_mean_score, balanced_accuracy_score and f_score for
         each processed data chunk.
 
     Examples
@@ -41,7 +41,7 @@ class TestThenTrain:
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self, metrics=(accuracy_score, bac)):
+    def __init__(self, metrics=(accuracy_score, balanced_accuracy_score)):
         if isinstance(metrics, (list, tuple)):
             self.metrics = metrics
         else:
