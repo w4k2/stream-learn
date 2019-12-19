@@ -3,7 +3,7 @@
 import sys
 import strlearn as sl
 from sklearn.metrics import accuracy_score, roc_auc_score
-from ..utils import bac, f1_score, geometric_mean_score_1
+from ..metrics import bac, f1_score, geometric_mean_score_1
 
 sys.path.insert(0, "../..")
 
@@ -29,6 +29,7 @@ def test_TTT_custom_metrics():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, len(metrics))
+
 
 def test_TTT_one_metric():
     stream = get_stream()
@@ -68,14 +69,11 @@ def test_P_multiple_clfs():
         len(metrics),
     )
 
+
 def test_P_one_metric():
     stream = get_stream()
     clf = sl.classifiers.AccumulatedSamplesClassifier()
     evaluator = sl.evaluators.Prequential(metrics=accuracy_score)
     evaluator.process(stream, clf, interval=100)
 
-    assert evaluator.scores.shape == (
-        1,
-        (stream.n_chunks - 1) * 2,
-        1,
-    )
+    assert evaluator.scores.shape == (1, (stream.n_chunks - 1) * 2, 1,)

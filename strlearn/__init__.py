@@ -4,4 +4,4 @@ from . import classifiers
 from . import ensembles
 from . import evaluators
 from . import streams
-from . import utils
+from . import metrics

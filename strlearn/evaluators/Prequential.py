@@ -2,7 +2,7 @@
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from ..utils import bac
+from ..metrics import bac
 from sklearn.base import ClassifierMixin
 
 

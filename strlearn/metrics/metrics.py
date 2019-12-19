@@ -2,9 +2,11 @@
 
 import numpy as np
 
+
 def binary_confusion_matrix(y_true, y_pred):
     # tn, fp, fn, tp
-    return tuple([np.sum((y_pred == i%2) * (y_true == i//2)) for i in range(4)])
+    return tuple([np.sum((y_pred == i % 2) * (y_true == i // 2)) for i in range(4)])
+
 
 def specificity(y_true, y_pred):
     """
@@ -22,7 +24,7 @@ def specificity(y_true, y_pred):
     specificity : float
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return tn/(tn+fp)
+    return np.nan_to_num(tn / (tn + fp))
 
 
 def recall(y_true, y_pred):
@@ -41,7 +43,8 @@ def recall(y_true, y_pred):
     recall : float
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return np.nan_to_num(tp/(tp+fn))
+    return np.nan_to_num(tp / (tp + fn))
+
 
 def precision(y_true, y_pred):
     """
@@ -59,11 +62,14 @@ def precision(y_true, y_pred):
     precision : float
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return np.nan_to_num(tp/(tp+fp))
+    return np.nan_to_num(tp / (tp + fp))
+
 
 def fbeta_score(y_true, y_pred, beta):
     pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
-    return np.nan_to_num((1+np.power(beta,2)) * pre * rec / (np.power(beta,2) * pre + rec))
+    return np.nan_to_num(
+        (1 + np.power(beta, 2)) * pre * rec / (np.power(beta, 2) * pre + rec)
+    )
 
 
 def f1_score(y_true, y_pred):
@@ -83,6 +89,7 @@ def f1_score(y_true, y_pred):
     """
     return fbeta_score(y_true, y_pred, 1)
 
+
 def bac(y_true, y_pred):
     """
     Calculates the balanced accuracy score.
@@ -99,7 +106,8 @@ def bac(y_true, y_pred):
     bac : float
     """
     spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
-    return np.nan_to_num((rec+spe)/2)
+    return np.nan_to_num((rec + spe) / 2)
+
 
 def geometric_mean_score_1(y_true, y_pred):
     """
@@ -117,7 +125,7 @@ def geometric_mean_score_1(y_true, y_pred):
     gmean : float
     """
     spe, rec = specificity(y_true, y_pred), recall(y_true, y_pred)
-    return np.nan_to_num(np.sqrt(rec*spe))
+    return np.nan_to_num(np.sqrt(rec * spe))
 
 
 def geometric_mean_score_2(y_true, y_pred):
@@ -136,4 +144,4 @@ def geometric_mean_score_2(y_true, y_pred):
     gmean : float
     """
     pre, rec = precision(y_true, y_pred), recall(y_true, y_pred)
-    return np.nan_to_num(np.sqrt(rec*pre))
+    return np.nan_to_num(np.sqrt(rec * pre))
