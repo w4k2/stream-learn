@@ -36,11 +36,10 @@ What's very important, contrary to the typical call to ``make_classification()``
 ``n_samples`` parameter here, which determines the number of patterns in the set, but instead we provide
 two new attributes of data stream:
 
-- ``n_chunks`` — to determine the number of chunks in a data stream,
-- ``chunk_size`` — to dermine number of patterns in each chunk of data stream.
+- ``n_chunks`` — to determine the number of chunks in a data stream.
+- ``chunk_size`` — to determine the number of patterns in each data chunk.
 
-Additionally, data streams may contain noise which, while not considered as concept drift, provides additional challenge during the data stream analysis and data stream classifiers
-should be robust to it. The ``StreamGenerator`` class implements noise by inverting the class labels of a given percentage of incoming instances in the data stream. This percentage can be defined by a ``y_flip`` parameter, like in standard ``make_classification()`` call.
+Additionally, data streams may contain noise which, while not considered as concept drift, provides additional challenge during the data stream analysis and data stream classifiers should be robust to it. The ``StreamGenerator`` class implements noise by inverting the class labels of a given percentage of incoming instances in the data stream. This percentage can be defined by a ``y_flip`` parameter, like in standard ``make_classification()`` call. If a single float is given as the parameter value, the percentage of noise refers to combined instances from all classes, while if we specify a tuple of floats, the noise occurs within each class separately using the given percentages.
 
 Streams containing concept drifts
 =================================

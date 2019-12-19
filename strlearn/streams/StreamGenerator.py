@@ -31,7 +31,7 @@ class StreamGenerator:
         the more sudden the drift is.
     n_classes : integer, optional (default=2)
         The number of classes in the generated data stream.
-    y_flip: integer or tuple (default=0.01)
+    y_flip: float or tuple (default=0.01)
         Label noise for whole dataset or separate classes.
     recurring : boolean, optional (default=False)
         Determines if the streams can go back to
