@@ -116,7 +116,7 @@ The default mode of consecutive concept occurences is a non-recurring drift, whe
 Class imbalance
 ===============
 
-Another area of data stream properties, different from the concept drift phenomenon, is the a priori probability of problem classes. By default, a balanced stream is generated, i.e. one in which patterns of all classes are present in a similar number.
+Another area of data stream properties, different from the concept drift phenomenon, is the prior probability of problem classes. By default, a balanced stream is generated, i.e. one in which patterns of all classes are present in a similar number.
 
 .. code-block:: python
 
