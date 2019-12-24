@@ -37,13 +37,13 @@ three-dimensional array of shape (n_classifiers, n_chunks, n_metrics).
 .. code-block:: python
 
   from strlearn.evaluators import TestThenTrain
-  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.ensembles import SEA
   from strlearn.utils.metrics import bac, f_score
   from strlearn.streams import StreamGenerator
   from sklearn.naive_bayes import GaussianNB
 
   stream = StreamGenerator(chunk_size=200, n_chunks=250)
-  clf = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  clf = SEA(base_estimator=GaussianNB())
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf)
@@ -55,15 +55,15 @@ three-dimensional array of shape (n_classifiers, n_chunks, n_metrics).
 .. code-block:: python
 
   from strlearn.evaluators import TestThenTrain
-  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.ensembles import SEA
   from strlearn.utils.metrics import bac, f_score
   from strlearn.streams import StreamGenerator
   from sklearn.naive_bayes import GaussianNB
   from sklearn.tree import DecisionTreeClassifier
 
   stream = StreamGenerator(chunk_size=200, n_chunks=250)
-  clf1 = ChunkBasedEnsemble(base_estimator=GaussianNB())
-  clf2 = ChunkBasedEnsemble(base_estimator=DecisionTreeClassifier())
+  clf1 = SEA(base_estimator=GaussianNB())
+  clf2 = SEA(base_estimator=DecisionTreeClassifier())
   clfs = (clf1, clf2)
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
@@ -96,13 +96,13 @@ the instance of ``StreamGenerator`` class.
 .. code-block:: python
 
   from strlearn.evaluators import Prequential
-  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.ensembles import SEA
   from strlearn.utils.metrics import bac, f_score
   from strlearn.streams import StreamGenerator
   from sklearn.naive_bayes import GaussianNB
 
   stream = StreamGenerator()
-  clf = ChunkBasedEnsemble(base_estimator=GaussianNB())
+  clf = SEA(base_estimator=GaussianNB())
   evaluator = TestThenTrain(metrics=(bac, f_score))
 
   evaluator.process(stream, clf, interval=100)
@@ -114,15 +114,15 @@ the instance of ``StreamGenerator`` class.
 .. code-block:: python
 
   from strlearn.evaluators import Prequential
-  from strlearn.ensembles import ChunkBasedEnsemble
+  from strlearn.ensembles import SEA
   from strlearn.utils.metrics import bac, f_score
   from strlearn.streams import StreamGenerator
   from sklearn.naive_bayes import GaussianNB
   from sklearn.tree import DecisionTreeClassifier
 
   stream = StreamGenerator(chunk_size=200, n_chunks=250)
-  clf1 = ChunkBasedEnsemble(base_estimator=GaussianNB())
-  clf2 = ChunkBasedEnsemble(base_estimator=DecisionTreeClassifier())
+  clf1 = SEA(base_estimator=GaussianNB())
+  clf2 = SEA(base_estimator=DecisionTreeClassifier())
   clfs = (clf1, clf2)
   evaluator = Prequential(metrics=(bac, f_score))
 

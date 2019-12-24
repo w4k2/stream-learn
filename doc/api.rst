@@ -63,7 +63,7 @@ API
    :toctree: generated/
    :template: class.rst
 
-   ensembles.ChunkBasedEnsemble
+   ensembles.SEA
    ensembles.OnlineBagging
    ensembles.OOB
    ensembles.UOB

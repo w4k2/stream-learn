@@ -8,14 +8,17 @@ from sklearn.naive_bayes import GaussianNB
 
 sys.path.insert(0, "../..")
 
+
 def get_stream():
     return sl.streams.StreamGenerator(n_chunks=10, n_features=10)
+
 
 def get_different_stream():
     return sl.streams.StreamGenerator(n_chunks=10, n_features=4)
 
+
 def test_ensembles_fit():
-    clf1 = sl.ensembles.ChunkBasedEnsemble(GaussianNB())
+    clf1 = sl.ensembles.SEA(GaussianNB())
     clf2 = sl.ensembles.WAE(GaussianNB())
     clf3 = sl.ensembles.OOB(GaussianNB())
     clf4 = sl.ensembles.OnlineBagging(GaussianNB())
@@ -35,7 +38,7 @@ def test_ensembles_fit():
 def test_features():
     "Bare CBE"
     clfs = [
-        sl.ensembles.ChunkBasedEnsemble(GaussianNB()),
+        sl.ensembles.SEA(GaussianNB()),
         sl.ensembles.OOB(GaussianNB()),
         sl.ensembles.UOB(GaussianNB()),
         sl.ensembles.WAE(GaussianNB()),
@@ -52,10 +55,11 @@ def test_features():
         with pytest.raises(ValueError):
             clf.partial_fit(X_b, y_b)
 
+
 def test_pred():
     """Pred error"""
     clfs = [
-        sl.ensembles.ChunkBasedEnsemble(GaussianNB()),
+        sl.ensembles.SEA(GaussianNB()),
         sl.ensembles.OOB(GaussianNB()),
         sl.ensembles.UOB(GaussianNB()),
         sl.ensembles.WAE(GaussianNB()),
@@ -72,12 +76,14 @@ def test_pred():
         with pytest.raises(ValueError):
             clf.predict(X_b)
 
-def test_CBE():
-    "Bare CBE"
+
+def test_SEA():
+    "Bare SEA"
     stream = get_stream()
-    clf = sl.ensembles.ChunkBasedEnsemble(GaussianNB(), n_estimators=5)
+    clf = sl.ensembles.SEA(GaussianNB(), n_estimators=5)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
+
 
 def test_WAE():
     """Bare WAE."""
@@ -94,6 +100,7 @@ def test_OOB():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
+
 def test_OB():
     """Bare WAE."""
     stream = get_stream()
@@ -101,12 +108,14 @@ def test_OB():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
+
 def test_UOB():
     """Bare WAE."""
     stream = get_stream()
     clf = sl.ensembles.UOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
+
 
 def test_pp_WAE():
     """Post pruned WAE."""
@@ -119,7 +128,9 @@ def test_pp_WAE():
 def test_WAE_wcm1():
     """Various weight computation methods of WAE."""
     stream = get_stream()
-    clf = sl.ensembles.WAE(GaussianNB(), weight_calculation_method="same_for_each", n_estimators=5)
+    clf = sl.ensembles.WAE(
+        GaussianNB(), weight_calculation_method="same_for_each", n_estimators=5
+    )
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 

@@ -1,12 +1,13 @@
 """Chunk based ensemble."""
 
 from sklearn.base import ClassifierMixin, clone
+from sklearn.metrics import accuracy_score
 from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
 
 
-class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
+class SEA(ClassifierMixin, BaseEnsemble):
     """
     Chunk based ensemble classifier.
 
@@ -15,7 +16,7 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
 
     Parameters
     ----------
-    
+
     n_estimators : integer, optional (default=5)
         The maximum number of estimators trained using consecutive data chunks
         and maintained in the ensemble.
@@ -31,7 +32,7 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
     --------
     >>> import strlearn as sl
     >>> stream = sl.streams.StreamGenerator()
-    >>> clf = sl.ensembles.ChunkBasedEnsemble()
+    >>> clf = sl.ensembles.SEA()
     >>> evaluator = sl.evaluators.TestThenTrainEvaluator()
     >>> evaluator.process(clf, stream)
     >>> print(evaluator.scores_)
@@ -45,15 +46,15 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self, base_estimator=None, n_estimators=10):
+    def __init__(self, base_estimator=None, n_estimators=10, metric=accuracy_score):
         """Initialization."""
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
+        self.metric = metric
 
     def fit(self, X, y):
         """Fitting."""
         self.partial_fit(X, y)
-
         return self
 
     def partial_fit(self, X, y, classes=None):
@@ -73,11 +74,14 @@ class ChunkBasedEnsemble(ClassifierMixin, BaseEnsemble):
         if self.classes_ is None:
             self.classes_, _ = np.unique(y, return_inverse=True)
 
+        # Append new estimator
         self.ensemble_.append(clone(self.base_estimator).fit(self.X_, self.y_))
 
+        # Remove the worst when ensemble becomes too large
         if len(self.ensemble_) > self.n_estimators:
-            del self.ensemble_[0]
-
+            del self.ensemble_[
+                np.argmin([self.metric(y, clf.predict(X)) for clf in self.ensemble_])
+            ]
         return self
 
     def ensemble_support_matrix(self, X):
