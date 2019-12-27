@@ -9,17 +9,19 @@ import numpy as np
 
 class SEA(ClassifierMixin, BaseEnsemble):
     """
-    Chunk based ensemble classifier.
+    Streaming Ensemble Algorithm.
 
     Ensemble classifier composed of estimators trained on the fixed
-    number of previously seen data chunks.
+    number of previously seen data chunks, prunning the worst one in the pool.
 
     Parameters
     ----------
 
-    n_estimators : integer, optional (default=5)
+    n_estimators : integer, optional (default=10)
         The maximum number of estimators trained using consecutive data chunks
         and maintained in the ensemble.
+    metric : function, optional (default=accuracy_score)
+        The metric used to prune the worst classifier in the pool.
 
     Attributes
     ----------

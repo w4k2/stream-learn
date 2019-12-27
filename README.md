@@ -110,6 +110,7 @@ plt.legend()
 
 ![](https://w4k2.github.io/stream-learn/_images/simplest.png)
 
+<!--
 ---
 
 
@@ -122,19 +123,9 @@ plt.legend()
   </p>
 </p>
 
-
-
 ![](https://w4k2.github.io/stream-learn/_images/disco.png)
 
-
-
-
-
-
-
-
-
-
+-->
 
 
 
