@@ -50,21 +50,21 @@ clf = GaussianNB()
 
 #### 2. Data Stream
 
-The next element is the data stream that we aim to process. In the example we will use a synthetic stream consisting of shocking number of 30 chunks and containing precisely one concept drift. We will prepare it using the `StreamGenerator()` class of the `stream-learn` module:
+The next element is the data stream that we aim to process. In the example we will use a synthetic stream consisting of shocking number of 100 chunks and containing precisely one concept drift. We will prepare it using the `StreamGenerator()` class of the `stream-learn` module:
 
 ```python
 from strlearn.streams import StreamGenerator
-stream = StreamGenerator(n_chunks=30, n_drifts=1)
+stream = StreamGenerator(n_chunks=100, n_drifts=1)
 ```
 
 #### 3. Metrics
 
-The third requirement of the experiment is to specify the metrics used in the evaluation of the methods. In the example, we will use the *accuracy* metric available in `scikit-learn` and the *balanced accuracy* from the `stream-learn` module:
+The third requirement of the experiment is to specify the metrics used in the evaluation of the methods. In the example, we will use the *accuracy* metric available in `scikit-learn` and the *precision* from the `stream-learn` module:
 
 ```python
 from sklearn.metrics import accuracy_score
-from strlearn.utils.metrics import bac
-metrics = [accuracy_score, bac]
+from strlearn.metrics import precision
+metrics = [accuracy_score, precision]
 ```
 
 #### 4. Evaluator
