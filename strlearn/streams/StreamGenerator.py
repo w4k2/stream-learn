@@ -75,6 +75,11 @@ class StreamGenerator:
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
+        n_features=20,
+        n_informative=2,
+        n_redundant=2,
+        n_repeated=0,
+        n_clusters_per_class=2,
         recurring=False,
         weights=None,
         incremental=False,
@@ -95,6 +100,11 @@ class StreamGenerator:
         self.incremental = incremental
         self.y_flip = y_flip
         self.classes_ = np.array(range(self.n_classes))
+        self.n_features = n_features
+        self.n_redundant = n_redundant
+        self.n_informative = n_informative
+        self.n_repeated = n_repeated
+        self.n_clusters_per_class = n_clusters_per_class
 
     def is_dry(self):
         """Checking if we have reached the end of the stream."""
@@ -144,6 +154,11 @@ class StreamGenerator:
                         **self.make_classification_kwargs,
                         n_samples=self.n_chunks * self.chunk_size,
                         n_classes=self.n_classes,
+                        n_features=self.n_features,
+                        n_informative=self.n_informative,
+                        n_redundant=self.n_redundant,
+                        n_repeated=self.n_repeated,
+                        n_clusters_per_class=self.n_clusters_per_class,
                         random_state=self.random_state + i,
                         weights=weights.tolist(),
                     )[0].T
