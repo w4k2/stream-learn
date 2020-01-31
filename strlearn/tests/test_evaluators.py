@@ -8,8 +8,6 @@ import strlearn as sl
 
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 
-sys.path.insert(0, "../..")
-
 
 def get_stream():
     return sl.streams.StreamGenerator(n_chunks=10)

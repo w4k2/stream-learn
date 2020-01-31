@@ -6,8 +6,6 @@ from sklearn.datasets import make_classification
 
 import strlearn as sl
 
-sys.path.insert(0, "../..")
-
 
 def test_precision_recall():
     "Calculating matrics"
