@@ -7,21 +7,6 @@ from sklearn.naive_bayes import GaussianNB
 import pytest
 import strlearn as sl
 
-sys.path.insert(0, "../..")
-
-"""
-def test_download_arff():
-    url = "http://156.17.43.89/Toyset.arff"
-    r = requests.get(url)
-    with open("Toyset.arff", "wb") as f:
-        f.write(r.content)
-
-    url = "http://156.17.43.89/Elec.arff"
-    r = requests.get(url)
-    with open("Elec.arff", "wb") as f:
-        f.write(r.content)
-"""
-
 
 def test_generator_same():
     n_chunks = 10
