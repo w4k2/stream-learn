@@ -4,10 +4,10 @@ Data streams generator.
 A class for generating streams with various parameters.
 """
 
-from sklearn.datasets import make_classification
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import logistic
-import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification
 
 
 class StreamGenerator:

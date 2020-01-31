@@ -1,9 +1,9 @@
 """Undersampling-based Online Bagging."""
 
+import numpy as np
 from sklearn.base import ClassifierMixin, clone
 from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-import numpy as np
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 
 class UOB(BaseEnsemble, ClassifierMixin):

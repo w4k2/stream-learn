@@ -1,13 +1,20 @@
 import os
 import sys
+
+import sphinx_gallery
 import sphinx_rtd_theme
+from github_link import make_linkcode_resolve
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+# The short X.Y version.
+from strlearn import __version__
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath("sphinxext"))
-from github_link import make_linkcode_resolve
-import sphinx_gallery
 
 # -- General configuration ------------------------------------------------
 
@@ -64,12 +71,6 @@ project = "stream-learn"
 copyright = u"2019, P. Ksieniewicz, P. Zyblewski"
 html_logo = "_static/logo.png"
 
-# The version info for the project you're documenting, acts as replacement for
-# |version| and |release|, also used in various other places throughout the
-# built documents.
-#
-# The short X.Y version.
-from strlearn import __version__
 
 version = __version__
 # The full version, including alpha/beta/rc tags.

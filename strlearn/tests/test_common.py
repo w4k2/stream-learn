@@ -1,8 +1,10 @@
 """Basic tests."""
 
 import sys
-import strlearn as sl
+
 from sklearn.neural_network import MLPClassifier
+
+import strlearn as sl
 
 sys.path.insert(0, "../..")
 

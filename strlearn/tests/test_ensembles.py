@@ -1,10 +1,12 @@
 """Ensemble tests."""
 
 import sys
+
 import numpy as np
-import strlearn as sl
-import pytest
 from sklearn.naive_bayes import GaussianNB
+
+import pytest
+import strlearn as sl
 
 sys.path.insert(0, "../..")
 

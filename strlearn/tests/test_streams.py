@@ -1,13 +1,15 @@
 """Basic tests."""
 import sys
-import pytest
-import strlearn as sl
+
 import numpy as np
 import requests
 from sklearn.metrics import accuracy_score
+from sklearn.naive_bayes import GaussianNB
+
+import pytest
+import strlearn as sl
 
 sys.path.insert(0, "../..")
-from sklearn.naive_bayes import GaussianNB
 
 """
 def test_download_arff():

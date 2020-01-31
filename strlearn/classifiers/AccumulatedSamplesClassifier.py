@@ -1,9 +1,9 @@
 """Accumulated samples classifier."""
 
-from sklearn.naive_bayes import GaussianNB
-from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.naive_bayes import GaussianNB
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 
 class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):

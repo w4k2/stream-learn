@@ -1,8 +1,10 @@
 """Metric tests."""
 
 import sys
-import strlearn as sl
+
 from sklearn.datasets import make_classification
+
+import strlearn as sl
 
 sys.path.insert(0, "../..")
 

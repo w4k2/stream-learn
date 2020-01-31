@@ -1,7 +1,8 @@
-import numpy as np
 import warnings
-from sklearn import metrics
 from builtins import range
+
+import numpy as np
+from sklearn import metrics
 
 PRUNING_CRITERION = ('accuracy')
 # TODO Liczba kombinacji jest opcjonalna. Przy jej braku dokonujemy przegladu zupelnego.

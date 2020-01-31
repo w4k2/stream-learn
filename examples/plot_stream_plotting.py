@@ -14,10 +14,11 @@ pariatur ullamco, an export excepteur fidelissimae.
 """
 
 
-import strlearn as sl
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
+
+import strlearn as sl
 
 cm = LinearSegmentedColormap.from_list(
     "lokomotiv", colors=[(0.3, 0.7, 0.3), (0.7, 0.3, 0.3)]

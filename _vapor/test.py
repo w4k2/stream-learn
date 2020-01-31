@@ -6,10 +6,11 @@ Example
 Just example.
 
 """
-import strlearn as sl
-from sklearn.naive_bayes import GaussianNB
-from sklearn.base import clone
 import numpy as np
+from sklearn.base import clone
+from sklearn.naive_bayes import GaussianNB
+
+import strlearn as sl
 
 clf = [GaussianNB(), GaussianNB()]
 

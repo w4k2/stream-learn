@@ -1,9 +1,10 @@
 """Oversamping-based Online Bagging."""
 
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.ensemble import BaseEnsemble
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+
 
 class OOB(BaseEnsemble, ClassifierMixin):
     """

@@ -1,9 +1,10 @@
 """Test-Than-Train data stream evaluator."""
 
 import numpy as np
-from sklearn.metrics import accuracy_score
-from ..metrics import balanced_accuracy_score
 from sklearn.base import ClassifierMixin
+from sklearn.metrics import accuracy_score
+
+from ..metrics import balanced_accuracy_score
 
 
 class TestThenTrain:

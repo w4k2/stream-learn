@@ -1,7 +1,8 @@
-from sklearn.base import  BaseEstimator, ClassifierMixin, clone
-from sklearn.neural_network import MLPClassifier
-from sklearn.naive_bayes import GaussianNB
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
+
 
 class SampleWeightedMetaEstimator(BaseEstimator, ClassifierMixin):
     """

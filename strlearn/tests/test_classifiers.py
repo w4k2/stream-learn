@@ -1,8 +1,10 @@
 """Classifier tests."""
 
 import sys
-import strlearn as sl
+
 from sklearn.naive_bayes import GaussianNB
+
+import strlearn as sl
 
 sys.path.insert(0, "../..")
 
