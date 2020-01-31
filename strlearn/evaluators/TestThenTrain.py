@@ -86,7 +86,8 @@ class TestThenTrain:
                     ]
 
             # Train
-            [clf.partial_fit(X, y, self.stream_.classes_) for clf in self.clfs_]
+            [clf.partial_fit(X, y, self.stream_.classes_)
+             for clf in self.clfs_]
 
             if stream.is_dry():
                 break

@@ -27,6 +27,7 @@ class WAE(BaseEnsemble, ClassifierMixin):
     """
     Weighted Aging Ensemble.
     """
+
     def __init__(
         self,
         base_estimator=None,
@@ -95,7 +96,8 @@ class WAE(BaseEnsemble, ClassifierMixin):
 
         """Partial fitting"""
         if self.age_ > 0:
-            self.overall_accuracy = self.score(self.previous_X, self.previous_y)
+            self.overall_accuracy = self.score(
+                self.previous_X, self.previous_y)
 
         # Pre-pruning
         if len(self.ensemble_) > self.n_estimators and not self.post_pruning:
@@ -127,7 +129,8 @@ class WAE(BaseEnsemble, ClassifierMixin):
 
     def _accuracies(self):
         return np.array(
-            [m_clf.score(self.previous_X, self.previous_y) for m_clf in self.ensemble_]
+            [m_clf.score(self.previous_X, self.previous_y)
+             for m_clf in self.ensemble_]
         )
 
     def _set_weights(self):
@@ -198,7 +201,8 @@ class WAE(BaseEnsemble, ClassifierMixin):
 
         # Weight support before acumulation
         weighted_support = (
-            self.ensemble_support_matrix(X) * self.weights_[:, np.newaxis, np.newaxis]
+            self.ensemble_support_matrix(
+                X) * self.weights_[:, np.newaxis, np.newaxis]
         )
 
         # Acumulate supports

@@ -23,8 +23,8 @@ def test_precision_recall():
     for chunk_id in range(n_chunks):
         print("Chunk ", chunk_id)
         chunk = (
-            X[chunk_size * chunk_id : chunk_size * chunk_id + chunk_size],
-            y[chunk_size * chunk_id : chunk_size * chunk_id + chunk_size],
+            X[chunk_size * chunk_id: chunk_size * chunk_id + chunk_size],
+            y[chunk_size * chunk_id: chunk_size * chunk_id + chunk_size],
         )
 
         if previous_chunk is not None:

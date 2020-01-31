@@ -65,7 +65,8 @@ def test_TTT_multiple_clfs():
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clfs)
 
-    assert evaluator.scores.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
+    assert evaluator.scores.shape == (
+        len(clfs), stream.n_chunks - 1, len(metrics))
 
 
 def test_P_multiple_clfs():

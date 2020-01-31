@@ -82,7 +82,8 @@ class SEA(ClassifierMixin, BaseEnsemble):
         # Remove the worst when ensemble becomes too large
         if len(self.ensemble_) > self.n_estimators:
             del self.ensemble_[
-                np.argmin([self.metric(y, clf.predict(X)) for clf in self.ensemble_])
+                np.argmin([self.metric(y, clf.predict(X))
+                           for clf in self.ensemble_])
             ]
         return self
 

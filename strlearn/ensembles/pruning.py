@@ -28,8 +28,10 @@ class OneOffPruner(object):
         best_accuracy = 0.
 
         for cid in range(candidates_no):
-            weights = np.array([0 if i == cid else 1 for i in range(candidates_no)])
-            weighted_support = self.ensemble_support_matrix * weights[:, np.newaxis, np.newaxis]
+            weights = np.array(
+                [0 if i == cid else 1 for i in range(candidates_no)])
+            weighted_support = self.ensemble_support_matrix * \
+                weights[:, np.newaxis, np.newaxis]
             acumulated_weighted_support = np.sum(weighted_support, axis=0)
             decisions = np.argmax(acumulated_weighted_support, axis=1)
             accuracy = metrics.accuracy_score(self.y, decisions)

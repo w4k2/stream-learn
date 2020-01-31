@@ -44,7 +44,8 @@ def test_generator_incremental():
 
 
 def test_generator_incremental_recurring():
-    stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, recurring=True)
+    stream = sl.streams.StreamGenerator(
+        n_drifts=2, incremental=True, recurring=True)
     while stream.get_chunk():
         pass
 
