@@ -6,8 +6,6 @@ from sklearn.utils.estimator_checks import check_estimator
 
 import strlearn as sl
 
-sys.path.insert(0, "../..")
-
 
 def test_estimators():
     "Checking CBE, WAE and ASC."
