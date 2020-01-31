@@ -1,4 +1,3 @@
-import warnings
 from builtins import range
 
 import numpy as np
