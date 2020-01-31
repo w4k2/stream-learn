@@ -14,7 +14,8 @@ def test_precision_recall():
     chunk_size = 100
     n_chunks = 10
     X, y = make_classification(
-        n_samples=chunk_size * n_chunks, n_features=5, n_classes=2, random_state=1410
+        n_samples=chunk_size * n_chunks, n_features=5,
+        n_classes=2, random_state=1410
     )
 
     clf = sl.classifiers.AccumulatedSamplesClassifier()
@@ -31,11 +32,11 @@ def test_precision_recall():
             X_test, y_test = previous_chunk
             y_pred = clf.predict(X_test)
 
-            precision = sl.metrics.precision(y_test, y_pred)
-            recall = sl.metrics.recall(y_test, y_pred)
-            gmean1 = sl.metrics.geometric_mean_score_1(y_test, y_pred)
-            gmean2 = sl.metrics.geometric_mean_score_2(y_test, y_pred)
-            f1 = sl.metrics.f1_score(y_test, y_pred)
+            _ = sl.metrics.precision(y_test, y_pred)
+            _ = sl.metrics.recall(y_test, y_pred)
+            _ = sl.metrics.geometric_mean_score_1(y_test, y_pred)
+            _ = sl.metrics.geometric_mean_score_2(y_test, y_pred)
+            _ = sl.metrics.f1_score(y_test, y_pred)
 
         clf.partial_fit(chunk[0], chunk[1])
 

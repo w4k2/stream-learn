@@ -4,7 +4,6 @@ Data streams generator.
 A class for generating streams with various parameters.
 """
 
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
@@ -192,7 +191,7 @@ class StreamGenerator:
                     self.concept_probabilities.shape).astype(int)
 
                 # Recurring
-                if self.recurring == False:
+                if self.recurring is False:
                     for i in range(0, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.a_ind[start:end] = i + ((i + 1) % 2)
@@ -213,7 +212,7 @@ class StreamGenerator:
                 ).astype(int)
 
                 # Recurring drift
-                if self.recurring == False:
+                if self.recurring is False:
                     for i in range(1, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.concept_selector[
@@ -332,7 +331,7 @@ class StreamGenerator:
     def __str__(self):
         if type(self.y_flip) == tuple:
             return "%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
-                "gr" if self.incremental == False else "inc",
+                "gr" if self.incremental is False else "inc",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -340,12 +339,12 @@ class StreamGenerator:
                 self.n_drifts,
                 int(self.y_flip[0] * 100),
                 int(self.y_flip[1] * 100),
-                50 if self.weights == None else (self.weights[0] * 100),
+                50 if self.weights is None else (self.weights[0] * 100),
                 int(self.chunk_size * self.n_chunks),
             )
         else:
             return "%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
-                "gr" if self.incremental == False else "inc",
+                "gr" if self.incremental is False else "inc",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
