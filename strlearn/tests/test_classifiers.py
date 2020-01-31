@@ -6,8 +6,6 @@ from sklearn.naive_bayes import GaussianNB
 
 import strlearn as sl
 
-sys.path.insert(0, "../..")
-
 
 def get_stream():
     return sl.streams.StreamGenerator(n_chunks=10)
