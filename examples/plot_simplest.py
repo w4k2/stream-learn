@@ -7,22 +7,24 @@ Lorem impsum.
 
 """
 
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
+
+from strlearn.evaluators import TestThenTrain
+from strlearn.metrics import recall
+from strlearn.streams import StreamGenerator
 
 clf = GaussianNB()
 
-from strlearn.streams import StreamGenerator
 
 stream = StreamGenerator(n_chunks=30, n_drifts=1)
 
 
-from sklearn.metrics import accuracy_score
-from strlearn.metrics import recall
 
 metrics = [accuracy_score, recall]
 
 
-from strlearn.evaluators import TestThenTrain
 
 evaluator = TestThenTrain(metrics)
 
@@ -39,7 +41,6 @@ evaluator.scores
 ##############################################################################
 # Olaboga, jakie ważne bardzo.
 
-import matplotlib.pyplot as plt
 
 plt.figure(figsize=(6, 3), dpi=400)
 

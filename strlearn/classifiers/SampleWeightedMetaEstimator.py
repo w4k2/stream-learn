@@ -1,13 +1,14 @@
-from sklearn.base import  BaseEstimator, ClassifierMixin, clone
-from sklearn.neural_network import MLPClassifier
-from sklearn.naive_bayes import GaussianNB
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
+from sklearn.naive_bayes import GaussianNB
+
 
 class SampleWeightedMetaEstimator(BaseEstimator, ClassifierMixin):
     """
     Sample Weighted Meta Estimator.
     """
-    def __init__(self, base_classifier= GaussianNB()):
+
+    def __init__(self, base_classifier=GaussianNB()):
         self.base_classifier = base_classifier
 
     def fit(self, X, y):
@@ -15,7 +16,6 @@ class SampleWeightedMetaEstimator(BaseEstimator, ClassifierMixin):
             self.clf_ = clone(self.base_classifier)
 
         self.clf_.fit(X, y)
-
 
     def partial_fit(self, X, y, classes, sample_weight):
         if not hasattr(self, 'clf_'):

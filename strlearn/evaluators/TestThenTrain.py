@@ -1,9 +1,10 @@
 """Test-Than-Train data stream evaluator."""
 
 import numpy as np
-from sklearn.metrics import accuracy_score
-from ..metrics import balanced_accuracy_score
 from sklearn.base import ClassifierMixin
+from sklearn.metrics import accuracy_score
+
+from ..metrics import balanced_accuracy_score
 
 
 class TestThenTrain:
@@ -85,7 +86,8 @@ class TestThenTrain:
                     ]
 
             # Train
-            [clf.partial_fit(X, y, self.stream_.classes_) for clf in self.clfs_]
+            [clf.partial_fit(X, y, self.stream_.classes_)
+             for clf in self.clfs_]
 
             if stream.is_dry():
                 break

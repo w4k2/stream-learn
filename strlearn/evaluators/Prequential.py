@@ -1,9 +1,10 @@
 """Prequential data stream evaluator."""
 
 import numpy as np
-from sklearn.metrics import accuracy_score
-from ..metrics import balanced_accuracy_score
 from sklearn.base import ClassifierMixin
+from sklearn.metrics import accuracy_score
+
+from ..metrics import balanced_accuracy_score
 
 
 class Prequential:
@@ -107,7 +108,8 @@ class Prequential:
                             metric(y[start:end], y_pred) for metric in self.metrics
                         ]
 
-                    [clf.partial_fit(X[start:end], y[start:end]) for clf in self.clfs]
+                    [clf.partial_fit(X[start:end], y[start:end])
+                     for clf in self.clfs]
 
                     i += 1
             else:

@@ -1,26 +1,11 @@
 """Basic tests."""
 import sys
-import pytest
-import strlearn as sl
-import numpy as np
-import requests
-from sklearn.metrics import accuracy_score
 
-sys.path.insert(0, "../..")
+import numpy as np
 from sklearn.naive_bayes import GaussianNB
 
-"""
-def test_download_arff():
-    url = "http://156.17.43.89/Toyset.arff"
-    r = requests.get(url)
-    with open("Toyset.arff", "wb") as f:
-        f.write(r.content)
-
-    url = "http://156.17.43.89/Elec.arff"
-    r = requests.get(url)
-    with open("Elec.arff", "wb") as f:
-        f.write(r.content)
-"""
+import pytest
+import strlearn as sl
 
 
 def test_generator_same():
@@ -42,7 +27,8 @@ def test_generator_incremental():
 
 
 def test_generator_incremental_recurring():
-    stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, recurring=True)
+    stream = sl.streams.StreamGenerator(
+        n_drifts=2, incremental=True, recurring=True)
     while stream.get_chunk():
         pass
 

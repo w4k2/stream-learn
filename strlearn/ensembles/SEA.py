@@ -1,10 +1,10 @@
 """Chunk based ensemble."""
 
-from sklearn.base import ClassifierMixin, clone
-from sklearn.metrics import accuracy_score
-from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
+from sklearn.base import ClassifierMixin, clone
+from sklearn.ensemble import BaseEnsemble
+from sklearn.metrics import accuracy_score
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 
 class SEA(ClassifierMixin, BaseEnsemble):
@@ -82,7 +82,8 @@ class SEA(ClassifierMixin, BaseEnsemble):
         # Remove the worst when ensemble becomes too large
         if len(self.ensemble_) > self.n_estimators:
             del self.ensemble_[
-                np.argmin([self.metric(y, clf.predict(X)) for clf in self.ensemble_])
+                np.argmin([self.metric(y, clf.predict(X))
+                           for clf in self.ensemble_])
             ]
         return self
 

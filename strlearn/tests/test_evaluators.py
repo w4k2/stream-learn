@@ -1,11 +1,12 @@
 """Classifier tests."""
 
 import sys
-import strlearn as sl
-from sklearn.metrics import accuracy_score, roc_auc_score
-from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 
-sys.path.insert(0, "../..")
+from sklearn.metrics import accuracy_score, roc_auc_score
+
+import strlearn as sl
+
+from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 
 
 def get_stream():
@@ -62,7 +63,8 @@ def test_TTT_multiple_clfs():
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clfs)
 
-    assert evaluator.scores.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
+    assert evaluator.scores.shape == (
+        len(clfs), stream.n_chunks - 1, len(metrics))
 
 
 def test_P_multiple_clfs():

@@ -1,9 +1,10 @@
 """Oversamping-based Online Bagging."""
 
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 import numpy as np
+from sklearn.base import ClassifierMixin, clone
 from sklearn.ensemble import BaseEnsemble
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+
 
 class OOB(BaseEnsemble, ClassifierMixin):
     """
@@ -75,22 +76,27 @@ class OOB(BaseEnsemble, ClassifierMixin):
                 label == 1
                 and self.chunk_tdcs[instance][1] < self.chunk_tdcs[instance][0]
             ):
-                lmbda = self.chunk_tdcs[instance][0] / self.chunk_tdcs[instance][1]
+                lmbda = self.chunk_tdcs[instance][0] / \
+                    self.chunk_tdcs[instance][1]
                 K = np.asarray(
-                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                    [np.random.poisson(lmbda, 1)[0]
+                     for i in range(self.n_estimators)]
                 )
             elif (
                 label == 0
                 and self.chunk_tdcs[instance][0] < self.chunk_tdcs[instance][1]
             ):
-                lmbda = self.chunk_tdcs[instance][1] / self.chunk_tdcs[instance][0]
+                lmbda = self.chunk_tdcs[instance][1] / \
+                    self.chunk_tdcs[instance][0]
                 K = np.asarray(
-                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                    [np.random.poisson(lmbda, 1)[0]
+                     for i in range(self.n_estimators)]
                 )
             else:
                 lmbda = 1
                 K = np.asarray(
-                    [np.random.poisson(lmbda, 1)[0] for i in range(self.n_estimators)]
+                    [np.random.poisson(lmbda, 1)[0]
+                     for i in range(self.n_estimators)]
                 )
 
             self.weights.append(K)
