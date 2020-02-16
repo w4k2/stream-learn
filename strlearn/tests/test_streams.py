@@ -120,6 +120,42 @@ def test_generator_save_to_arff(stream_filepath):
     stream_one.save_to_arff(stream_filepath)
 
 
+def test_arffparser(stream_filepath):
+    n_chunks = 10
+    chunk_size = 20
+    stream_one = sl.streams.StreamGenerator(random_state=5, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream_two = sl.streams.ARFFParser(stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks)
+
+    for i in range(n_chunks):
+        X_one, y_one = stream_one.get_chunk()
+        X_two, y_two = stream_two.get_chunk()
+
+        assert np.allclose(X_one, X_two)
+        assert np.array_equal(y_one, y_two)
+
+
+def test_arffparser_str(stream_filepath):
+    stream = sl.streams.ARFFParser(stream_filepath)
+    assert str(stream) == stream_filepath
+
+
+def test_arffparser_is_dry(stream_filepath):
+    n_chunks = 10
+    chunk_size = 20
+    stream = sl.streams.ARFFParser(stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks)
+    assert not stream.is_dry()
+    # for i in range(n_chunks+1):
+    #     pass
+    # assert stream.is_dry()
+
+
+def test_arffparser_reset(stream_filepath):
+    stream = sl.streams.ARFFParser(stream_filepath)
+    stream.reset()
+    assert stream.chunk_id == 0
+    assert not stream.is_dry()
+
+
 """
 def test_arff_parser():
     stream = sl.streams.ARFFParser("Toyset.arff")
