@@ -354,3 +354,36 @@ class StreamGenerator:
                 self.weights[0] * 100 if self.weights is not None else 0,
                 int(self.chunk_size * self.n_chunks),
             )
+
+    def save_to_arff(self, filepath):
+        """ Save generated stream to the ARFF format file.
+
+        Parameters
+        ----------
+        filepath : string
+            Path to the file where data will be saved in ARFF format
+        """
+        X_array = []
+        y_array = []
+
+        for i in range(self.n_chunks):
+            X, y = self.get_chunk()
+            X_array.extend(X)
+            y_array.extend(y)
+
+        X_array = np.array(X_array)
+        y_array = np.array(y_array)
+        classes = np.unique(y_array)
+        data = np.column_stack((X_array, y_array))
+
+        header = '@relation %s %s\n\n' % ((filepath.split("/")[-1]).split(".")[0], str(self))
+
+        for feature in range(self.n_features):
+            header += "@attribute feature" + str(feature+1) + " numeric \n"
+
+        header += "@attribute class {%s} \n\n" % ','.join(map(str, classes))
+        header += "@data\n"
+
+        with open(filepath, "w") as file:
+            file.write(str(header))
+            np.savetxt(file, data, fmt='%.10g', delimiter=",")
