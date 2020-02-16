@@ -6,6 +6,7 @@ from sklearn.naive_bayes import GaussianNB
 
 import pytest
 import strlearn as sl
+import os
 
 
 def test_generator_same():
@@ -103,6 +104,20 @@ def test_generator_str():
     evaluator.process(stream, clf)
     print(evaluator.scores)
     assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
+
+
+@pytest.fixture(scope='session', autouse=True)
+def stream_filepath():
+    filepath = "test_stream.arff"
+    yield filepath
+    os.remove(filepath)
+
+
+def test_generator_save_to_arff(stream_filepath):
+    n_chunks = 10
+    chunk_size = 20
+    stream_one = sl.streams.StreamGenerator(random_state=5, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream_one.save_to_arff(stream_filepath)
 
 
 """
