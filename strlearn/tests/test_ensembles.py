@@ -1,12 +1,11 @@
 """Ensemble tests."""
 
 import sys
-import numpy as np
-import strlearn as sl
-import pytest
+
 from sklearn.naive_bayes import GaussianNB
 
-sys.path.insert(0, "../..")
+import pytest
+import strlearn as sl
 
 
 def get_stream():
@@ -164,7 +163,8 @@ def test_WAE_wcm3():
 def test_WAE_wcm4():
     "Various weight computation methods of WAE."
     stream = get_stream()
-    clf = sl.ensembles.WAE(GaussianNB(), weight_calculation_method="bell_curve")
+    clf = sl.ensembles.WAE(
+        GaussianNB(), weight_calculation_method="bell_curve")
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -196,6 +196,7 @@ def test_WAE_rejuvenation():
 def test_pp_WAE_rejuvenation():
     "Post pruning with rejuvenation WAE."
     stream = get_stream()
-    clf = sl.ensembles.WAE(GaussianNB(), rejuvenation_power=0.5, post_pruning=True)
+    clf = sl.ensembles.WAE(
+        GaussianNB(), rejuvenation_power=0.5, post_pruning=True)
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)

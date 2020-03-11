@@ -1,10 +1,10 @@
 """Basic tests."""
 
 import sys
-import strlearn as sl
+
 from sklearn.neural_network import MLPClassifier
 
-sys.path.insert(0, "../..")
+import strlearn as sl
 
 
 def test_mlp_drifted():

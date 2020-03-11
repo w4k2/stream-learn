@@ -1,10 +1,10 @@
 """Checking compliance with the sklearn API"""
 
 import sys
-import strlearn as sl
+
 from sklearn.utils.estimator_checks import check_estimator
 
-sys.path.insert(0, "../..")
+import strlearn as sl
 
 
 def test_estimators():

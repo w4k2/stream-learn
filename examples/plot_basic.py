@@ -8,9 +8,11 @@ Lorem impsum.
 """
 
 
-import strlearn as sl
-from sklearn.neural_network import MLPClassifier
+import matplotlib.pyplot as plt
 from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
+
+import strlearn as sl
 
 # Initialize list of scikit-learn classifiers with partial_fit() function
 clfs = [MLPClassifier(), GaussianNB()]
@@ -41,7 +43,6 @@ evaluator.scores
 # Plotting
 ##############################################################################
 
-import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots(1, len(metrics), figsize=(12, 4))
 labels = ["MLP", "GNB"]

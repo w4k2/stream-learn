@@ -11,10 +11,11 @@ This example shows a basic stream processing using WAE algorithm.
 # License: MIT
 
 
-import numpy as np
-from strlearn.streams import StreamGenerator
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
+
+from strlearn.streams import StreamGenerator
 
 mcargs = {
     "n_classes": 3,

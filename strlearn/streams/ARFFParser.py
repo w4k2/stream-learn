@@ -106,7 +106,8 @@ class ARFFParser:
         """Checking if we have reached the end of the stream."""
 
         return (
-            self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
+            self.chunk_id +
+            1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
 
     def get_chunk(self):

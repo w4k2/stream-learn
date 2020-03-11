@@ -61,11 +61,9 @@ class AWE(ClassifierMixin, BaseEnsemble):
 
         # Remove the worst when ensemble becomes too large
         if len(self.ensemble_) > self.n_estimators:
-            #print(self.weights_)
             worst_idx = np.argmax(self.weights_)
             del self.ensemble_[worst_idx]
             del self.weights_[worst_idx]
-            #print(self.weights_)
 
         return self
 

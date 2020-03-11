@@ -4,10 +4,9 @@ Data streams generator.
 A class for generating streams with various parameters.
 """
 
-from sklearn.datasets import make_classification
 import numpy as np
 from scipy.stats import logistic
-import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification
 
 
 class StreamGenerator:
@@ -110,7 +109,8 @@ class StreamGenerator:
         """Checking if we have reached the end of the stream."""
 
         return (
-            self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
+            self.chunk_id +
+            1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
 
     def _sigmoid(self, sigmoid_spacing, n_drifts):
@@ -119,7 +119,8 @@ class StreamGenerator:
         """
 
         period = (
-            int((self.n_samples) / (n_drifts)) if n_drifts > 0 else int(self.n_samples)
+            int((self.n_samples) / (n_drifts)
+                ) if n_drifts > 0 else int(self.n_samples)
         )
         css = sigmoid_spacing if sigmoid_spacing is not None else 9999
         _probabilities = (
@@ -138,7 +139,8 @@ class StreamGenerator:
         )
 
         # Szybka naprawa, żeby dało się przepuścić podzielną z resztą liczbę dryfów
-        probabilities = np.ones(self.n_chunks * self.chunk_size) * _probabilities[-1]
+        probabilities = np.ones(
+            self.n_chunks * self.chunk_size) * _probabilities[-1]
         probabilities[: _probabilities.shape[0]] = _probabilities
 
         return (period, probabilities)
@@ -183,11 +185,13 @@ class StreamGenerator:
             # Inkrementalny
             if self.incremental:
                 # Something
-                self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
-                self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
+                self.a_ind = np.zeros(
+                    self.concept_probabilities.shape).astype(int)
+                self.b_ind = np.ones(
+                    self.concept_probabilities.shape).astype(int)
 
                 # Recurring
-                if self.recurring == False:
+                if self.recurring is False:
                     for i in range(0, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.a_ind[start:end] = i + ((i + 1) % 2)
@@ -208,14 +212,16 @@ class StreamGenerator:
                 ).astype(int)
 
                 # Recurring drift
-                if self.recurring == False:
+                if self.recurring is False:
                     for i in range(1, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 1)[0] + start
+                            np.where(self.concept_selector[start:end] == 1)[
+                                0] + start
                         ] = i + ((i + 1) % 2)
                         self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 0)[0] + start
+                            np.where(self.concept_selector[start:end] == 0)[
+                                0] + start
                         ] = i + (i % 2)
 
         # Selekcja klas na potrzeby doboru balansu
@@ -223,10 +229,12 @@ class StreamGenerator:
 
         # Case of same size of all classes
         if self.weights is None:
-            self.class_selector = (self.balance_noise * self.n_classes).astype(int)
+            self.class_selector = (
+                self.balance_noise * self.n_classes).astype(int)
         # If static balance is given
         elif not isinstance(self.weights, tuple):
-            self.class_selector = np.zeros(self.balance_noise.shape).astype(int)
+            self.class_selector = np.zeros(
+                self.balance_noise.shape).astype(int)
             accumulator = 0.0
             for i, treshold in enumerate(self.weights):
                 mask = self.balance_noise > accumulator
@@ -323,7 +331,7 @@ class StreamGenerator:
     def __str__(self):
         if type(self.y_flip) == tuple:
             return "%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
-                "gr" if self.incremental == False else "inc",
+                "gr" if self.incremental is False else "inc",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -331,12 +339,12 @@ class StreamGenerator:
                 self.n_drifts,
                 int(self.y_flip[0] * 100),
                 int(self.y_flip[1] * 100),
-                50 if self.weights == None else (self.weights[0] * 100),
+                50 if self.weights is None else (self.weights[0] * 100),
                 int(self.chunk_size * self.n_chunks),
             )
         else:
             return "%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
-                "gr" if self.incremental == False else "inc",
+                "gr" if self.incremental is False else "inc",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -346,3 +354,36 @@ class StreamGenerator:
                 self.weights[0] * 100 if self.weights is not None else 0,
                 int(self.chunk_size * self.n_chunks),
             )
+
+    def save_to_arff(self, filepath):
+        """ Save generated stream to the ARFF format file.
+
+        Parameters
+        ----------
+        filepath : string
+            Path to the file where data will be saved in ARFF format
+        """
+        X_array = []
+        y_array = []
+
+        for i in range(self.n_chunks):
+            X, y = self.get_chunk()
+            X_array.extend(X)
+            y_array.extend(y)
+
+        X_array = np.array(X_array)
+        y_array = np.array(y_array)
+        classes = np.unique(y_array)
+        data = np.column_stack((X_array, y_array))
+
+        header = '@relation %s %s\n\n' % ((filepath.split("/")[-1]).split(".")[0], str(self))
+
+        for feature in range(self.n_features):
+            header += "@attribute feature" + str(feature+1) + " numeric \n"
+
+        header += "@attribute class {%s} \n\n" % ','.join(map(str, classes))
+        header += "@data\n"
+
+        with open(filepath, "w") as file:
+            file.write(str(header))
+            np.savetxt(file, data, fmt='%.10g', delimiter=",")

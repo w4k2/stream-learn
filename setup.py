@@ -4,11 +4,10 @@ from __future__ import absolute_import
 
 import codecs
 import os
-
-from setuptools import find_packages, setup
-
 # read the contents of your README file
 from os import path
+
+from setuptools import find_packages, setup
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
