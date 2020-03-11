@@ -17,6 +17,12 @@ def get_different_stream():
     return sl.streams.StreamGenerator(n_chunks=10, n_features=4)
 
 
+
+def test_AWE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
+
 def test_ensembles_fit():
     clf1 = sl.ensembles.SEA(GaussianNB())
     clf2 = sl.ensembles.WAE(GaussianNB())
@@ -57,7 +63,7 @@ def test_features():
 
 
 def test_pred():
-    """Pred error"""
+    "Pred error"
     clfs = [
         sl.ensembles.SEA(GaussianNB()),
         sl.ensembles.OOB(GaussianNB()),
@@ -86,7 +92,7 @@ def test_SEA():
 
 
 def test_WAE():
-    """Bare WAE."""
+    "Bare WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
@@ -94,7 +100,7 @@ def test_WAE():
 
 
 def test_OOB():
-    """Bare WAE."""
+    "Bare WAE."
     stream = get_stream()
     clf = sl.ensembles.OOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
@@ -102,7 +108,7 @@ def test_OOB():
 
 
 def test_OB():
-    """Bare WAE."""
+    "Bare WAE."
     stream = get_stream()
     clf = sl.ensembles.OnlineBagging(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
@@ -110,7 +116,7 @@ def test_OB():
 
 
 def test_UOB():
-    """Bare WAE."""
+    "Bare WAE."
     stream = get_stream()
     clf = sl.ensembles.UOB(GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
@@ -118,7 +124,7 @@ def test_UOB():
 
 
 def test_pp_WAE():
-    """Post pruned WAE."""
+    "Post pruned WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), post_pruning=True, n_estimators=5)
     evaluator = sl.evaluators.TestThenTrain()
@@ -126,7 +132,7 @@ def test_pp_WAE():
 
 
 def test_WAE_wcm1():
-    """Various weight computation methods of WAE."""
+    "Various weight computation methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(
         GaussianNB(), weight_calculation_method="same_for_each", n_estimators=5
@@ -136,7 +142,7 @@ def test_WAE_wcm1():
 
 
 def test_WAE_wcm2():
-    """Various weight computation methods of WAE."""
+    "Various weight computation methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(
         GaussianNB(), weight_calculation_method="proportional_to_accuracy"
@@ -146,7 +152,7 @@ def test_WAE_wcm2():
 
 
 def test_WAE_wcm3():
-    """Various weight computation methods of WAE."""
+    "Various weight computation methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(
         GaussianNB(), weight_calculation_method="pta_related_to_whole"
@@ -156,7 +162,7 @@ def test_WAE_wcm3():
 
 
 def test_WAE_wcm4():
-    """Various weight computation methods of WAE."""
+    "Various weight computation methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), weight_calculation_method="bell_curve")
     evaluator = sl.evaluators.TestThenTrain()
@@ -164,7 +170,7 @@ def test_WAE_wcm4():
 
 
 def test_WAE_am2():
-    """Various aging methods of WAE."""
+    "Various aging methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), aging_method="constant")
     evaluator = sl.evaluators.TestThenTrain()
@@ -172,7 +178,7 @@ def test_WAE_am2():
 
 
 def test_WAE_am3():
-    """Various aging methods of WAE."""
+    "Various aging methods of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), aging_method="gaussian")
     evaluator = sl.evaluators.TestThenTrain()
@@ -180,7 +186,7 @@ def test_WAE_am3():
 
 
 def test_WAE_rejuvenation():
-    """Rejuvenation of WAE."""
+    "Rejuvenation of WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), rejuvenation_power=0.5)
     evaluator = sl.evaluators.TestThenTrain()
@@ -188,7 +194,7 @@ def test_WAE_rejuvenation():
 
 
 def test_pp_WAE_rejuvenation():
-    """Post pruning with rejuvenation WAE."""
+    "Post pruning with rejuvenation WAE."
     stream = get_stream()
     clf = sl.ensembles.WAE(GaussianNB(), rejuvenation_power=0.5, post_pruning=True)
     evaluator = sl.evaluators.TestThenTrain()
