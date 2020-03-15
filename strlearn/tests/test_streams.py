@@ -1,12 +1,11 @@
 """Basic tests."""
 import sys
-
 import numpy as np
-from sklearn.naive_bayes import GaussianNB
-
+import requests
 import pytest
 import strlearn as sl
 import os
+from sklearn.naive_bayes import GaussianNB
 
 
 def test_generator_same():
@@ -28,8 +27,7 @@ def test_generator_incremental():
 
 
 def test_generator_incremental_recurring():
-    stream = sl.streams.StreamGenerator(
-        n_drifts=2, incremental=True, recurring=True)
+    stream = sl.streams.StreamGenerator(n_drifts=2, incremental=True, recurring=True)
     while stream.get_chunk():
         pass
 
@@ -106,25 +104,33 @@ def test_generator_str():
     assert str(stream) == "gr_css999_rs1410_nd0_ln50_50_d50_50000"
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def stream_filepath():
     filepath = "test_stream.arff"
     yield filepath
-    os.remove(filepath)
+
+
+# os.remove(filepath)
 
 
 def test_generator_save_to_arff(stream_filepath):
     n_chunks = 10
     chunk_size = 20
-    stream_one = sl.streams.StreamGenerator(random_state=5, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream_one = sl.streams.StreamGenerator(
+        random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
+    )
     stream_one.save_to_arff(stream_filepath)
 
 
 def test_arffparser(stream_filepath):
     n_chunks = 10
     chunk_size = 20
-    stream_one = sl.streams.StreamGenerator(random_state=5, chunk_size=chunk_size, n_chunks=n_chunks)
-    stream_two = sl.streams.ARFFParser(stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream_one = sl.streams.StreamGenerator(
+        random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
+    )
+    stream_two = sl.streams.ARFFParser(
+        stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
+    )
 
     for i in range(n_chunks):
         X_one, y_one = stream_one.get_chunk()
@@ -142,11 +148,10 @@ def test_arffparser_str(stream_filepath):
 def test_arffparser_is_dry(stream_filepath):
     n_chunks = 10
     chunk_size = 20
-    stream = sl.streams.ARFFParser(stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream = sl.streams.ARFFParser(
+        stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
+    )
     assert not stream.is_dry()
-    # for i in range(n_chunks+1):
-    #     pass
-    # assert stream.is_dry()
 
 
 def test_arffparser_reset(stream_filepath):
@@ -157,18 +162,11 @@ def test_arffparser_reset(stream_filepath):
 
 
 """
-def test_arff_parser():
-    stream = sl.streams.ARFFParser("Toyset.arff")
-    assert str(stream) == "Toyset.arff"
+def test_arff_parser(stream_filepath):
+    stream = sl.streams.ARFFParser(stream_filepath)
+    # assert str(stream) == "test_stream.arff"
     clf = GaussianNB()
-    evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
-    evaluator.process(stream, clf)
-    stream.reset()
-
-    stream = sl.streams.ARFFParser("Elec.arff")
-    assert str(stream) == "Elec.arff"
-    clf = GaussianNB()
-    evaluator = sl.evaluators.TestThenTrain(metrics=(accuracy_score))
+    evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
     stream.reset()
 """
