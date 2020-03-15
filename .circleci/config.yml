@@ -50,9 +50,7 @@ jobs:
       - run: git checkout -f gh-pages
       - run: git reset --hard origin/gh-pages
       - run: git clean -dfx
-
       - run: cp -R ../tmp/* ./
-
       - run: git config --global user.email $EMAIL
       - run: git config --global user.name $USERNAME
       - run: git add -f .
