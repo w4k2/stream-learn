@@ -45,20 +45,21 @@ jobs:
                 then git clone "git@github.com:$USERNAME/"$DOC_REPO".git";
             fi
 
-            cd $DOC_REPO
-            git branch gh-pages
-            git checkout -f gh-pages
-            git reset --hard origin/gh-pages
-            git clean -dfx
+      - run: cd $DOC_REPO
+      - run: git branch gh-pages
+      - run: git checkout -f gh-pages
+      - run: git reset --hard origin/gh-pages
+      - run: git clean -dfx
 
-            # Copy the new build docs
-            cp -R ../tmp/* ./
+      - run: cp -R ../tmp/* ./
 
-            git config --global user.email $EMAIL
-            git config --global user.name $USERNAME
-            git add -f .
-            git commit -m "Pushing the docs for revision for branch: $CIRCLE_BRANCH, commit $CIRCLE_SHA1"
-            git push -f origin gh-pages
+      - run: git config --global user.email $EMAIL
+      - run: git config --global user.name $USERNAME
+      - run: git add -f .
+      - run: git commit -m "Pushing the docs."
+      - run: git push -f origin gh-pages
+      - run:
+          command: |
             if [ $? -ne 0 ]; then
                   echo "Pushing docs failed"
                 echo
