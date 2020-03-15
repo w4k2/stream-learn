@@ -41,5 +41,26 @@ jobs:
             if [ ! -d $DOC_REPO ];
                 then git clone "git@github.com:$USERNAME/"$DOC_REPO".git";
             fi
+
+            cd $DOC_REPO
+            git branch gh-pages
+            git checkout -f gh-pages
+            git reset --hard origin/gh-pages
+            git clean -dfx
+
+            # Copy the new build docs
+            cp -R ../tmp/* ./
+
+            git config --global user.email $EMAIL
+            git config --global user.name $USERNAME
+            git add -f .
+            git commit -m "$MSG"
+            git push -f origin gh-pages
+            if [ $? -ne 0 ]; then
+                  echo "Pushing docs failed"
+                echo
+                exit 1
+            fi
+
 #      - run: bash ci_scripts/circleci/push_doc.sh
 #      - run: ls doc
