@@ -3,7 +3,8 @@ import sys
 
 import sphinx_gallery
 import sphinx_rtd_theme
-from github_link import make_linkcode_resolve
+
+# from github_link import make_linkcode_resolve
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -29,7 +30,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.linkcode",
+    # "sphinx.ext.linkcode",
     "sphinxcontrib.bibtex",
     "numpydoc",
     "sphinx_issues",
@@ -37,7 +38,7 @@ extensions = [
     "sphinx.ext.mathjax",
 ]
 
-mathjax_path="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js"
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js"
 
 # this is needed for some reason...
 # see https://github.com/numpy/numpydoc/issues/69
@@ -226,7 +227,7 @@ latex_documents = [
         "stream-learn Documentation",
         "P. Ksieniewicz, P. Zyblewski",
         "manual",
-    ),
+    )
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -303,7 +304,7 @@ texinfo_documents = [
         "P. Ksieniewicz, P. Zyblewski",
         "Description.",
         "Miscellaneous",
-    ),
+    )
 ]
 
 
@@ -349,9 +350,11 @@ def setup(app):
 # texinfo_no_detailmenu = False
 
 # The following is used by sphinx.ext.linkcode to provide links to github
+"""
 linkcode_resolve = make_linkcode_resolve(
     "strlearn",
     "https://github.com/w4k2/"
     "stream-learn/blob/{revision}/"
     "{package}/{path}#L{lineno}",
 )
+"""
