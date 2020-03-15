@@ -61,6 +61,3 @@ jobs:
                 echo
                 exit 1
             fi
-
-#      - run: bash ci_scripts/circleci/push_doc.sh
-#      - run: ls doc
