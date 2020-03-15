@@ -36,5 +36,10 @@ jobs:
       - run: rm -rf tmp
       - run: mkdir tmp
       - run: cp -R doc/_build/html/* ./tmp/
+      - run:
+          command: |
+            if [ ! -d $DOC_REPO ];
+                then git clone "git@github.com:$USERNAME/"$DOC_REPO".git";
+            fi
 #      - run: bash ci_scripts/circleci/push_doc.sh
 #      - run: ls doc
