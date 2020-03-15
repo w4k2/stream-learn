@@ -67,6 +67,7 @@ API
    ensembles.OnlineBagging
    ensembles.OOB
    ensembles.UOB
+   ensembles.AWE
    ensembles.WAE
 
 :mod:`strlearn.metrics`: Metrics
