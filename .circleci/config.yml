@@ -33,6 +33,7 @@ jobs:
           command: |
             . venv/bin/activate
             cd doc && make html 2>&1 | tee ~/log.txt
+      - run: MSG="Pushing the docs for revision for branch: $CIRCLE_BRANCH, commit $CIRCLE_SHA1"
       - run: rm -rf tmp
       - run: mkdir tmp
       - run: cp -R doc/_build/html/* ./tmp/
