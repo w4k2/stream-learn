@@ -33,5 +33,5 @@ jobs:
           command: |
             . venv/bin/activate
             cd doc && make html 2>&1 | tee ~/log.txt
-      - run: bash ci_scripts/circleci/push_doc.sh
-      - run: ls doc
+#      - run: bash ci_scripts/circleci/push_doc.sh
+#      - run: ls doc
