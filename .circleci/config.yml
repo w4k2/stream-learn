@@ -33,7 +33,6 @@ jobs:
           command: |
             . venv/bin/activate
             cd doc && make html 2>&1 | tee ~/log.txt
-      - run: MSG="Pushing the docs for revision for branch: $CIRCLE_BRANCH, commit $CIRCLE_SHA1"
       - run: rm -rf tmp
       - run: mkdir tmp
       - run: cp -R doc/_build/html/* ./tmp/
@@ -55,7 +54,7 @@ jobs:
             git config --global user.email $EMAIL
             git config --global user.name $USERNAME
             git add -f .
-            git commit -m "$MSG"
+            git commit -m "Pushing the docs for revision for branch: $CIRCLE_BRANCH, commit $CIRCLE_SHA1"
             git push -f origin gh-pages
             if [ $? -ne 0 ]; then
                   echo "Pushing docs failed"
