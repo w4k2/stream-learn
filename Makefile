@@ -40,7 +40,7 @@ code-analysis:
 upload:
 	python setup.py sdist bdist_wheel
 	twine upload dist/*
-	pip install --upgrade stream-learn
+	pip3 install --upgrade stream-learn
 
 install: clean
 	python setup.py clean
