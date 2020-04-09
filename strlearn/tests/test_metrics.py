@@ -16,7 +16,7 @@ def test_precision_recall():
         n_classes=2, random_state=1410
     )
 
-    clf = sl.classifiers.AccumulatedSamplesClassifier()
+    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
 
     previous_chunk = None
     for chunk_id in range(n_chunks):

@@ -14,7 +14,7 @@ def get_stream():
 def test_ACS_Prequential():
     "Bare ACS for Prequential"
     stream = get_stream()
-    clf = sl.classifiers.AccumulatedSamplesClassifier()
+    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
     evaluator = sl.evaluators.Prequential()
     evaluator.process(stream, clf)
 
