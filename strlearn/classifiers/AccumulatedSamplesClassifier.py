@@ -66,7 +66,7 @@ class AccumulatedSamplesClassifier(BaseEnsemble, ClassifierMixin):
                 self, "_y") else np.copy(y)
         )
 
-        self._clf = self.base_clf().fit(self._X, self._y)
+        self._clf = clone(self.base_clf).fit(self._X, self._y)
 
         return self
 

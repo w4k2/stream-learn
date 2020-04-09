@@ -3,6 +3,7 @@
 import sys
 
 from sklearn.datasets import make_classification
+from sklearn.naive_bayes import GaussianNB
 
 import strlearn as sl
 
