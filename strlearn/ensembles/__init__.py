@@ -1,5 +1,6 @@
 from .SEA import SEA
 from .AWE import AWE
+from .AUE import AUE
 from .WAE import WAE
 from .OnlineBagging import OnlineBagging
 from .OOB import OOB
@@ -11,5 +12,6 @@ __all__ = [
     "SEA",
     "UOB",
     "WAE",
-    "AWE"
+    "AWE",
+    "AUE"
 ]

@@ -22,6 +22,12 @@ def test_AWE():
     evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
 
 
+def test_AWE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.AUE(GaussianNB(), n_estimators=5))
+
+
 def test_ensembles_fit():
     clf1 = sl.ensembles.SEA(GaussianNB())
     clf2 = sl.ensembles.WAE(GaussianNB())
