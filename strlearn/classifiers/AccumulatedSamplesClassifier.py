@@ -1,12 +1,13 @@
 """Accumulated samples classifier."""
 
 import numpy as np
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.base import ClassifierMixin, clone
+from sklearn.ensemble import BaseEnsemble
 from sklearn.naive_bayes import GaussianNB
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 
-class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
+class AccumulatedSamplesClassifier(BaseEnsemble, ClassifierMixin):
     """
     Accumulated samples classifier.
 
@@ -35,30 +36,22 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
     [0.935      0.93569212 0.93540766 0.93569212 0.93467337]]
     """
 
-    def __init__(self):
+    def __init__(self, base_clf=None):
         """Initialization."""
-        pass
-
-    def set_base_clf(self, base_clf=GaussianNB):
-        """Establishing base classifier."""
-        self._base_clf = base_clf
+        self.base_clf = base_clf
 
     def fit(self, X, y):
         """Fitting."""
         X, y = check_X_y(X, y)
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
 
         self.classes_, _ = np.unique(y, return_inverse=True)
-        self._clf = self._base_clf().fit(X, y)
+        self._clf = clone(self.base_clf).fit(X, y)
 
         return self
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
         X, y = check_X_y(X, y)
-        if not hasattr(self, "_base_clf"):
-            self.set_base_clf()
 
         self.classes_ = classes
         if self.classes_ is None:
@@ -73,7 +66,7 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
                 self, "_y") else np.copy(y)
         )
 
-        self._clf = self._base_clf().fit(self._X, self._y)
+        self._clf = self.base_clf().fit(self._X, self._y)
 
         return self
 
@@ -95,3 +88,22 @@ class AccumulatedSamplesClassifier(BaseEstimator, ClassifierMixin):
         X = check_array(X)
 
         return self._clf.predict(X)
+
+    def predict_proba(self, X):
+        """
+        Predict classes for X.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The training input samples.
+
+        Returns
+        -------
+        y : array-like, shape (n_samples, )
+            The predicted classes.
+        """
+        check_is_fitted(self, "classes_")
+        X = check_array(X)
+
+        return self._clf.predict_proba(X)
