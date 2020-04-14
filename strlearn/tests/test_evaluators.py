@@ -17,7 +17,7 @@ def get_stream():
 def test_TTT_single_clf():
     stream = get_stream()
     clf = sl.classifiers.ASC(base_clf=GaussianNB())
-    evaluator = sl.evaluators.TestThenTrain()
+    evaluator = sl.evaluators.TestThenTrain(verbose=True)
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)

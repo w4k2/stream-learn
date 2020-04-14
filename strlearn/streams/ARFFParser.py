@@ -122,7 +122,6 @@ class ARFFParser:
         size = self.chunk_size
         X, y = np.zeros((size, self.n_attributes)), []
         for i in range(size):
-            # Read pattern and break it into elements
             if not self.a_line[-1] == "\n":
                 self.is_dry_ = True
                 line = self.a_line

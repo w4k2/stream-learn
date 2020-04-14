@@ -170,16 +170,9 @@ def test_arff_parser():
     stream_original.save_to_arff(filename)
     stream_parsed = sl.streams.ARFFParser(filename)
 
-    for i in range(n_chunks + 1):
-        if i < n_chunks:
-            X_a, y_a = stream_original.get_chunk()
-            X_b, y_b = stream_parsed.get_chunk()
+    for i in range(n_chunks):
+        X_a, y_a = stream_original.get_chunk()
+        X_b, y_b = stream_parsed.get_chunk()
 
-            assert np.array_equal(X_a, X_b)
-            assert np.array_equal(y_a, y_b)
-        else:
-            chunk_a = stream_original.get_chunk()
-            assert chunk_a is None
-
-            chunk_b = stream_parsed.get_chunk()
-            assert chunk_b is None
+        assert np.array_equal(X_a, X_b)
+        assert np.array_equal(y_a, y_b)

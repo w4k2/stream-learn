@@ -22,7 +22,7 @@ def test_AWE():
     evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
 
 
-def test_AWE():
+def test_AUE():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.AUE(GaussianNB(), n_estimators=5))
@@ -35,8 +35,9 @@ def test_ensembles_fit():
     clf4 = sl.ensembles.OnlineBagging(GaussianNB())
     clf5 = sl.ensembles.UOB(GaussianNB())
     clf6 = sl.ensembles.AWE(GaussianNB())
+    clf7 = sl.ensembles.AUE(GaussianNB())
 
-    clfs = (clf1, clf2, clf3, clf4, clf5, clf6)
+    clfs = (clf1, clf2, clf3, clf4, clf5, clf6, clf7)
 
     stream = get_stream()
     X, y = stream.get_chunk()
@@ -55,6 +56,7 @@ def test_features():
         sl.ensembles.UOB(GaussianNB()),
         sl.ensembles.WAE(GaussianNB()),
         sl.ensembles.AWE(GaussianNB()),
+        sl.ensembles.AUE(GaussianNB()),
         sl.ensembles.OnlineBagging(GaussianNB()),
     ]
     stream = get_stream()
@@ -77,6 +79,7 @@ def test_pred():
         sl.ensembles.UOB(GaussianNB()),
         sl.ensembles.WAE(GaussianNB()),
         sl.ensembles.AWE(GaussianNB()),
+        sl.ensembles.AUE(GaussianNB()),
         sl.ensembles.OnlineBagging(GaussianNB()),
     ]
     stream = get_stream()
