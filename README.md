@@ -26,7 +26,7 @@ You can read more about each module in the [documentation page](https://w4k2.git
 To use the `stream-learn` package, it will be absolutely useful to install it. Fortunately, it is available in the *PyPI* repository, so you may install it using `pip`:
 
 ```shell
-pip install -U stream-learn
+pip3 install -U stream-learn
 ```
 
 You can also install the module cloned from Github using the setup.py file if you have a strange, but perhaps legitimate need:
