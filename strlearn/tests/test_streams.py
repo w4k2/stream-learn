@@ -179,7 +179,7 @@ def test_arff_parser():
             assert np.array_equal(y_a, y_b)
         else:
             chunk_a = stream_original.get_chunk()
-            chunk_b = stream_parsed.get_chunk()
+            assert chunk_a is None
 
-            print(chunk_a, chunk_b)
-            assert False
+            chunk_b = stream_parsed.get_chunk()
+            assert chunk_b is None
