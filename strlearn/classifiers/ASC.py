@@ -7,7 +7,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 
-class AccumulatedSamplesClassifier(BaseEnsemble, ClassifierMixin):
+class ASC(BaseEnsemble, ClassifierMixin):
     """
     Accumulated samples classifier.
 
@@ -58,12 +58,10 @@ class AccumulatedSamplesClassifier(BaseEnsemble, ClassifierMixin):
             self.classes_, _ = np.unique(y, return_inverse=True)
 
         self._X = (
-            np.concatenate((self._X, X), axis=0) if hasattr(
-                self, "_X") else np.copy(X)
+            np.concatenate((self._X, X), axis=0) if hasattr(self, "_X") else np.copy(X)
         )
         self._y = (
-            np.concatenate((self._y, y), axis=0) if hasattr(
-                self, "_y") else np.copy(y)
+            np.concatenate((self._y, y), axis=0) if hasattr(self, "_y") else np.copy(y)
         )
 
         self._clf = clone(self.base_clf).fit(self._X, self._y)

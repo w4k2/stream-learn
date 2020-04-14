@@ -1,7 +1,4 @@
-from .AccumulatedSamplesClassifier import AccumulatedSamplesClassifier
+from .ASC import ASC
 from .SampleWeightedMetaEstimator import SampleWeightedMetaEstimator
 
-__all__ = [
-    "AccumulatedSamplesClassifier",
-    "SampleWeightedMetaEstimator"
-]
+__all__ = ["ASC", "SampleWeightedMetaEstimator"]

@@ -16,7 +16,7 @@ def get_stream():
 
 def test_TTT_single_clf():
     stream = get_stream()
-    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
@@ -25,7 +25,7 @@ def test_TTT_single_clf():
 
 def test_TTT_custom_metrics():
     stream = get_stream()
-    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
     metrics = [
         accuracy_score,
         roc_auc_score,
@@ -41,7 +41,7 @@ def test_TTT_custom_metrics():
 
 def test_TTT_one_metric():
     stream = get_stream()
-    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
     evaluator = sl.evaluators.TestThenTrain(metrics=accuracy_score)
     evaluator.process(stream, clf)
 
@@ -51,8 +51,8 @@ def test_TTT_one_metric():
 def test_TTT_multiple_clfs():
     stream = get_stream()
     clfs = [
-        sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB()),
-        sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB()),
+        sl.classifiers.ASC(base_clf=GaussianNB()),
+        sl.classifiers.ASC(base_clf=GaussianNB()),
     ]
     metrics = [
         accuracy_score,
@@ -64,15 +64,14 @@ def test_TTT_multiple_clfs():
     evaluator = sl.evaluators.TestThenTrain(metrics=metrics)
     evaluator.process(stream, clfs)
 
-    assert evaluator.scores.shape == (
-        len(clfs), stream.n_chunks - 1, len(metrics))
+    assert evaluator.scores.shape == (len(clfs), stream.n_chunks - 1, len(metrics))
 
 
 def test_P_multiple_clfs():
     stream = get_stream()
     clfs = [
-        sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB()),
-        sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB()),
+        sl.classifiers.ASC(base_clf=GaussianNB()),
+        sl.classifiers.ASC(base_clf=GaussianNB()),
     ]
     metrics = [
         accuracy_score,
@@ -93,7 +92,7 @@ def test_P_multiple_clfs():
 
 def test_P_one_metric():
     stream = get_stream()
-    clf = sl.classifiers.AccumulatedSamplesClassifier(base_clf=GaussianNB())
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
     evaluator = sl.evaluators.Prequential(metrics=accuracy_score)
     evaluator.process(stream, clf, interval=100)
 
