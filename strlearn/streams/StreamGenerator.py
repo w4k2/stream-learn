@@ -383,6 +383,6 @@ class StreamGenerator:
 
         with open(filepath, "w") as file:
             file.write(str(header))
-            np.savetxt(file, data, fmt="%.10g", delimiter=",")
+            np.savetxt(file, data, fmt="%.20g", delimiter=",")
 
         self.reset()
