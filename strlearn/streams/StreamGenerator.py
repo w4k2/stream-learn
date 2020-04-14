@@ -109,8 +109,7 @@ class StreamGenerator:
         """Checking if we have reached the end of the stream."""
 
         return (
-            self.chunk_id +
-            1 >= self.n_chunks if hasattr(self, "chunk_id") else False
+            self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
 
     def _sigmoid(self, sigmoid_spacing, n_drifts):
@@ -119,8 +118,7 @@ class StreamGenerator:
         """
 
         period = (
-            int((self.n_samples) / (n_drifts)
-                ) if n_drifts > 0 else int(self.n_samples)
+            int((self.n_samples) / (n_drifts)) if n_drifts > 0 else int(self.n_samples)
         )
         css = sigmoid_spacing if sigmoid_spacing is not None else 9999
         _probabilities = (
@@ -139,8 +137,7 @@ class StreamGenerator:
         )
 
         # Szybka naprawa, żeby dało się przepuścić podzielną z resztą liczbę dryfów
-        probabilities = np.ones(
-            self.n_chunks * self.chunk_size) * _probabilities[-1]
+        probabilities = np.ones(self.n_chunks * self.chunk_size) * _probabilities[-1]
         probabilities[: _probabilities.shape[0]] = _probabilities
 
         return (period, probabilities)
@@ -185,10 +182,8 @@ class StreamGenerator:
             # Inkrementalny
             if self.incremental:
                 # Something
-                self.a_ind = np.zeros(
-                    self.concept_probabilities.shape).astype(int)
-                self.b_ind = np.ones(
-                    self.concept_probabilities.shape).astype(int)
+                self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
+                self.b_ind = np.ones(self.concept_probabilities.shape).astype(int)
 
                 # Recurring
                 if self.recurring is False:
@@ -216,12 +211,10 @@ class StreamGenerator:
                     for i in range(1, self.n_drifts):
                         start, end = (i * period, (i + 1) * period)
                         self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 1)[
-                                0] + start
+                            np.where(self.concept_selector[start:end] == 1)[0] + start
                         ] = i + ((i + 1) % 2)
                         self.concept_selector[
-                            np.where(self.concept_selector[start:end] == 0)[
-                                0] + start
+                            np.where(self.concept_selector[start:end] == 0)[0] + start
                         ] = i + (i % 2)
 
         # Selekcja klas na potrzeby doboru balansu
@@ -229,12 +222,10 @@ class StreamGenerator:
 
         # Case of same size of all classes
         if self.weights is None:
-            self.class_selector = (
-                self.balance_noise * self.n_classes).astype(int)
+            self.class_selector = (self.balance_noise * self.n_classes).astype(int)
         # If static balance is given
         elif not isinstance(self.weights, tuple):
-            self.class_selector = np.zeros(
-                self.balance_noise.shape).astype(int)
+            self.class_selector = np.zeros(self.balance_noise.shape).astype(int)
             accumulator = 0.0
             for i, treshold in enumerate(self.weights):
                 mask = self.balance_noise > accumulator
@@ -297,6 +288,10 @@ class StreamGenerator:
         y = np.mod(y, self.n_classes)
         return X, y
 
+    def reset(self):
+        self.previous_chunk = None
+        self.chunk_id = -1
+
     def get_chunk(self):
         """
         Generating a data chunk of a stream.
@@ -312,8 +307,7 @@ class StreamGenerator:
         else:
             self.X, self.y = self._make_classification()
 
-            self.chunk_id = -1
-            self.previous_chunk = None
+            self.reset()
 
         self.chunk_id += 1
 
@@ -376,14 +370,19 @@ class StreamGenerator:
         classes = np.unique(y_array)
         data = np.column_stack((X_array, y_array))
 
-        header = '@relation %s %s\n\n' % ((filepath.split("/")[-1]).split(".")[0], str(self))
+        header = "@relation %s %s\n\n" % (
+            (filepath.split("/")[-1]).split(".")[0],
+            str(self),
+        )
 
         for feature in range(self.n_features):
-            header += "@attribute feature" + str(feature+1) + " numeric \n"
+            header += "@attribute feature" + str(feature + 1) + " numeric \n"
 
-        header += "@attribute class {%s} \n\n" % ','.join(map(str, classes))
+        header += "@attribute class {%s} \n\n" % ",".join(map(str, classes))
         header += "@data\n"
 
         with open(filepath, "w") as file:
             file.write(str(header))
-            np.savetxt(file, data, fmt='%.10g', delimiter=",")
+            np.savetxt(file, data, fmt="%.10g", delimiter=",")
+
+        self.reset()

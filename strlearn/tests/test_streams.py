@@ -7,7 +7,7 @@ import strlearn as sl
 import os
 from sklearn.naive_bayes import GaussianNB
 
-
+"""
 def test_generator_same():
     n_chunks = 10
     stream_one = sl.streams.StreamGenerator(random_state=5, n_chunks=n_chunks)
@@ -159,15 +159,21 @@ def test_arffparser_reset(stream_filepath):
     stream.reset()
     assert stream.chunk_id == 0
     assert not stream.is_dry()
+"""
 
 
-def test_arff_parser(stream_filepath):
+def test_arff_parser():
     filename = "stream.arff"
     stream_original = sl.streams.StreamGenerator(n_drifts=1, incremental=True)
     stream_original.save_to_arff(filename)
     stream_parsed = sl.streams.ARFFParser(filename)
 
     X_a, y_a = stream_original.get_chunk()
-    # X_b, y_b = stream_parsed.get_chunk()
+    X_b, y_b = stream_parsed.get_chunk()
 
-    # assert X_a == X__b
+    print("Xa", X_a, X_a.shape)
+    print("Xb", X_b, X_b.shape)
+
+    print("CMP", np.array_equal(X_a, X_b))
+
+    assert np.array_equal(X_a, X_b)
