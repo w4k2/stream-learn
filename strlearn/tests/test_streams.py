@@ -161,12 +161,13 @@ def test_arffparser_reset(stream_filepath):
     assert not stream.is_dry()
 
 
-"""
 def test_arff_parser(stream_filepath):
-    stream = sl.streams.ARFFParser(stream_filepath)
-    # assert str(stream) == "test_stream.arff"
-    clf = GaussianNB()
-    evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, clf)
-    stream.reset()
-"""
+    filename = "stream.arff"
+    stream_original = sl.streams.StreamGenerator(n_drifts=1, incremental=True)
+    stream_original.save_to_arff(filename)
+    stream_parsed = sl.streams.ARFFParser(filename)
+
+    X_a, y_a = stream_original.get_chunk()
+    # X_b, y_b = stream_parsed.get_chunk()
+
+    # assert X_a == X__b
