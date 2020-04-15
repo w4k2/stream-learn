@@ -82,14 +82,18 @@ class SEA(ClassifierMixin, BaseEnsemble):
         # Remove the worst when ensemble becomes too large
         if len(self.ensemble_) > self.n_estimators:
             del self.ensemble_[
-                np.argmin([self.metric(y, clf.predict(X))
-                           for clf in self.ensemble_])
+                np.argmin([self.metric(y, clf.predict(X)) for clf in self.ensemble_])
             ]
         return self
 
     def ensemble_support_matrix(self, X):
         """Ensemble support matrix."""
         return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
+
+    def predict_proba(self, X):
+        esm = self.ensemble_support_matrix(X)
+        average_support = np.mean(esm, axis=0)
+        return average_support
 
     def predict(self, X):
         """

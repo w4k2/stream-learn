@@ -4,6 +4,7 @@ import sys
 
 from sklearn.naive_bayes import GaussianNB
 
+import numpy as np
 import pytest
 import strlearn as sl
 
@@ -20,6 +21,21 @@ def test_AWE():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
+
+
+def test_pp():
+    stream = get_stream()
+    clf = sl.ensembles.SEA(GaussianNB())
+
+    X, y = stream.get_chunk()
+
+    clf.partial_fit(X, y)
+
+    pp = clf.predict_proba(X)
+    y_pred = clf.predict(X)
+    y_pred_pp = np.argmax(pp, axis=1)
+
+    assert np.array_equal(y_pred, y_pred_pp)
 
 
 def test_AUE():
