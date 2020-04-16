@@ -22,13 +22,11 @@ You can read more about each module in the [documentation page](https://w4k2.git
 If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
 
 ```
-@misc{ksieniewicz2020streamlearn,
-    title={stream-learn -- open-source Python library for difficult data stream batch analysis},
-    author={Paweł Ksieniewicz and Paweł Zyblewski},
-    year={2020},
-    eprint={2001.11077},
-    archivePrefix={arXiv},
-    primaryClass={cs.LG}
+@article{ksieniewicz2020stream,
+  title={stream-learn--open-source Python library for difficult data stream batch analysis},
+  author={Ksieniewicz, Pawe{\l} and Zyblewski, Pawe{\l}},
+  journal={arXiv preprint arXiv:2001.11077},
+  year={2020}
 }
 ```
 
