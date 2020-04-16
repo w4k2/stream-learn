@@ -128,7 +128,7 @@ plt.legend()
 -->
 
 
-### About
+### Citation policy
 
 If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
 
