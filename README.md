@@ -128,27 +128,17 @@ plt.legend()
 -->
 
 
-
-
-
-
-
-<!--
-
 ### About
 
 If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
 
 ```
-@article{key:key,
-author  = {abc},
-title   = {def},
-journal = {ghi},
-year    = {2018},
-volume  = {1},
-number  = {1},
-pages   = {1-5},
-url     = {http://jkl}
+@misc{ksieniewicz2020streamlearn,
+    title={stream-learn -- open-source Python library for difficult data stream batch analysis},
+    author={Paweł Ksieniewicz and Paweł Zyblewski},
+    year={2020},
+    eprint={2001.11077},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
 }
 ```
--->
