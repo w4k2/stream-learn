@@ -17,7 +17,20 @@ The `stream-learn` module is a set of tools necessary for processing data stream
 
 You can read more about each module in the [documentation page](https://w4k2.github.io/stream-learn/).
 
+## Citation policy
 
+If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
+
+```
+@misc{ksieniewicz2020streamlearn,
+    title={stream-learn -- open-source Python library for difficult data stream batch analysis},
+    author={Paweł Ksieniewicz and Paweł Zyblewski},
+    year={2020},
+    eprint={2001.11077},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+```
 
 ## Quick start guide
 
@@ -126,19 +139,3 @@ plt.legend()
 ![](https://w4k2.github.io/stream-learn/_images/disco.png)
 
 -->
-
-
-### Citation policy
-
-If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
-
-```
-@misc{ksieniewicz2020streamlearn,
-    title={stream-learn -- open-source Python library for difficult data stream batch analysis},
-    author={Paweł Ksieniewicz and Paweł Zyblewski},
-    year={2020},
-    eprint={2001.11077},
-    archivePrefix={arXiv},
-    primaryClass={cs.LG}
-}
-```
