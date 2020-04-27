@@ -16,6 +16,11 @@ def get_stream():
 def get_different_stream():
     return sl.streams.StreamGenerator(n_chunks=10, n_features=4)
 
+def test_DWM():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.DWM(GaussianNB(), p=stream.chunk_size))
+
 
 def test_AWE():
     stream = get_stream()
@@ -52,8 +57,9 @@ def test_ensembles_fit():
     clf5 = sl.ensembles.UOB(GaussianNB())
     clf6 = sl.ensembles.AWE(GaussianNB())
     clf7 = sl.ensembles.AUE(GaussianNB())
+    clf8 = sl.ensembles.DWM(GaussianNB())
 
-    clfs = (clf1, clf2, clf3, clf4, clf5, clf6, clf7)
+    clfs = (clf1, clf2, clf3, clf4, clf5, clf6, clf7, clf8)
 
     stream = get_stream()
     X, y = stream.get_chunk()
@@ -73,6 +79,7 @@ def test_features():
         sl.ensembles.WAE(GaussianNB()),
         sl.ensembles.AWE(GaussianNB()),
         sl.ensembles.AUE(GaussianNB()),
+        sl.ensembles.DWM(GaussianNB()),
         sl.ensembles.OnlineBagging(GaussianNB()),
     ]
     stream = get_stream()
@@ -96,6 +103,7 @@ def test_pred():
         sl.ensembles.WAE(GaussianNB()),
         sl.ensembles.AWE(GaussianNB()),
         sl.ensembles.AUE(GaussianNB()),
+        sl.ensembles.DWM(GaussianNB()),
         sl.ensembles.OnlineBagging(GaussianNB()),
     ]
     stream = get_stream()

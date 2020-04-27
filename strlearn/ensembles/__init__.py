@@ -5,6 +5,7 @@ from .WAE import WAE
 from .OnlineBagging import OnlineBagging
 from .OOB import OOB
 from .UOB import UOB
+from .DWM import DWM
 
 __all__ = [
     "OnlineBagging",
@@ -13,5 +14,6 @@ __all__ = [
     "UOB",
     "WAE",
     "AWE",
-    "AUE"
+    "AUE",
+    "DWM"
 ]
