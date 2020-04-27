@@ -114,7 +114,7 @@ class DWM(ClassifierMixin, BaseEnsemble):
         if X.shape[1] != self.X_.shape[1]:
             raise ValueError("number of features does not match")
 
-        esm = np.nan_to_num(self.ensemble_support_matrix(X), nan=1./len(self.classes_))
+        esm = np.nan_to_num(self.ensemble_support_matrix(X))
         if self.weighted_support:
             esm = esm * self.weights_[:, np.newaxis, np.newaxis]
 
