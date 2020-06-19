@@ -6,6 +6,11 @@ from .OnlineBagging import OnlineBagging
 from .OOB import OOB
 from .UOB import UOB
 from .DWM import DWM
+from .REA import REA
+from .KMC import KMC
+from .learnppCDS import LearnppCDS
+from .learnppNIE import LearnppNIE
+from .OUSE import OUSE
 
 __all__ = [
     "OnlineBagging",
@@ -15,5 +20,10 @@ __all__ = [
     "WAE",
     "AWE",
     "AUE",
-    "DWM"
+    "DWM",
+    "REA",
+    "KMC",
+    "LearnppCDS",
+    "LearnppNIE",
+    "OUSE"
 ]
