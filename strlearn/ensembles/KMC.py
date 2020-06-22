@@ -23,7 +23,6 @@ class KMC(ClassifierMixin, BaseEnsemble):
 
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
-        print(self.n_estimators)
 
     def fit(self, X, y):
         """Fitting."""
