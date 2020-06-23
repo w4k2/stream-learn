@@ -1,7 +1,5 @@
 """Classifier tests."""
 
-import sys
-
 from sklearn.naive_bayes import GaussianNB
 
 import strlearn as sl
