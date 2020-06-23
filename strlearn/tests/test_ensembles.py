@@ -39,18 +39,6 @@ def get_imbalanced_stream():
     return sl.streams.StreamGenerator(n_chunks=2, n_features=10, weights=[0.99,0.01])
 
 
-def test_DWM():
-    stream = get_stream()
-    evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, sl.ensembles.DWM(GaussianNB(), p=stream.chunk_size))
-
-
-def test_AWE():
-    stream = get_stream()
-    evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
-
-
 def test_predict_proba():
     clfs = get_clfs()
     stream = get_stream()
@@ -64,12 +52,6 @@ def test_predict_proba():
             y_pred_pp = np.argmax(pp, axis=1)
 
             assert np.array_equal(y_pred, y_pred_pp)
-
-
-def test_AUE():
-    stream = get_stream()
-    evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, sl.ensembles.AUE(GaussianNB(), n_estimators=5))
 
 
 def test_ensembles_fit():
@@ -139,6 +121,24 @@ def test_one_class():
         if hasattr(clf, "minority_majority_name"):
             with pytest.raises(ValueError):
                 clf.fit(X, y)
+
+
+def test_DWM():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.DWM(GaussianNB(), p=stream.chunk_size))
+
+
+def test_AWE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.AWE(GaussianNB(), n_estimators=5))
+
+
+def test_AUE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.AUE(GaussianNB(), n_estimators=5))
 
 
 def test_SEA():
