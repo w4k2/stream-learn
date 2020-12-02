@@ -1,4 +1,4 @@
-:mod:`strlearn.metrics`.geometric_mean_score_1
+﻿:mod:`strlearn.metrics`.geometric_mean_score_1
 ===========================================================
 
 .. currentmodule:: strlearn.metrics

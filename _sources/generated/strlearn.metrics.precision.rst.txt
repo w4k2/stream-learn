@@ -1,4 +1,4 @@
-:mod:`strlearn.metrics`.precision
+﻿:mod:`strlearn.metrics`.precision
 ==============================================
 
 .. currentmodule:: strlearn.metrics

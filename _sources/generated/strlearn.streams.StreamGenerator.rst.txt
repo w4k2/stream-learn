@@ -1,4 +1,4 @@
-:mod:`strlearn.streams`.StreamGenerator
+﻿:mod:`strlearn.streams`.StreamGenerator
 ==============================================
 
 .. currentmodule:: strlearn.streams

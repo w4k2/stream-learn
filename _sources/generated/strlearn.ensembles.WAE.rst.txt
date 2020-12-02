@@ -1,4 +1,4 @@
-:mod:`strlearn.ensembles`.WAE
+﻿:mod:`strlearn.ensembles`.WAE
 ====================================
 
 .. currentmodule:: strlearn.ensembles

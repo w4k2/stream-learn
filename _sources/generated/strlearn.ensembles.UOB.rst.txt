@@ -1,4 +1,4 @@
-:mod:`strlearn.ensembles`.UOB
+﻿:mod:`strlearn.ensembles`.UOB
 ====================================
 
 .. currentmodule:: strlearn.ensembles

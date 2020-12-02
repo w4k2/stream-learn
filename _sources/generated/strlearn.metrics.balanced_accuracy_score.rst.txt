@@ -1,4 +1,4 @@
-:mod:`strlearn.metrics`.balanced_accuracy_score
+﻿:mod:`strlearn.metrics`.balanced_accuracy_score
 ============================================================
 
 .. currentmodule:: strlearn.metrics

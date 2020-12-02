@@ -1,4 +1,4 @@
-:mod:`strlearn.metrics`.fbeta_score
+﻿:mod:`strlearn.metrics`.fbeta_score
 ================================================
 
 .. currentmodule:: strlearn.metrics

@@ -1,4 +1,4 @@
-:mod:`strlearn.evaluators`.TestThenTrain
+﻿:mod:`strlearn.evaluators`.TestThenTrain
 ===============================================
 
 .. currentmodule:: strlearn.evaluators
