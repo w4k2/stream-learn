@@ -324,8 +324,9 @@ class StreamGenerator:
 
     def __str__(self):
         if type(self.y_flip) == tuple and type(self.weights) != tuple:
-            return "%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -337,8 +338,9 @@ class StreamGenerator:
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) != tuple and type(self.weights) != tuple:
-            return "%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -349,8 +351,9 @@ class StreamGenerator:
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) == tuple and type(self.weights) == tuple:
-            return "%s_css%i_rs%i_nd%i_ln%i_%i_d%s_%i" % (
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_%i_d%s_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -362,8 +365,9 @@ class StreamGenerator:
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) != tuple and type(self.weights) == tuple:
-            return "%s_css%i_rs%i_nd%i_ln%i_d%s_%i" % (
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_d%s_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
