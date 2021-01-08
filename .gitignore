@@ -1,6 +1,8 @@
 metex.py
 example.png
 example.py
+work.py
+foo.png
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

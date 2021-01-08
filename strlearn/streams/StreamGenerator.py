@@ -234,25 +234,46 @@ class StreamGenerator:
                 accumulator += treshold
         # If dynamic balance is given
         else:
-            (
-                self.n_balance_drifts,
-                self.class_sigmoid_spacing,
-                self.balance_amplitude,
-            ) = self.weights
+            if len(self.weights) == 3:
+                (
+                    self.n_balance_drifts,
+                    self.class_sigmoid_spacing,
+                    self.balance_amplitude,
+                ) = self.weights
 
-            period, self.class_probabilities = self._sigmoid(
-                self.class_sigmoid_spacing, self.n_balance_drifts
-            )
+                period, self.class_probabilities = self._sigmoid(
+                    self.class_sigmoid_spacing, self.n_balance_drifts
+                )
 
-            # Amplitude correction
-            self.class_probabilities -= 0.5
-            self.class_probabilities *= self.balance_amplitude
-            self.class_probabilities += 0.5
+                # Amplitude correction
+                self.class_probabilities -= 0.5
+                self.class_probabilities *= self.balance_amplitude
+                self.class_probabilities += 0.5
 
-            # Will it work?
-            self.class_selector = (
-                self.class_probabilities < self.balance_noise
-            ).astype(int)
+                print(self.class_probabilities.shape)
+
+                # Will it work?
+                self.class_selector = (
+                    self.class_probabilities < self.balance_noise
+                ).astype(int)
+            elif len(self.weights) == 2:
+                (
+                    self.mean_prior,
+                    self.std_prior
+                ) = self.weights
+
+                self.class_probabilities = np.clip(np.random.normal(
+                    self.mean_prior,
+                    self.std_prior,
+                    self.n_chunks
+                ), 0.0001, 0.9999)
+
+                self.class_selector = np.random.uniform(size=(self.n_chunks,
+                                                              self.chunk_size))
+
+                self.class_selector = (self.class_selector > self.class_probabilities[:,np.newaxis]).astype(int)
+
+                self.class_selector = np.ravel(self.class_selector)
 
         # Przypisanie klas i etykiet
         if self.n_drifts > 0:
