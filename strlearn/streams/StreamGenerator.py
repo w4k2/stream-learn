@@ -324,9 +324,10 @@ class StreamGenerator:
             return None
 
     def __str__(self):
-        if type(self.y_flip) == tuple:
-            return "%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
+        if type(self.y_flip) == tuple and type(self.weights) != tuple:
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_%i_d%i_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -337,9 +338,10 @@ class StreamGenerator:
                 50 if self.weights is None else (self.weights[0] * 100),
                 int(self.chunk_size * self.n_chunks),
             )
-        else:
-            return "%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
+        elif type(self.y_flip) != tuple and type(self.weights) != tuple:
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_d%i_%i" % (
                 "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
                 999
                 if self.concept_sigmoid_spacing is None
                 else self.concept_sigmoid_spacing,
@@ -348,6 +350,33 @@ class StreamGenerator:
                 int(self.y_flip * 100),
                 self.weights[0] * 100 if self.weights is not None else 0,
                 int(self.chunk_size * self.n_chunks),
+            )
+        elif type(self.y_flip) == tuple and type(self.weights) == tuple:
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_%i_d%s_%i" % (
+                "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
+                999
+                if self.concept_sigmoid_spacing is None
+                else self.concept_sigmoid_spacing,
+                self.random_state,
+                self.n_drifts,
+                int(self.y_flip[0] * 100),
+                int(self.y_flip[1] * 100),
+                (str(self.weights[0])+str(self.weights[1])+str(self.weights[2]).split(".")[1]),
+                int(self.chunk_size * self.n_chunks),
+            )
+        elif type(self.y_flip) != tuple and type(self.weights) == tuple:
+            return "%s_%s_css%i_rs%i_nd%i_ln%i_d%s_%i" % (
+                "gr" if self.incremental is False else "inc",
+                "n" if self.recurring is False else "r",
+                999
+                if self.concept_sigmoid_spacing is None
+                else self.concept_sigmoid_spacing,
+                self.random_state,
+                self.n_drifts,
+                int(self.y_flip * 100),
+                (str(self.weights[0])+str(self.weights[1])+str(self.weights[2]).split(".")[1]),
+                int(self.chunk_size * self.n_chunks)
             )
 
     def save_to_arff(self, filepath):
