@@ -262,14 +262,17 @@ class StreamGenerator:
                     self.std_prior
                 ) = self.weights
 
-                self.class_probabilities = np.clip(np.random.normal(
+                self.class_probabilities = np.random.normal(
                     self.mean_prior,
                     self.std_prior,
                     self.n_chunks
-                ), 0.0001, 0.9999)
+                )
 
                 self.class_selector = np.random.uniform(size=(self.n_chunks,
                                                               self.chunk_size))
+
+                self.class_selector[:, 0] = 0
+                self.class_selector[:,-1] = 1
 
                 self.class_selector = (self.class_selector > self.class_probabilities[:,np.newaxis]).astype(int)
 
