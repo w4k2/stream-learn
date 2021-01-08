@@ -8,8 +8,6 @@ import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
 
-print("HELLO, THERE!")
-
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
 
@@ -249,8 +247,6 @@ class StreamGenerator:
                 self.class_probabilities -= 0.5
                 self.class_probabilities *= self.balance_amplitude
                 self.class_probabilities += 0.5
-
-                print(self.class_probabilities.shape)
 
                 # Will it work?
                 self.class_selector = (
