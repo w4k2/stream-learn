@@ -94,7 +94,7 @@ def test_generator_str():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
     print(evaluator.scores)
-    assert str(stream) == "gr_n_css999_rs1410_nd0_ln1_d0_50000"
+    assert str(stream) == "gr_n_css999_rs1410_nd0_ln1_d50_50000"
 
     stream = sl.streams.StreamGenerator(y_flip=(0.5, 0.5))
     clf = GaussianNB()

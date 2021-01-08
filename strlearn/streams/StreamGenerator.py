@@ -372,7 +372,7 @@ class StreamGenerator:
                 self.random_state,
                 self.n_drifts,
                 int(self.y_flip * 100),
-                self.weights[0] * 100 if self.weights is not None else 0,
+                50 if self.weights is None else (self.weights[0] * 100),
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) == tuple and type(self.weights) == tuple and len(self.weights) == 3:
