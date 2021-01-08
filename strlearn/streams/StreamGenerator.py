@@ -8,6 +8,7 @@ import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
 
+print("HELLO, THERE!")
 
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
@@ -37,8 +38,8 @@ class StreamGenerator:
         the previously encountered concepts.
     weights : array-like, shape (n_classes, ) or tuple (only for 2 classes)
         If array - class weight for static imbalance,
-        if tuple - (n_drifts, concept_sigmoid_spacing, IR aplitude [0-1])
-        for generation of dynamically imbalanced streams.
+        if 3-valued tuple - (n_drifts, concept_sigmoid_spacing, IR amplitude
+        [0-1]) for generation of continous dynamically imbalanced streams, if 2-valued tuple - (mean value, standard deviation) for generation of discreete dynamically imbalanced streams.
 
     Attributes
     ----------
