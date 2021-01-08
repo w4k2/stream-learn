@@ -413,7 +413,7 @@ class StreamGenerator:
                 self.n_drifts,
                 int(self.y_flip[0] * 100),
                 int(self.y_flip[1] * 100),
-                (str(self.weights[0])+str(self.weights[1]).split(".")[1]),
+                ("%.0f_%.0f" % (self.weights[0]*100,self.weights[1]*100)),
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) != tuple and type(self.weights) == tuple and len(self.weights) == 2:
@@ -426,7 +426,7 @@ class StreamGenerator:
                 self.random_state,
                 self.n_drifts,
                 int(self.y_flip * 100),
-                (str(self.weights[0])+str(self.weights[1]).split(".")[1]),
+                ("%.0f_%.0f" % (self.weights[0]*100,self.weights[1]*100)),
                 int(self.chunk_size * self.n_chunks)
             )
 
