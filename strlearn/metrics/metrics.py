@@ -2,10 +2,16 @@
 
 import numpy as np
 
-
 def binary_confusion_matrix(y_true, y_pred):
     # tn, fp, fn, tp
-    return tuple([np.sum((y_pred == i % 2) * (y_true == i // 2)) for i in range(4)])
+    b = y_pred.astype(bool)
+    a = np.logical_not(b)
+    d = y_true.astype(bool)
+    c = np.logical_not(d)
+    ttt = (np.count_nonzero(a*c), np.count_nonzero(b*c),
+           np.count_nonzero(a*d), np.count_nonzero(b*d))
+
+    return ttt
 
 
 def specificity(y_true, y_pred):
