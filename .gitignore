@@ -143,3 +143,4 @@ doc/auto_examples
 plots/keyframes
 work.py
 *.arff
+test_stream.*

@@ -5,8 +5,10 @@ A class for generating streams with various parameters.
 """
 
 import numpy as np
+import pandas as pd
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
+import pandas as pd
 
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
@@ -464,3 +466,33 @@ class StreamGenerator:
             file.write("\n")
 
         self.reset()
+
+    def save_to_npy(self, filepath):
+        """ Save generated stream to the ARFF format file.
+
+        Parameters
+        ----------
+        filepath : string
+            Path to the file where data will be saved in ARFF format
+        """
+        X, y = self._make_classification()
+        ds = np.concatenate([X, y[:, np.newaxis]], axis=1)
+        np.save(filepath, ds)
+
+
+    def save_to_csv(self, filepath):
+        """ Save generated stream to the ARFF format file.
+
+        Parameters
+        ----------
+        filepath : string
+            Path to the file where data will be saved in ARFF format
+        """
+        X, y = self._make_classification()
+
+        ds = np.concatenate([X, y[:, np.newaxis]], axis=1)
+
+        pdds = pd.DataFrame(ds)
+        pdds.infer_objects()
+        pdds.iloc[: , -1] = pdds.iloc[: , -1].astype(int)
+        pdds.to_csv(filepath, header=None,index=None)
