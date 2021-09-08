@@ -120,20 +120,3 @@ plt.legend()
 ```
 
 ![](https://w4k2.github.io/stream-learn/_images/simplest.png)
-
-<!--
----
-
-
-<p align="center">
-  <a href="http://kssk.pwr.edu.pl/">
-    <img src="/doc/_static/logo.png" width="150">
-  </a>
-  <p align="center" style="color:#AF2624">
-    <strong>Katedra Systemów i Sieci Komputerowych</strong>
-  </p>
-</p>
-
-![](https://w4k2.github.io/stream-learn/_images/disco.png)
-
--->
