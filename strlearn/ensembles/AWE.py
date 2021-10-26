@@ -79,6 +79,11 @@ class AWE(ClassifierMixin, BaseEnsemble):
         """Ensemble support matrix."""
         return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
 
+    def predict_proba(self, X):
+        esm = self.ensemble_support_matrix(X)
+        average_support = np.mean(esm, axis=0)
+        return average_support
+
     def predict(self, X):
         """
         Predict classes for X.

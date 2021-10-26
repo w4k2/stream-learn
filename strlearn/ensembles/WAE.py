@@ -127,6 +127,8 @@ class WAE(BaseEnsemble, ClassifierMixin):
         self.age_ += 1
         self.iterations_ += 1
 
+        return self
+
     def _accuracies(self):
         return np.array(
             [m_clf.score(self.previous_X, self.previous_y)
