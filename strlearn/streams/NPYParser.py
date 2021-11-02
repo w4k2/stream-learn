@@ -61,6 +61,7 @@ class NPYParser:
     def _make_classification(self):
         # Read CSV
         ds = np.load(self.path)
+        self.classes_ = np.unique(ds[:,-1])
         return ds[:,:-1], ds[:,-1]
 
     def __str__(self):
