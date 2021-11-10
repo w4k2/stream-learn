@@ -80,10 +80,17 @@ class ARFFParser:
                     self.n_classes = len(self.classes_)
                 else:
                     self.names.append(elements[1])
-                    if elements[2][0] == "{":
+                    if elements[2][0] == "{" and elements[2][1] != "'":
                         self.types.append("nominal")
                         le = preprocessing.LabelEncoder()
                         le.fit(np.array(elements[2][1:-1].split(",")))
+                        self.lencs.update({len(self.names) - 1: le})
+                    elif elements[2][0] == "{" and elements[2][1] == "'":
+                        self.types.append("nominal")
+                        le = preprocessing.LabelEncoder()
+                        temporary = np.array(elements[2][1:-1].split(","))
+                        temporary = np.array([element[1:-1] for element in temporary])
+                        le.fit(temporary)
                         self.lencs.update({len(self.names) - 1: le})
                     elif elements[2] == "numeric":
                         self.types.append("numeric")
@@ -131,12 +138,15 @@ class ARFFParser:
 
             # Get class
             if elements[-1] == "":
-                y.append(elements[-2])
+                y.append(elements[-2].strip())
             else:
-                y.append(elements[-1])
+                y.append(elements[-1].strip())
 
             # Read attributes
             attributes = np.array(elements[:-1])
+            attributes = np.array([att.strip() for att in attributes])
+            # print(attributes)
+            # exit()
 
             # Get nominal
             X[i, self.numeric_atts] = attributes[self.numeric_atts]
