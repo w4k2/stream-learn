@@ -50,7 +50,7 @@ class StreamGenerator:
         self,
         n_chunks=250,
         chunk_size=200,
-        random_state=1410,
+        random_state=None,
         n_drifts=0,
         concept_sigmoid_spacing=None,
         n_classes=2,
@@ -67,7 +67,7 @@ class StreamGenerator:
     ):
         self.n_chunks = n_chunks
         self.chunk_size = chunk_size
-        self.random_state = random_state
+        self.random_state = random_state if random_state is not None else np.random.randint(10000)
         self.n_drifts = n_drifts
         self.concept_sigmoid_spacing = concept_sigmoid_spacing
         self.n_classes = n_classes
