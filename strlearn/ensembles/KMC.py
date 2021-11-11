@@ -7,11 +7,10 @@ import numpy as np
 
 
 class KMC(ClassifierMixin, BaseEnsemble):
-
     """
-    References
-    ----------
-    .. [1] Wang, Yi, Yang Zhang, and Yong Wang. "Mining data streams
+    KMC
+
+    Wang, Yi, Yang Zhang, and Yong Wang. "Mining data streams
            with skewed distribution by static classifier ensemble."
            Opportunities and Challenges for Next-Generation Applied
            Intelligence. Springer, Berlin, Heidelberg, 2009. 65-71.
@@ -116,15 +115,11 @@ class KMC(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called
@@ -144,19 +139,13 @@ class KMC(ClassifierMixin, BaseEnsemble):
     def minority_majority_split(self, X, y, minority_name, majority_name):
         """Returns minority and majority data
 
-        Parameters
-        ----------
-        X : array-like, shape = [n_samples, n_features]
-            The training input samples.
-        y : array-like, shape = [n_samples]
-            The target values.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
 
-        Returns
-        -------
-        minority : array-like, shape = [n_samples, n_features]
-            Minority class samples.
-        majority : array-like, shape = [n_samples, n_features]
-            Majority class samples.
+        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
+        :returns: Tuple of minority and majority class samples
         """
 
         minority_ma = np.ma.masked_where(y == minority_name, y)
@@ -168,19 +157,13 @@ class KMC(ClassifierMixin, BaseEnsemble):
         return minority, majority
 
     def minority_majority_name(self, y):
-        """Returns the name of minority and majority class
+        """Returns minority and majority data
 
-        Parameters
-        ----------
-        y : array-like, shape = [n_samples]
-            The target values.
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
 
-        Returns
-        -------
-        minority_name : object
-            Name of minority class.
-        majority_name : object
-            Name of majority class.
+        :rtype: tuple (object, object)
+        :returns: Tuple of minority and majority class names.
         """
 
         unique, counts = np.unique(y, return_counts=True)

@@ -1,5 +1,3 @@
-"""Test-Than-Train data stream evaluator."""
-
 import numpy as np
 from sklearn.base import ClassifierMixin
 from sklearn.metrics import accuracy_score
@@ -16,17 +14,18 @@ class TestThenTrain:
     where each individual data chunk is first used to test
     the classifier and then it is used for training.
 
-    Attributes
-    ----------
-    classes_ : array-like, shape (n_classes, )
-        The class labels.
-    scores_ : array-like, shape (stream.n_chunks, 5)
-        Values of accuracy_score, roc_auc_score,
-        geometric_mean_score, balanced_accuracy_score and f_score for
-        each processed data chunk.
+    :type metrics: tuple or function
+    :param metrics: Tuple of metric functions or single metric function.
+    :type verbose: boolean
+    :param verbose: Flag to turn on verbose mode.
 
-    Examples
-    --------
+    :var classes_: The class labels.
+    :var scores_: Values of metrics for each processed data chunk.
+    :vartype classes_: array-like, shape (n_classes, )
+    :vartype scores_: array-like, shape (stream.n_chunks, len(metrics))
+
+    :Example:
+
     >>> import strlearn as sl
     >>> stream = sl.streams.StreamGenerator()
     >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
@@ -56,12 +55,10 @@ class TestThenTrain:
         """
         Perform learning procedure on data stream.
 
-        Parameters
-        ----------
-        clf : scikit-learn estimator
-            Classifier implementing a `partial_fit()` method.
-        stream : object
-            Data stream as an object.
+        :param stream: Data stream as an object
+        :type stream: object
+        :param clfs: scikit-learn estimator of list of scikit-learn estimators.
+        :type clfs: tuple or function
         """
         # Verify if pool of classifiers or one
         if isinstance(clfs, ClassifierMixin):

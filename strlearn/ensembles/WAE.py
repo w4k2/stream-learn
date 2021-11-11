@@ -212,7 +212,15 @@ class WAE(BaseEnsemble, ClassifierMixin):
         return acumulated_weighted_support
 
     def predict(self, X):
-        """Hard decision."""
+        """
+        Predict classes for X.
+
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
+
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
+        """
         # Check is fit had been called
         check_is_fitted(self, "classes_")
 

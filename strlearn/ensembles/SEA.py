@@ -14,24 +14,18 @@ class SEA(ClassifierMixin, BaseEnsemble):
     Ensemble classifier composed of estimators trained on the fixed
     number of previously seen data chunks, prunning the worst one in the pool.
 
-    Parameters
-    ----------
+    :type n_estimators: integer, optional (default=10)
+    :param n_estimators: The maximum number of estimators trained using consecutive data chunks and maintained in the ensemble.
+    :type metric: function, optional (default=accuracy_score)
+    :param metric: The metric used to prune the worst classifier in the pool.
 
-    n_estimators : integer, optional (default=10)
-        The maximum number of estimators trained using consecutive data chunks
-        and maintained in the ensemble.
-    metric : function, optional (default=accuracy_score)
-        The metric used to prune the worst classifier in the pool.
+    :vartype ensemble_: list of classifiers
+    :var ensemble_: The collection of fitted sub-estimators.
+    :vartype classes_: array-like, shape (n_classes, )
+    :var classes_: The class labels.
 
-    Attributes
-    ----------
-    ensemble_ : list of classifiers
-        The collection of fitted sub-estimators.
-    classes_ : array-like, shape (n_classes, )
-        The class labels.
+    :Example:
 
-    Examples
-    --------
     >>> import strlearn as sl
     >>> stream = sl.streams.StreamGenerator()
     >>> clf = sl.ensembles.SEA()
@@ -99,15 +93,11 @@ class SEA(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called

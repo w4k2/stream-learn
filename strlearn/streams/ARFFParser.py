@@ -1,7 +1,3 @@
-"""
-ARFF Parser.
-A class to parse datasets in ARFF standard.
-"""
 import numpy as np
 from sklearn import preprocessing
 
@@ -9,24 +5,17 @@ ATYPES = ("nominal", "numeric")
 
 
 class ARFFParser:
-    """
-    Stream-aware parser of datasets in ARFF format.
+    """ Stream-aware parser of datasets in ARFF format.
 
-    Parameters
-    ----------
-    path : string
-        Path to the ARFF file.
-    chunk_size : integer, optional (default=200)
-        The number of instances in each data chunk.
-    n_chunks : integer, optional (default=250)
-        The number of data chunks, that the stream
-        is composed of.
+    :type path: string
+    :param path: Path to the ARFF file.
+    :type chunk_size: integer, optional (default=200)
+    :param chunk_size: The number of instances in each data chunk.
+    :type n_chunks: integer, optional (default=250)
+    :param n_chunks: The number of data chunks, that the stream is composed of.
 
-    Attributes
-    ----------
+    :Example:
 
-    Examples
-    --------
     >>> import strlearn as sl
     >>> stream = sl.streams.ARFFParser("Agrawal.arff")
     >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
@@ -43,9 +32,7 @@ class ARFFParser:
     [0.895      0.86935764 0.86452058 0.86935764 0.92134831]
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
-
     def __init__(self, path, chunk_size=200, n_chunks=250):
-        """Initializer."""
         # Read file.
         self.name = path
         self.path = path
@@ -110,15 +97,26 @@ class ARFFParser:
         return self.name
 
     def is_dry(self):
-        """Checking if we have reached the end of the stream."""
+        """
+        Checking if we have reached the end of the stream.
+
+        :returns: flag showing if the stream has ended
+        :rtype: boolean
+        """
 
         return (
             self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
 
     def get_chunk(self):
-        """Get Chunk of size."""
+        """
+        Generating a data chunk of a stream.
 
+        Used by all evaluators but also accesible for custom evaluation.
+
+        :returns: Generated samples and target values.
+        :rtype: tuple {array-like, shape (n_samples, n_features), array-like, shape (n_samples, )}
+        """
         if self.chunk_id == 0 and self.starting_chunk is False:
             self.previous_chunk = None
             self.chunk_id = -1

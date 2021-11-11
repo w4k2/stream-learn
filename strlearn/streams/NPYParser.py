@@ -1,31 +1,20 @@
-"""
-NPY Parser.
-A class to parse datasets in NPY standard.
-"""
 import numpy as np
 from sklearn import preprocessing
 
 class NPYParser:
-    """
-    Stream-aware parser of datasets in CSV format.
+    """ Stream-aware parser of datasets in numpy format.
 
-    Parameters
-    ----------
-    path : string
-        Path to the CSV file.
-    chunk_size : integer, optional (default=200)
-        The number of instances in each data chunk.
-    n_chunks : integer, optional (default=250)
-        The number of data chunks, that the stream
-        is composed of.
+    :type path: string
+    :param path: Path to the npy file.
+    :type chunk_size: integer, optional (default=200)
+    :param chunk_size: The number of instances in each data chunk.
+    :type n_chunks: integer, optional (default=250)
+    :param n_chunks: The number of data chunks, that the stream is composed of.
 
-    Attributes
-    ----------
+    :Example:
 
-    Examples
-    --------
     >>> import strlearn as sl
-    >>> stream = sl.streams.CSVParser("Agrawal.csv")
+    >>> stream = sl.streams.NPYParser("Agrawal.npy")
     >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
     >>> evaluator = sl.evaluators.PrequentialEvaluator()
     >>> evaluator.process(clf, stream)
@@ -40,9 +29,7 @@ class NPYParser:
     [0.895      0.86935764 0.86452058 0.86935764 0.92134831]
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
-
     def __init__(self, path, chunk_size=200, n_chunks=250):
-        """Initializer."""
         # Read file.
         self.name = path
         self.path = path
@@ -68,8 +55,12 @@ class NPYParser:
         return self.name
 
     def is_dry(self):
-        """Checking if we have reached the end of the stream."""
+        """
+        Checking if we have reached the end of the stream.
 
+        :returns: flag showing if the stream has ended
+        :rtype: boolean
+        """
         return (
             self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
@@ -78,11 +69,10 @@ class NPYParser:
         """
         Generating a data chunk of a stream.
 
-        Returns
-        -------
-        current_chunk : tuple {array-like, shape (n_samples, n_features),
-        array-like, shape (n_samples, )}
-            Generated samples and target values.
+        Used by all evaluators but also accesible for custom evaluation.
+
+        :returns: Generated samples and target values.
+        :rtype: tuple {array-like, shape (n_samples, n_features), array-like, shape (n_samples, )}
         """
         if hasattr(self, "X"):
             self.previous_chunk = self.current_chunk
@@ -104,5 +94,6 @@ class NPYParser:
             return None
 
     def reset(self):
+        """Reset stream to the beginning."""
         self.previous_chunk = None
         self.chunk_id = -1

@@ -6,6 +6,9 @@ from sklearn.model_selection import KFold
 import numpy as np
 
 class AWE(ClassifierMixin, BaseEnsemble):
+    """
+    Accuracy Weighted Ensemble
+    """
     def __init__(self, base_estimator=None, n_estimators=10, n_splits=5):
         """Initialization."""
         self.base_estimator = base_estimator
@@ -88,15 +91,11 @@ class AWE(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called

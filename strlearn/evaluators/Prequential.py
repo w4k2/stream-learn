@@ -18,22 +18,21 @@ class Prequential:
     that are currently in the window are used to test the classifier
     and then for training.
 
-    Attributes
-    ----------
-    classes_ : array-like, shape (n_classes, )
-        The class labels.
-    scores_ : array-like, shape (stream.n_chunks, 5)
-        Values of accuracy_score, roc_auc_score,
-        geometric_mean_score, bac and f_score for
-        each processed data chunk.
+    :type metrics: tuple or function
+    :param metrics: Tuple of metric functions or single metric function.
 
-    Examples
-    --------
+    :var classes_: The class labels.
+    :var scores_: Values of metrics for each processed data chunk.
+    :vartype classes_: array-like, shape (n_classes, )
+    :vartype scores_: array-like, shape (stream.n_chunks, len(metrics))
+
+    :Example:
+
     >>> import strlearn as sl
     >>> stream = sl.streams.StreamGenerator()
     >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
     >>> evaluator = sl.evaluators.PrequentialEvaluator()
-     >>> evaluator.process(clf, stream, interval=50)
+    >>> evaluator.process(clf, stream, interval=50)
     >>> print(evaluator.scores_)
     ...
     [[0.95       0.9483469  0.94805282 0.9483469  0.95412844]
@@ -55,15 +54,12 @@ class Prequential:
         """
         Perform learning procedure on data stream.
 
-        Parameters
-        ----------
-        clf : scikit-learn estimator
-            Classifier implementing a `partial_fit()` method.
-        stream : object
-            Data stream as an object.
-        interval: integer, optional (default=100)
-            The number of instances by which the sliding window
-            moves before the next evaluation and training steps.
+        :param stream: Data stream as an object
+        :type stream: object
+        :param clfs: scikit-learn estimator of list of scikit-learn estimators.
+        :type clfs: tuple or function
+        :param interval: The number of instances by which the sliding window moves before the next evaluation and training steps.
+        :type interval: integer, optional (default=100)
         """
 
         if isinstance(clfs, ClassifierMixin):

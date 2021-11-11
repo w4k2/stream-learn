@@ -4,6 +4,7 @@ from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 class DWM(ClassifierMixin, BaseEnsemble):
+    """DWM"""
     def __init__(self, base_estimator=None, beta=.5, theta=.01, p = 1, weighted_support=False):
         """Initialization."""
         self.base_estimator = base_estimator
@@ -97,15 +98,11 @@ class DWM(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called

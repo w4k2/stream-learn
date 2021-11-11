@@ -13,13 +13,11 @@ class ASC(BaseEnsemble, ClassifierMixin):
 
     Classifier fitted on accumulated samples from all data chunks.
 
-    Attributes
-    ----------
-    classes_ : array-like, shape (n_classes, )
-        The class labels.
+    :var classes_: The class labels.
+    :vartype classes_: array-like, shape (n_classes, )
 
-    Examples
-    --------
+    :Example:
+
     >>> import strlearn as sl
     >>> stream = sl.streams.StreamGenerator()
     >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
@@ -69,38 +67,12 @@ class ASC(BaseEnsemble, ClassifierMixin):
         return self
 
     def predict(self, X):
-        """
-        Predict classes for X.
-
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
-
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
-        """
         check_is_fitted(self, "classes_")
         X = check_array(X)
 
         return self._clf.predict(X)
 
     def predict_proba(self, X):
-        """
-        Predict classes for X.
-
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
-
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
-        """
         check_is_fitted(self, "classes_")
         X = check_array(X)
 

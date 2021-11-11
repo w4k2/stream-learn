@@ -117,15 +117,11 @@ class UOB(BaseEnsemble, ClassifierMixin):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called

@@ -7,13 +7,10 @@ import math
 
 
 class LearnppNIE(ClassifierMixin, BaseEnsemble):
-
     """
-    References
-    ----------
-    .. [1] Ditzler, Gregory, and Robi Polikar. "Incremental learning of
-           concept drift from streaming imbalanced data." IEEE Transactions
-           on Knowledge and Data Engineering 25.10 (2013): 2283-2301.
+    LearnppNIE
+
+    Ditzler, Gregory, and Robi Polikar. "Incremental learning of concept drift from streaming imbalanced data." IEEE Transactions on Knowledge and Data Engineering 25.10 (2013): 2283-2301.
     """
 
     def __init__(self,
@@ -121,15 +118,11 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called
@@ -180,19 +173,13 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
     def minority_majority_split(self, X, y, minority_name, majority_name):
         """Returns minority and majority data
 
-        Parameters
-        ----------
-        X : array-like, shape = [n_samples, n_features]
-            The training input samples.
-        y : array-like, shape = [n_samples]
-            The target values.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
 
-        Returns
-        -------
-        minority : array-like, shape = [n_samples, n_features]
-            Minority class samples.
-        majority : array-like, shape = [n_samples, n_features]
-            Majority class samples.
+        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
+        :returns: Tuple of minority and majority class samples
         """
 
         minority_ma = np.ma.masked_where(y == minority_name, y)
@@ -204,19 +191,13 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
         return minority, majority
 
     def minority_majority_name(self, y):
-        """Returns the name of minority and majority class
+        """Returns minority and majority data
 
-        Parameters
-        ----------
-        y : array-like, shape = [n_samples]
-            The target values.
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
 
-        Returns
-        -------
-        minority_name : object
-            Name of minority class.
-        majority_name : object
-            Name of majority class.
+        :rtype: tuple (object, object)
+        :returns: Tuple of minority and majority class names.
         """
 
         unique, counts = np.unique(y, return_counts=True)

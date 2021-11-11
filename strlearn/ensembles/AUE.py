@@ -7,6 +7,7 @@ import numpy as np
 
 
 class AUE(ClassifierMixin, BaseEnsemble):
+    """ Accuracy Updated Ensemble"""
     def __init__(
         self, base_estimator=None, n_estimators=10, n_splits=5, epsilon=0.0000000001
     ):
@@ -112,15 +113,11 @@ class AUE(ClassifierMixin, BaseEnsemble):
         """
         Predict classes for X.
 
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
 
-        Returns
-        -------
-        y : array-like, shape (n_samples, )
-            The predicted classes.
+        :rtype: array-like, shape (n_samples, )
+        :returns: The predicted classes.
         """
 
         # Check is fit had been called

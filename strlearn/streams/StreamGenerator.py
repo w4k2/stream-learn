@@ -1,9 +1,3 @@
-"""
-Data streams generator.
-
-A class for generating streams with various parameters.
-"""
-
 import numpy as np
 import pandas as pd
 from scipy.stats import logistic
@@ -13,58 +7,43 @@ import pandas as pd
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
 
-    Parameters
-    ----------
+    A key element of the ``stream-learn`` package is a generator that allows to prepare a replicable (according to the given ``random_state`` value) classification dataset with class distribution changing over the course of stream, with base concepts build on a default class distributions for the ``scikit-learn`` package from the ``make_classification()`` function. These types of distributions try to reproduce the rules for generating the ``Madelon`` set. The ``StreamGenerator`` is capable of preparing any variation of the data stream known in the general taxonomy of data streams.
 
-    n_chunks : integer, optional (default=250)
-        The number of data chunks, that the stream
-        is composed of.
-    chunk_size : integer, optional (default=200)
-        The number of instances in each data chunk.
-    random_state : integer, optional (default=1410)
-        The seed used by the random number generator.
-    n_drifts : integer, optional (default=4)
-        The number of concept changes in the data stream.
-    concept_sigmoid_spacing : float, optional (default=10.)
-        Value that determines the shape of sigmoid function and
-        how sudden is the change of concept. The higher the value,
-        the more sudden the drift is.
-    n_classes : integer, optional (default=2)
-        The number of classes in the generated data stream.
-    y_flip: float or tuple (default=0.01)
-        Label noise for whole dataset or separate classes.
-    recurring : boolean, optional (default=False)
-        Determines if the streams can go back to
-        the previously encountered concepts.
-    weights : array-like, shape (n_classes, ) or tuple (only for 2 classes)
-        If array - class weight for static imbalance,
-        if 3-valued tuple - (n_drifts, concept_sigmoid_spacing, IR amplitude
-        [0-1]) for generation of continous dynamically imbalanced streams, if 2-valued tuple - (mean value, standard deviation) for generation of discreete dynamically imbalanced streams.
+    :param n_chunks: The number of data chunks, that the stream is composed of.
+    :param chunk_size: The number of instances in each data chunk.
+    :param random_state: The seed used by the random number generator.
+    :param n_drifts: The number of concept changes in the data stream.
+    :param concept_sigmoid_spacing: Value that determines the shape of sigmoid function and how sudden is the change of concept. The higher the value, the more sudden the drift is.
+    :param n_classes: The number of classes in the generated data stream.
+    :param y_flip: Label noise for whole dataset or separate classes.
+    :param recurring: Determines if the streams can go back to the previously encountered concepts.
+    :param weights: If array - class weight for static imbalance, if 3-valued tuple - (n_drifts, concept_sigmoid_spacing, IR amplitude [0-1]) for generation of continous dynamically imbalanced streams, if 2-valued tuple - (mean value, standard deviation) for generation of discreete dynamically imbalanced streams.
 
-    Attributes
-    ----------
+    :type n_chunks: integer, optional (default=250)
+    :type chunk_size: integer, optional (default=200)
+    :type random_state: integer, optional (default=1410)
+    :type n_drifts: integer, optional (default=4)
+    :type concept_sigmoid_spacing: float, optional (default=10.)
+    :type n_classes: integer, optional (default=2)
+    :type y_flip: float or tuple (default=0.01)
+    :type recurring: boolean, optional (default=False)
+    :type weights: array-like, shape (n_classes, ) or tuple (only for 2 classes)
 
-    Examples
-    --------
+    :Example:
 
-    Examples:
-
-    Data stream with 2 gradual non-recurring drifts and 20% of minority class.::
-
-        >>> import strlearn as sl
-        >>> stream = sl.streams.StreamGenerator(n_drifts=2, weights=[0.2, 0.8], concept_sigmoid_spacing=5)
-        >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
-        >>> evaluator = sl.evaluators.PrequentialEvaluator()
-        >>> evaluator.process(clf, stream)
-        >>> print(evaluator.scores_)
-
-        [[0.955      0.93655817 0.93601827 0.93655817 0.97142857]
-         [0.94       0.91397849 0.91275313 0.91397849 0.96129032]
-         [0.9        0.85565271 0.85234488 0.85565271 0.93670886]
-         ...
-         [0.815      0.72584133 0.70447376 0.72584133 0.8802589 ]
-         [0.83       0.69522145 0.65223303 0.69522145 0.89570552]
-         [0.845      0.67267706 0.61257135 0.67267706 0.90855457]]
+    >>> import strlearn as sl
+    >>> stream = sl.streams.StreamGenerator(n_drifts=2, weights=[0.2, 0.8], concept_sigmoid_spacing=5)
+    >>> clf = sl.classifiers.AccumulatedSamplesClassifier()
+    >>> evaluator = sl.evaluators.PrequentialEvaluator()
+    >>> evaluator.process(clf, stream)
+    >>> print(evaluator.scores_)
+    [[0.955      0.93655817 0.93601827 0.93655817 0.97142857]
+     [0.94       0.91397849 0.91275313 0.91397849 0.96129032]
+     [0.9        0.85565271 0.85234488 0.85565271 0.93670886]
+     ...
+     [0.815      0.72584133 0.70447376 0.72584133 0.8802589 ]
+     [0.83       0.69522145 0.65223303 0.69522145 0.89570552]
+     [0.845      0.67267706 0.61257135 0.67267706 0.90855457]]
     """
 
     def __init__(
@@ -86,7 +65,6 @@ class StreamGenerator:
         y_flip=0.01,
         **kwargs,
     ):
-        # Wyższy spacing, bardziej nagły
         self.n_chunks = n_chunks
         self.chunk_size = chunk_size
         self.random_state = random_state
@@ -107,17 +85,12 @@ class StreamGenerator:
         self.n_clusters_per_class = n_clusters_per_class
 
     def is_dry(self):
-        """Checking if we have reached the end of the stream."""
 
         return (
             self.chunk_id + 1 >= self.n_chunks if hasattr(self, "chunk_id") else False
         )
 
     def _sigmoid(self, sigmoid_spacing, n_drifts):
-        """
-        Funkcja, która generuje okresowy sigmoid zgodnie z wymaganiami.
-        """
-
         period = (
             int((self.n_samples) / (n_drifts)) if n_drifts > 0 else int(self.n_samples)
         )
@@ -319,11 +292,10 @@ class StreamGenerator:
         """
         Generating a data chunk of a stream.
 
-        Returns
-        -------
-        current_chunk : tuple {array-like, shape (n_samples, n_features),
-        array-like, shape (n_samples, )}
-            Generated samples and target values.
+        Used by all evaluators but also accesible for custom evaluation.
+
+        :returns: Generated samples and target values.
+        :rtype: tuple {array-like, shape (n_samples, n_features), array-like, shape (n_samples, )}
         """
         if hasattr(self, "X"):
             self.previous_chunk = self.current_chunk
@@ -429,12 +401,11 @@ class StreamGenerator:
             )
 
     def save_to_arff(self, filepath):
-        """ Save generated stream to the ARFF format file.
+        """
+        Save generated stream to the ARFF format file.
 
-        Parameters
-        ----------
-        filepath : string
-            Path to the file where data will be saved in ARFF format
+        :param filepath: Path to the file where data will be saved in ARFF format.
+        :type filepath: string
         """
         X_array = []
         y_array = []
@@ -468,12 +439,11 @@ class StreamGenerator:
         self.reset()
 
     def save_to_npy(self, filepath):
-        """ Save generated stream to the ARFF format file.
+        """
+        Save generated stream to the numpy format file.
 
-        Parameters
-        ----------
-        filepath : string
-            Path to the file where data will be saved in ARFF format
+        :param filepath: Path to the file where data will be saved in numpy format.
+        :type filepath: string
         """
         X, y = self._make_classification()
         ds = np.concatenate([X, y[:, np.newaxis]], axis=1)
@@ -481,12 +451,11 @@ class StreamGenerator:
 
 
     def save_to_csv(self, filepath):
-        """ Save generated stream to the ARFF format file.
+        """
+        Save generated stream to the csv format file.
 
-        Parameters
-        ----------
-        filepath : string
-            Path to the file where data will be saved in ARFF format
+        :param filepath: Path to the file where data will be saved in csv format.
+        :type filepath: string
         """
         X, y = self._make_classification()
 
