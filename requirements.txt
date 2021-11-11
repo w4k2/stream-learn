@@ -1,5 +1,6 @@
 numpy
 scipy
+pandas
 scikit-learn
 numpydoc
 matplotlib
@@ -9,3 +10,4 @@ sphinx_rtd_theme
 sphinx_gallery
 pillow
 tqdm
+sphinxcontrib-bibtex
