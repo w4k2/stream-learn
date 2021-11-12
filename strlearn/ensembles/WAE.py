@@ -24,28 +24,28 @@ class WAE(StreamingEnsemble):
     The method was inspired by Accuracy Weighted Ensemble (AWE) algorithm to which it introduces two main modifications: (I) classifier weights depend on the individual classifier accuracies and time they have been spending in the ensemble, (II) individual classifier are chosen on the basis on the non-pairwise diversity measure.
 
     :type base_estimator: ClassifierMixin class object
-    :param Classification algorithm used as a base estimator.
+    :param base_estimator: Classification algorithm used as a base estimator.
     :type n_estimators: integer, optional (default=10)
-    :param The maximum number of estimators trained using consecutive data chunks and maintained in the ensemble.
+    :param  n_estimators: The maximum number of estimators trained using consecutive data chunks and maintained in the ensemble.
     :type theta: float, optional (default=0.1)
-    :param Threshold for weight calculation method and aging procedure control.
+    :param theta: Threshold for weight calculation method and aging procedure control.
     :type post_pruning: boolean, optional (default=False)
-    :param Whether the pruning is conducted before or after adding the classifier.
+    :param post_pruning: Whether the pruning is conducted before or after adding the classifier.
     :type pruning_criterion: string, optional (default='accuracy')
-    :param Accuracy.
+    :param pruning_criterion: Selection of pruning criterion.
     :type weight_calculation_method: string, optional (default='kuncheva')
-    :param same_for_each, proportional_to_accuracy, kuncheva, pta_related_to_whole, bell_curve,
+    :param weight_calculation_method: same_for_each, proportional_to_accuracy, kuncheva, pta_related_to_whole, bell_curve,
     :type aging_method: string, optional (default='weights_proportional')
-    :param weights_proportional, constant, gaussian.
+    :param aging_method: weights_proportional, constant, gaussian.
     :type rejuvenation_power: float, optional (default=0.0)
-    :param Rejuvenation dynamics control of classifiers with high prediction accuracy.
+    :param rejuvenation_power: Rejuvenation dynamics control of classifiers with high prediction accuracy.
 
-    :vartype ensemble_ : list of classifiers
-    :var The collection of fitted sub-estimators.
-    :vartype classes_ : array-like, shape (n_classes, )
-    :var The class labels.
-    :vartype weights_ : array-like, shape (n_estimators, )
-    :var Classifier weights.
+    :vartype ensemble_: list of classifiers
+    :var ensemble_: The collection of fitted sub-estimators.
+    :vartype classes_: array-like, shape (n_classes, )
+    :var classes_: The class labels.
+    :vartype weights_: array-like, shape (n_estimators, )
+    :var weights_: Classifier weights.
 
     :Examples:
 
