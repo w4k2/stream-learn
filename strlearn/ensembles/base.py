@@ -89,3 +89,45 @@ class StreamingEnsemble(ClassifierMixin, BaseEstimator):
         """MSEr score from original AWE algorithm."""
         prior_proba = self.prior_proba(y)
         return np.sum(prior_proba * np.power((1-prior_proba), 2))
+
+
+    def minority_majority_split(self, X, y, minority_name, majority_name):
+        """Returns minority and majority data
+
+        :type X: array-like, shape (n_samples, n_features)
+        :param X: The training input samples.
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
+
+        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
+        :returns: Tuple of minority and majority class samples
+        """
+
+        minority_ma = np.ma.masked_where(y == minority_name, y)
+        minority = X[minority_ma.mask]
+
+        majority_ma = np.ma.masked_where(y == majority_name, y)
+        majority = X[majority_ma.mask]
+
+        return minority, majority
+
+    def minority_majority_name(self, y):
+        """Returns minority and majority data
+
+        :type y: array-like, shape  (n_samples)
+        :param y: The target values.
+
+        :rtype: tuple (object, object)
+        :returns: Tuple of minority and majority class names.
+        """
+
+        unique, counts = np.unique(y, return_counts=True)
+
+        if counts[0] > counts[1]:
+            majority_name = unique[0]
+            minority_name = unique[1]
+        else:
+            majority_name = unique[1]
+            minority_name = unique[0]
+
+        return minority_name, majority_name

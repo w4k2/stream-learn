@@ -1,12 +1,11 @@
 import numpy as np
 import math
-from sklearn.base import ClassifierMixin, clone
-from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.base import clone
+from ..ensembles.base import StreamingEnsemble
 from sklearn.neighbors import NearestNeighbors
 
 
-class REA(ClassifierMixin, BaseEnsemble):
+class REA(StreamingEnsemble):
     """
     Recursive Ensemble Approach.
 
@@ -18,40 +17,18 @@ class REA(ClassifierMixin, BaseEnsemble):
                  n_estimators=10,
                  post_balance_ratio=0.5,
                  k_parameter=10,
-                 weighted_support=True):
-
-        self.base_estimator = base_estimator
-        self.n_estimators = n_estimators
+                 weighted=False,
+                 pruning=False):
+        super().__init__(base_estimator, n_estimators, weighted=weighted)
         self.post_balance_ratio = post_balance_ratio
         self.k_parameter = k_parameter
-        self.weighted_support = weighted_support
-
-    def fit(self, X, y):
-        """Fitting."""
-        self.partial_fit(X, y)
-        return self
+        self.pruning = pruning
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        X, y = check_X_y(X, y)
-
-        if not hasattr(self, "ensemble_"):
-            self.ensemble_ = []
-
-        # Check if is more than one class
-        if len(np.unique(y)) == 1:
-            raise ValueError("Only one class in data chunk.")
-
-        # Check feature consistency
-        if hasattr(self, "X_"):
-            if self.X_.shape[1] != X.shape[1]:
-                raise ValueError("number of features does not match")
-        self.X_, self.y_ = X, y
-
-        # Check classes
-        self.classes_ = classes
-        if self.classes_ is None:
-            self.classes_, _ = np.unique(y, return_inverse=True)
+        super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
 
         # Find minority and majority names
         if not hasattr(self, "minority_name") or not hasattr(self, "majority_name"):
@@ -64,10 +41,11 @@ class REA(ClassifierMixin, BaseEnsemble):
         self.ensemble_.append(clone(self.base_estimator).fit(res_X, res_y))
 
         # # Remove the worst model when ensemble becomes too large
-        # if len(self.ensemble_) >= self.n_estimators:
-        #     worst = np.argmin(self.weights_)
-        #     del self.ensemble_[worst]
-        #     np.delete(self.weights_, worst)
+        if self.pruning:
+            if len(self.ensemble_) >= self.n_estimators:
+                worst = np.argmin(self.weights_)
+                del self.ensemble_[worst]
+                np.delete(self.weights_, worst)
 
         # Recalculate the ensemble weights
         weights = []
@@ -80,7 +58,6 @@ class REA(ClassifierMixin, BaseEnsemble):
         return self
 
     def _resample(self, X, y):
-
         # Split the data
         minority, majority = self.minority_majority_split(X, y, self.minority_name, self.majority_name)
 
@@ -122,78 +99,3 @@ class REA(ClassifierMixin, BaseEnsemble):
         self.minority_data_ = np.concatenate((minority, self.minority_data_), axis=0)
 
         return res_X, res_y
-
-    def ensemble_support_matrix(self, X):
-        """Ensemble support matrix."""
-        return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
-
-    def predict_proba(self, X):
-        esm = self.ensemble_support_matrix(X)
-        esm = esm * np.array(self.weights_)[:, np.newaxis, np.newaxis]
-        average_support = np.mean(esm, axis=0)
-        return average_support
-
-    def predict(self, X):
-        """
-        Predict classes for X.
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-
-        :rtype: array-like, shape (n_samples, )
-        :returns: The predicted classes.
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-        X = check_array(X)
-        if X.shape[1] != self.X_.shape[1]:
-            raise ValueError("number of features does not match")
-
-        esm = self.ensemble_support_matrix(X)
-        average_support = np.mean(esm, axis=0)
-        prediction = np.argmax(average_support, axis=1)
-
-        # Return prediction
-        return self.classes_[prediction]
-
-    def minority_majority_split(self, X, y, minority_name, majority_name):
-        """Returns minority and majority data
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
-        :returns: Tuple of minority and majority class samples
-        """
-
-        minority_ma = np.ma.masked_where(y == minority_name, y)
-        minority = X[minority_ma.mask]
-
-        majority_ma = np.ma.masked_where(y == majority_name, y)
-        majority = X[majority_ma.mask]
-
-        return minority, majority
-
-    def minority_majority_name(self, y):
-        """Returns minority and majority data
-
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (object, object)
-        :returns: Tuple of minority and majority class names.
-        """
-
-        unique, counts = np.unique(y, return_counts=True)
-
-        if counts[0] > counts[1]:
-            majority_name = unique[0]
-            minority_name = unique[1]
-        else:
-            majority_name = unique[1]
-            minority_name = unique[0]
-
-        return minority_name, majority_name

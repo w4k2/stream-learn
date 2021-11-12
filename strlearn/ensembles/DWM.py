@@ -19,7 +19,6 @@ class DWM(StreamingEnsemble):
             return self
 
         # Initialization
-        super().partial_fit(X, y, classes)
         if len(self.ensemble_) == 0:
             self.weights_ = np.array([])
             self.age = 0
