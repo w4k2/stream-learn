@@ -22,7 +22,7 @@ def get_clfs():
         sl.ensembles.REA(GaussianNB()),
         sl.ensembles.KMC(GaussianNB()),
         sl.ensembles.CDS(GaussianNB()),
-        sl.ensembles.LearnppNIE(GaussianNB()),
+        sl.ensembles.NIE(GaussianNB()),
         sl.ensembles.OUSE(GaussianNB())
     ]
 
@@ -257,13 +257,13 @@ def test_KMC():
 def test_learnppCDS():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, sl.ensembles.LearnppCDS(GaussianNB(), n_estimators=5))
+    evaluator.process(stream, sl.ensembles.CDS(GaussianNB(), n_estimators=5))
 
 
 def test_learnppNIE():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
-    evaluator.process(stream, sl.ensembles.LearnppNIE(GaussianNB(), n_estimators=5))
+    evaluator.process(stream, sl.ensembles.NIE(GaussianNB(), n_estimators=5))
 
 
 def test_OUSE():

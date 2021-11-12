@@ -5,7 +5,7 @@ from ..ensembles.base import StreamingEnsemble
 
 
 class SEA(StreamingEnsemble):
-"""
+    """
     Streaming Ensemble Algorithm.
 
     Ensemble classifier composed of estimators trained on the fixed
