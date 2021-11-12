@@ -9,7 +9,7 @@ from .DWM import DWM
 from .REA import REA
 from .KMC import KMC
 from .CDS import CDS
-from .learnppNIE import LearnppNIE
+from .NIE import NIE
 from .OUSE import OUSE
 from .base import StreamingEnsemble
 
@@ -25,7 +25,7 @@ __all__ = [
     "REA",
     "KMC",
     "CDS",
-    "LearnppNIE",
+    "NIE",
     "OUSE",
     "StreamingEnsemble"
 ]

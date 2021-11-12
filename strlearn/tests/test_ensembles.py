@@ -21,7 +21,7 @@ def get_clfs():
         sl.ensembles.OnlineBagging(GaussianNB()),
         sl.ensembles.REA(GaussianNB()),
         sl.ensembles.KMC(GaussianNB()),
-        sl.ensembles.LearnppCDS(GaussianNB()),
+        sl.ensembles.CDS(GaussianNB()),
         sl.ensembles.LearnppNIE(GaussianNB()),
         sl.ensembles.OUSE(GaussianNB())
     ]

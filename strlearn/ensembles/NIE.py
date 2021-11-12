@@ -1,14 +1,11 @@
-from sklearn.base import ClassifierMixin, clone
-from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.base import clone
 from sklearn.metrics import f1_score
+from ..ensembles.base import StreamingEnsemble
 import numpy as np
-import math
 
-
-class LearnppNIE(ClassifierMixin, BaseEnsemble):
+class NIE(StreamingEnsemble):
     """
-    LearnppNIE
+    NIE
 
     Ditzler, Gregory, and Robi Polikar. "Incremental learning of concept drift from streaming imbalanced data." IEEE Transactions on Knowledge and Data Engineering 25.10 (2013): 2283-2301.
     """
@@ -18,38 +15,15 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
                  n_estimators=5,
                  param_a=1,
                  param_b=1):
-
-        self.base_estimator = base_estimator
-        self.n_estimators = n_estimators
+        super().__init__(base_estimator, n_estimators, weighted=True)
         self.param_a = param_a
         self.param_b = param_b
 
-    def fit(self, X, y):
-        """Fitting."""
-        self.partial_fit(X, y)
-        return self
-
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        X, y = check_X_y(X, y)
-
-        if not hasattr(self, "ensemble_"):
-            self.ensemble_ = []
-
-        # Check if is more than one class
-        if len(np.unique(y)) == 1:
-            raise ValueError("Only one class in data chunk.")
-
-        # Check feature consistency
-        if hasattr(self, "X_"):
-            if self.X_.shape[1] != X.shape[1]:
-                raise ValueError("number of features does not match")
-        self.X_, self.y_ = X, y
-
-        # Check classes
-        self.classes_ = classes
-        if self.classes_ is None:
-            self.classes_, _ = np.unique(y, return_inverse=True)
+        super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
 
         # Find minority and majority names
         if not hasattr(self, "minority_name") or not hasattr(self, "majority_name"):
@@ -61,7 +35,7 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
 
         self.weights_ = []
         for b in beta_mean:
-            self.weights_.append(math.log(1/b))
+            self.weights_.append(np.log(1/b))
 
         if len(self.ensemble_) >= self.n_estimators:
             ind = np.argmax(beta_mean)
@@ -108,36 +82,6 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
         """Ensemble support matrix."""
         return np.array([self._sub_ensemble_predict_proba(idx, X) for idx, member_clf in enumerate(self.ensemble_)])
 
-    def predict_proba(self, X):
-        esm = self.ensemble_support_matrix(X)
-        esm = esm * np.array(self.weights_)[:, np.newaxis, np.newaxis]
-        average_support = np.mean(esm, axis=0)
-        return average_support
-
-    def predict(self, X):
-        """
-        Predict classes for X.
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-
-        :rtype: array-like, shape (n_samples, )
-        :returns: The predicted classes.
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-        X = check_array(X)
-        if X.shape[1] != self.X_.shape[1]:
-            raise ValueError("number of features does not match")
-
-        esm = self.ensemble_support_matrix(X)
-        average_support = np.mean(esm, axis=0)
-        prediction = np.argmax(average_support, axis=1)
-
-        # Return prediction
-        return self.classes_[prediction]
-
     def _new_sub_ensemble(self, X, y):
         y = np.array(y)
         X = np.array(X)
@@ -150,7 +94,7 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
         N = len(X)
         sub_ensemble = []
         for k in range(T):
-            number_of_instances = int(math.floor(N/float(T)))
+            number_of_instances = int(np.floor(N/float(T)))
             idx = np.random.randint(len(majority), size=number_of_instances)
             sample = majority[idx, :]
             res_X = np.concatenate((sample, minority), axis=0)
@@ -169,44 +113,3 @@ class LearnppNIE(ClassifierMixin, BaseEnsemble):
                                   axis=1,
                                   arr=predictions)
         return maj
-
-    def minority_majority_split(self, X, y, minority_name, majority_name):
-        """Returns minority and majority data
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
-        :returns: Tuple of minority and majority class samples
-        """
-
-        minority_ma = np.ma.masked_where(y == minority_name, y)
-        minority = X[minority_ma.mask]
-
-        majority_ma = np.ma.masked_where(y == majority_name, y)
-        majority = X[majority_ma.mask]
-
-        return minority, majority
-
-    def minority_majority_name(self, y):
-        """Returns minority and majority data
-
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (object, object)
-        :returns: Tuple of minority and majority class names.
-        """
-
-        unique, counts = np.unique(y, return_counts=True)
-
-        if counts[0] > counts[1]:
-            majority_name = unique[0]
-            minority_name = unique[1]
-        else:
-            majority_name = unique[1]
-            minority_name = unique[0]
-
-        return minority_name, majority_name
