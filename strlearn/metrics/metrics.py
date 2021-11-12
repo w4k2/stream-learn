@@ -1,6 +1,7 @@
 """Evaluation metrics."""
 
 import numpy as np
+from warnings import warn
 
 def binary_confusion_matrix(y_true, y_pred):
     # tn, fp, fn, tp
@@ -49,7 +50,12 @@ def recall(y_true, y_pred):
     recall : float
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return np.nan_to_num(tp / (tp + fn))
+    score = np.nan
+    try:
+        score = np.nan_to_num(tp / (tp + fn))
+    except:
+        warn('Recall metric could not be calculated, NaN returned')
+    return score
 
 
 def precision(y_true, y_pred):

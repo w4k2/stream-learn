@@ -36,7 +36,7 @@ def get_different_stream():
 
 
 def get_imbalanced_stream():
-    return sl.streams.StreamGenerator(n_chunks=2, n_features=10, weights=[0.99,0.01])
+    return sl.streams.StreamGenerator(n_chunks=2, n_features=10, weights=[0.99,0.01], random_state=1410)
 
 def test_predict_proba():
     clfs = get_clfs()
@@ -286,4 +286,3 @@ def test_OUSE():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.OUSE(GaussianNB(), n_estimators=5, n_chunks=5))
-    

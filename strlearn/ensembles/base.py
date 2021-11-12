@@ -1,8 +1,8 @@
-from sklearn.base import ClassifierMixin
+from sklearn.base import ClassifierMixin, BaseEstimator
 from sklearn.utils.validation import check_X_y, check_is_fitted, check_array
 import numpy as np
 
-class StreamingEnsemble(ClassifierMixin):
+class StreamingEnsemble(ClassifierMixin, BaseEstimator):
     """Abstract, base ensemble streaming class"""
     def __init__(self, base_estimator, n_estimators, weighted=False):
         self.base_estimator = base_estimator
@@ -19,6 +19,8 @@ class StreamingEnsemble(ClassifierMixin):
         if not hasattr(self, "ensemble_"):
             self.ensemble_ = []
 
+        self.green_light = True
+
         # Check feature consistency
         if hasattr(self, "X_"):
             if self.X_.shape[1] != X.shape[1]:
@@ -29,6 +31,10 @@ class StreamingEnsemble(ClassifierMixin):
         self.classes_ = classes
         if self.classes_ is None:
             self.classes_, _ = np.unique(y, return_inverse=True)
+
+        # Check if it is possible to train new estimator
+        if len(np.unique(y)) != len(self.classes_):
+            self.green_light = False
 
         return self
 

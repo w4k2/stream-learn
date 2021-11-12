@@ -16,6 +16,8 @@ class AUE(StreamingEnsemble):
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
         super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
 
         # Compute baseline
         mser = self.mser(y)
@@ -24,13 +26,14 @@ class AUE(StreamingEnsemble):
         candidate = clone(self.base_estimator).fit(self.X_, self.y_)
 
         # Calculate its scores
-        scores = np.zeros(self.n_splits)
+        scores = []
         kf = KFold(n_splits=self.n_splits)
         for fold, (train, test) in enumerate(kf.split(X)):
-            fold_candidate = clone(self.base_estimator).fit(
-                self.X_[train], self.y_[train]
-            )
-            scores[fold] = self.msei(fold_candidate, self.X_[test], self.y_[test])
+            if len(np.unique(y[train])) != len(self.classes_):
+                continue
+            fold_candidate = clone(self.base_estimator).fit(self.X_[train], self.y_[train])
+            msei = self.msei(fold_candidate, self.X_[test], self.y_[test])
+            scores.append(msei)
 
         # Save scores
         candidate_msei = np.mean(scores)
