@@ -46,7 +46,7 @@ class StreamingEnsemble(ClassifierMixin, BaseEstimator):
         """Predict proba."""
         esm = self.ensemble_support_matrix(X)
         if self.weighted:
-            esm *= self.weights_[:, np.newaxis, np.newaxis]
+            esm *= np.array(self.weights_)[:, np.newaxis, np.newaxis]
 
         average_support = np.mean(esm, axis=0)
         return average_support

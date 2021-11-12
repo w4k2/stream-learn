@@ -1,12 +1,10 @@
-from sklearn.base import ClassifierMixin, clone
-from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.base import clone
 from sklearn.cluster import KMeans
 from sklearn.metrics import roc_auc_score
+from ..ensembles.base import StreamingEnsemble
 import numpy as np
 
-
-class KMC(ClassifierMixin, BaseEnsemble):
+class KMC(StreamingEnsemble):
     """
     KMC
 
@@ -19,37 +17,16 @@ class KMC(ClassifierMixin, BaseEnsemble):
     def __init__(self,
                  base_estimator=None,
                  n_estimators=10):
-
-        self.base_estimator = base_estimator
-        self.n_estimators = n_estimators
-
-    def fit(self, X, y):
-        """Fitting."""
-        self.partial_fit(X, y)
-        return self
+        super().__init__(base_estimator, n_estimators, weighted=True)
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        X, y = check_X_y(X, y)
+        super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
 
-        if not hasattr(self, "ensemble_"):
-            self.ensemble_ = []
+        if len(self.ensemble_) == 0:
             self.weights_ = []
-
-        # Check if is more than one class
-        if len(np.unique(y)) == 1:
-            raise ValueError("Only one class in data chunk.")
-
-        # Check feature consistency
-        if hasattr(self, "X_"):
-            if self.X_.shape[1] != X.shape[1]:
-                raise ValueError("number of features does not match")
-        self.X_, self.y_ = X, y
-
-        # Check classes
-        self.classes_ = classes
-        if self.classes_ is None:
-            self.classes_, _ = np.unique(y, return_inverse=True)
 
         # Find minority and majority names
         if not hasattr(self, "minority_name") or not hasattr(self, "majority_name"):
@@ -62,13 +39,10 @@ class KMC(ClassifierMixin, BaseEnsemble):
         new_classifier = clone(self.base_estimator).fit(res_X, res_y)
 
         if len(self.ensemble_) < self.n_estimators:
-
             # Append new estimator
             self.ensemble_.append(new_classifier)
             self.weights_.append(1)
-
         else:
-
             # Remove the worst model when ensemble becomes too large
             auc_array = []
 
@@ -101,78 +75,3 @@ class KMC(ClassifierMixin, BaseEnsemble):
         res_y = len(majority)*[self.majority_name] + len(minority)*[self.minority_name]
 
         return res_X, res_y
-
-    def ensemble_support_matrix(self, X):
-        """Ensemble support matrix."""
-        return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
-
-    def predict_proba(self, X):
-        esm = self.ensemble_support_matrix(X)
-        average_support = np.mean(esm, axis=0)
-        return average_support
-
-    def predict(self, X):
-        """
-        Predict classes for X.
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-
-        :rtype: array-like, shape (n_samples, )
-        :returns: The predicted classes.
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-        X = check_array(X)
-        if X.shape[1] != self.X_.shape[1]:
-            raise ValueError("number of features does not match")
-
-        esm = self.ensemble_support_matrix(X)
-        esm = esm * np.array(self.weights_)[:, np.newaxis, np.newaxis]
-        average_support = np.mean(esm, axis=0)
-        prediction = np.argmax(average_support, axis=1)
-
-        # Return prediction
-        return self.classes_[prediction]
-
-    def minority_majority_split(self, X, y, minority_name, majority_name):
-        """Returns minority and majority data
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (array-like, shape = [n_samples, n_features], array-like, shape = [n_samples, n_features])
-        :returns: Tuple of minority and majority class samples
-        """
-
-        minority_ma = np.ma.masked_where(y == minority_name, y)
-        minority = X[minority_ma.mask]
-
-        majority_ma = np.ma.masked_where(y == majority_name, y)
-        majority = X[majority_ma.mask]
-
-        return minority, majority
-
-    def minority_majority_name(self, y):
-        """Returns minority and majority data
-
-        :type y: array-like, shape  (n_samples)
-        :param y: The target values.
-
-        :rtype: tuple (object, object)
-        :returns: Tuple of minority and majority class names.
-        """
-
-        unique, counts = np.unique(y, return_counts=True)
-
-        if counts[0] > counts[1]:
-            majority_name = unique[0]
-            minority_name = unique[1]
-        else:
-            majority_name = unique[1]
-            minority_name = unique[0]
-
-        return minority_name, majority_name
