@@ -102,8 +102,6 @@ class WAE(StreamingEnsemble):
         self.weights_ = self.weights_[combination]
 
     def partial_fit(self, X, y, classes=None):
-        """Partial fitting."""
-
         # Initialization
         super().partial_fit(X, y, classes)
         if len(self.ensemble_) == 0:

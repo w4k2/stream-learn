@@ -15,6 +15,7 @@ class StreamingEnsemble(ClassifierMixin, BaseEstimator):
         return self
 
     def partial_fit(self, X, y, classes=None):
+        """Partial fitting"""
         X, y = check_X_y(X, y)
         if not hasattr(self, "ensemble_"):
             self.ensemble_ = []

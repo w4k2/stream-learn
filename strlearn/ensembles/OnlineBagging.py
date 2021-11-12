@@ -12,7 +12,6 @@ class OnlineBagging(StreamingEnsemble):
         super().__init__(base_estimator, n_estimators)
 
     def partial_fit(self, X, y, classes=None):
-        """Partial fitting."""
         super().partial_fit(X, y, classes)
         if not self.green_light:
             return self
