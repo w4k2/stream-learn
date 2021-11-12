@@ -11,25 +11,24 @@ class SEA(StreamingEnsemble):
     Ensemble classifier composed of estimators trained on the fixed
     number of previously seen data chunks, prunning the worst one in the pool.
 
-    Parameters
-    ----------
-    base_estimator : ClassifierMixin class object
-        Classification algorithm used as a base estimator.
-    n_estimators : integer, optional (default=10)
-        The maximum number of estimators trained using consecutive data chunks
-        and maintained in the ensemble.
-    metric : function, optional (default=accuracy_score)
-        The metric used to prune the worst classifier in the pool.
+    :type n_estimators: integer, optional (default=10)
+    :param n_estimators: The maximum number of estimators trained using consecutive data chunks and maintained in the ensemble.
+    :type metric: function, optional (default=accuracy_score)
+    :param metric: The metric used to prune the worst classifier in the pool.
+
+    :vartype ensemble_: list of classifiers
+    :var ensemble_: The collection of fitted sub-estimators.
+    :vartype classes_: array-like, shape (n_classes, )
+    :var classes_: The class labels.
 
     :Example:
 
     >>> import strlearn as sl
-    >>> from sklearn.naive_bayes import GaussianNB
-    >>> stream = sl.streams.StreamGenerator(GaussianNB())
+    >>> stream = sl.streams.StreamGenerator()
     >>> clf = sl.ensembles.SEA()
-    >>> ttt = sl.evaluators.TestThenTrain()
-    >>> ttt.process(stream, clf)
-    >>> print(ttt.scores)
+    >>> evaluator = sl.evaluators.TestThenTrainEvaluator()
+    >>> evaluator.process(clf, stream)
+    >>> print(evaluator.scores_)
     ...
     [[0.92       0.91879699 0.91848191 0.91879699 0.92523364]
     [0.945      0.94648779 0.94624912 0.94648779 0.94240838]
