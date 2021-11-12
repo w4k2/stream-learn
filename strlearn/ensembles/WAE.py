@@ -1,3 +1,5 @@
+"""Weighted Aging Ensemble."""
+
 import numpy as np
 from sklearn import base
 from sklearn.utils.multiclass import _check_partial_fit_first_call
@@ -18,6 +20,58 @@ AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 class WAE(StreamingEnsemble):
     """
     Weighted Aging Ensemble.
+
+    The method was inspired by Accuracy Weighted Ensemble (AWE) algorithm to which it introduces two main modifications: (I) classifier weights depend on the individual classifier accuracies and time they have been spending in the ensemble, (II) individual classifier are chosen on the basis on the non-pairwise diversity measure.
+
+    Parameters
+    ----------
+    base_estimator : ClassifierMixin class object
+        Classification algorithm used as a base estimator.
+    n_estimators : integer, optional (default=10)
+        The maximum number of estimators trained using consecutive data chunks
+        and maintained in the ensemble.
+    theta :  float, optional (default=0.1)
+        Threshold for weight calculation method and aging procedure control.
+    post_pruning : boolean, optional (default=False)
+        Whether the pruning is conducted before or after adding the classifier.
+    pruning_criterion : string, optional (default='accuracy')
+        Accuracy.
+    weight_calculation_method : string, optional (default='kuncheva')
+        same_for_each, proportional_to_accuracy, kuncheva, pta_related_to_whole, bell_curve,
+    aging_method : string, optional (default='weights_proportional')
+        weights_proportional, constant, gaussian.
+    rejuvenation_power : float, optional (default=0.0)
+        Rejuvenation dynamics control of classifiers with high prediction accuracy.
+
+    Attributes
+    ----------
+    ensemble_ : list of classifiers
+        The collection of fitted sub-estimators.
+    classes_ : array-like, shape (n_classes, )
+        The class labels.
+    weights_ : array-like, shape (n_estimators, )
+        Classifier weights.
+
+    Examples
+    --------
+    >>> import strlearn as sl
+    >>> from sklearn.naive_bayes import GaussianNB
+    >>> stream = sl.streams.StreamGenerator()
+    >>> clf = sl.ensembles.WAE(GaussianNB())
+    >>> ttt = sl.evaluators.TestThenTrain(
+    >>> metrics=(sl.metrics.balanced_accuracy_score))
+    >>> ttt.process(stream, clf)
+    >>> print(ttt.scores)
+    [[[0.91386218]
+      [0.93032581]
+      [0.90907219]
+      [0.90544872]
+      [0.90466186]
+      [0.91956783]
+      [0.90776942]
+      [0.92685422]
+      [0.92895186]
+      ...
     """
 
     def __init__(
