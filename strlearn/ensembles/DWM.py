@@ -1,42 +1,28 @@
 import numpy as np
-from sklearn.base import ClassifierMixin, clone
-from sklearn.ensemble import BaseEnsemble
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.base import clone
+from ..ensembles.base import StreamingEnsemble
 
-class DWM(ClassifierMixin, BaseEnsemble):
+class DWM(StreamingEnsemble):
     """DWM"""
-    def __init__(self, base_estimator=None, beta=.5, theta=.01, p = 1, weighted_support=False):
+    def __init__(self, base_estimator=None, beta=.5, theta=.01, p = 1, weighted=False):
         """Initialization."""
-        self.base_estimator = base_estimator
+        super().__init__(base_estimator, n_estimators=0, weighted=weighted)
         self.beta = beta
         self.theta = theta
         self.p = p
-        self.weighted_support = weighted_support
-
-
-    def fit(self, X, y):
-        """Fitting."""
-        self.partial_fit(X, y)
-        return self
 
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        X, y = check_X_y(X, y)
-        if not hasattr(self, "ensemble_"):
-            self.ensemble_ = []
+
+        super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
+
+        # Initialization
+        super().partial_fit(X, y, classes)
+        if len(self.ensemble_) == 0:
             self.weights_ = np.array([])
             self.age = 0
-
-        # Check feature consistency
-        if hasattr(self, "X_"):
-            if self.X_.shape[1] != X.shape[1]:
-                raise ValueError("number of features does not match")
-        self.X_, self.y_ = X, y
-
-        # Check classes
-        self.classes_ = classes
-        if self.classes_ is None:
-            self.classes_, _ = np.unique(y, return_inverse=True)
 
         # Iterate patterns
         for i, x in enumerate(X):
@@ -84,39 +70,3 @@ class DWM(ClassifierMixin, BaseEnsemble):
         self.age += 1
 
         return self
-
-    def ensemble_support_matrix(self, X):
-        """Ensemble support matrix."""
-        return np.nan_to_num(np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_]))
-
-    def predict_proba(self, X):
-        esm = self.ensemble_support_matrix(X)
-        average_support = np.mean(esm, axis=0)
-        return average_support
-
-    def predict(self, X):
-        """
-        Predict classes for X.
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-
-        :rtype: array-like, shape (n_samples, )
-        :returns: The predicted classes.
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-        X = check_array(X)
-        if X.shape[1] != self.X_.shape[1]:
-            raise ValueError("number of features does not match")
-
-        esm = np.nan_to_num(self.ensemble_support_matrix(X))
-        if self.weighted_support:
-            esm = esm * self.weights_[:, np.newaxis, np.newaxis]
-
-        average_support = np.mean(esm, axis=0)
-        prediction = np.argmax(average_support, axis=1)
-
-        # Return prediction
-        return self.classes_[prediction]
