@@ -1,15 +1,8 @@
-"""
-Weighted Aging Ensemble.
-
-"""
-
 import numpy as np
 from sklearn import base
-from sklearn.base import ClassifierMixin
-from sklearn.ensemble import BaseEnsemble
 from sklearn.utils.multiclass import _check_partial_fit_first_call
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
-
+from ..ensembles.base import StreamingEnsemble
 from ..ensembles import pruning
 
 WEIGHT_CALCULATION = (
@@ -22,8 +15,7 @@ WEIGHT_CALCULATION = (
 
 AGING_METHOD = ("weights_proportional", "constant", "gaussian")
 
-
-class WAE(BaseEnsemble, ClassifierMixin):
+class WAE(StreamingEnsemble):
     """
     Weighted Aging Ensemble.
     """
@@ -40,9 +32,8 @@ class WAE(BaseEnsemble, ClassifierMixin):
         rejuvenation_power=0.0,
     ):
         """Initialization."""
-        self.base_estimator = base_estimator
+        super().__init__(base_estimator, n_estimators, weighted=True)
         self.pruning_criterion = pruning_criterion
-        self.n_estimators = n_estimators
         self.theta = theta
         self.post_pruning = post_pruning
         self.weight_calculation_method = weight_calculation_method
@@ -61,40 +52,17 @@ class WAE(BaseEnsemble, ClassifierMixin):
         self.iterations_ = self.iterations_[combination]
         self.weights_ = self.weights_[combination]
 
-    # Fitting
-    def fit(self, X, y):
-        """Fitting."""
-        X, y = check_X_y(X, y)
-        self.X_ = X
-        self.y_ = y
-
-        candidate_clf = base.clone(self.base_estimator)
-        candidate_clf.fit(X, y)
-
-        self.ensemble_ = [candidate_clf]
-        self.weights_ = np.array([1])
-        self.classes_, _ = np.unique(y, return_inverse=True)
-        self.age_ = 0
-        self.iterations_ = np.array([])
-
-        # Return the classifier
-        return self
-
     def partial_fit(self, X, y, classes=None):
         """Partial fitting."""
-        X, y = check_X_y(X, y)
-        self.X_ = X
-        self.y_ = y
 
-        if _check_partial_fit_first_call(self, classes):
-            self.classes_ = classes
-
-            self.ensemble_ = []
+        # Initialization
+        super().partial_fit(X, y, classes)
+        if len(self.ensemble_) == 0:
             self.weights_ = np.array([1])
             self.age_ = 0
             self.iterations_ = np.array([])
 
-        """Partial fitting"""
+        # Scoring
         if self.age_ > 0:
             self.overall_accuracy = self.score(
                 self.previous_X, self.previous_y)
@@ -104,7 +72,6 @@ class WAE(BaseEnsemble, ClassifierMixin):
             self._prune()
 
         # Preparing and training new candidate
-        self.classes_ = classes
         candidate_clf = base.clone(self.base_estimator)
         candidate_clf.fit(X, y)
         self.ensemble_.append(candidate_clf)
@@ -191,45 +158,3 @@ class WAE(BaseEnsemble, ClassifierMixin):
         combination = np.array(np.where(self.weights_ > 0))[0]
         if len(combination) > 0:
             self._filter_ensemble(combination)
-
-    def ensemble_support_matrix(self, X):
-        """ESM."""
-        return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
-
-    def predict_proba(self, X):
-        """Aposteriori probabilities."""
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-
-        # Weight support before acumulation
-        weighted_support = (
-            self.ensemble_support_matrix(
-                X) * self.weights_[:, np.newaxis, np.newaxis]
-        )
-
-        # Acumulate supports
-        acumulated_weighted_support = np.sum(weighted_support, axis=0)
-        return acumulated_weighted_support
-
-    def predict(self, X):
-        """
-        Predict classes for X.
-
-        :type X: array-like, shape (n_samples, n_features)
-        :param X: The training input samples.
-
-        :rtype: array-like, shape (n_samples, )
-        :returns: The predicted classes.
-        """
-        # Check is fit had been called
-        check_is_fitted(self, "classes_")
-
-        # Input validation
-        X = check_array(X)
-        if X.shape[1] != self.X_.shape[1]:
-            raise ValueError("number of features does not match")
-
-        supports = self.predict_proba(X)
-        prediction = np.argmax(supports, axis=1)
-
-        return self.classes_[prediction]

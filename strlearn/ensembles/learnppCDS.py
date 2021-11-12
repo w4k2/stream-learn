@@ -138,9 +138,9 @@ class LearnppCDS(ClassifierMixin, BaseEnsemble):
                                                     self.minority_name,
                                                     self.majority_name)
         if len(minority) > 6:
-            res_X, res_y = SMOTE().fit_sample(X, y)
+            res_X, res_y = SMOTE().fit_resample(X, y)
         else:
-            res_X, res_y = SMOTE(k_neighbors=len(minority)-1).fit_sample(X, y)
+            res_X, res_y = SMOTE(k_neighbors=len(minority)-1).fit_resample(X, y)
         return res_X, res_y
 
     def ensemble_support_matrix(self, X):

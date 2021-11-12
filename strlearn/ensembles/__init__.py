@@ -11,6 +11,7 @@ from .KMC import KMC
 from .learnppCDS import LearnppCDS
 from .learnppNIE import LearnppNIE
 from .OUSE import OUSE
+from .base import StreamingEnsemble
 
 __all__ = [
     "OnlineBagging",
@@ -25,5 +26,6 @@ __all__ = [
     "KMC",
     "LearnppCDS",
     "LearnppNIE",
-    "OUSE"
+    "OUSE",
+    "StreamingEnsemble"
 ]

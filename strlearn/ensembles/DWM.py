@@ -87,7 +87,7 @@ class DWM(ClassifierMixin, BaseEnsemble):
 
     def ensemble_support_matrix(self, X):
         """Ensemble support matrix."""
-        return np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_])
+        return np.nan_to_num(np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_]))
 
     def predict_proba(self, X):
         esm = self.ensemble_support_matrix(X)

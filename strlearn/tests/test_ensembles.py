@@ -38,7 +38,6 @@ def get_different_stream():
 def get_imbalanced_stream():
     return sl.streams.StreamGenerator(n_chunks=2, n_features=10, weights=[0.99,0.01])
 
-
 def test_predict_proba():
     clfs = get_clfs()
     stream = get_stream()
@@ -47,12 +46,12 @@ def test_predict_proba():
     for clf in clfs:
         if hasattr(clf, "predict_proba"):
             clf.fit(X, y)
+            print("CLF", clf)
             pp = clf.predict_proba(X)
             y_pred = clf.predict(X)
             y_pred_pp = np.argmax(pp, axis=1)
 
             assert np.array_equal(y_pred, y_pred_pp)
-
 
 def test_ensembles_fit():
     clfs = get_clfs()
@@ -287,3 +286,4 @@ def test_OUSE():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.OUSE(GaussianNB(), n_estimators=5, n_chunks=5))
+    

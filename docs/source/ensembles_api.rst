@@ -5,6 +5,7 @@ Ensembles module
 .. currentmodule:: strlearn.ensembles
 
 .. autosummary::
+  StreamingEnsemble
   AUE
 	AWE
 	DWM
