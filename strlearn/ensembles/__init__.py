@@ -8,7 +8,7 @@ from .UOB import UOB
 from .DWM import DWM
 from .REA import REA
 from .KMC import KMC
-from .learnppCDS import LearnppCDS
+from .CDS import CDS
 from .learnppNIE import LearnppNIE
 from .OUSE import OUSE
 from .base import StreamingEnsemble
@@ -24,7 +24,7 @@ __all__ = [
     "DWM",
     "REA",
     "KMC",
-    "LearnppCDS",
+    "CDS",
     "LearnppNIE",
     "OUSE",
     "StreamingEnsemble"

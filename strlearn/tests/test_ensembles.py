@@ -106,22 +106,6 @@ def test_minority_majority_name_split():
             clf.fit(X, y)
 
 
-def test_one_class():
-    clfs = get_clfs()
-    stream = get_imbalanced_stream()
-    X, y = stream.get_chunk()
-
-    minority_ma = np.ma.masked_where(y == 0, y)
-    X = X[minority_ma.mask]
-    y = y[minority_ma.mask]
-
-
-    for clf in clfs:
-        if hasattr(clf, "minority_majority_name"):
-            with pytest.raises(ValueError):
-                clf.fit(X, y)
-
-
 def test_DWM():
     stream = get_stream()
     evaluator = sl.evaluators.TestThenTrain()
