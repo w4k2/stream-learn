@@ -104,6 +104,9 @@ class WAE(StreamingEnsemble):
     def partial_fit(self, X, y, classes=None):
         # Initialization
         super().partial_fit(X, y, classes)
+        if not self.green_light:
+            return self
+        
         if len(self.ensemble_) == 0:
             self.weights_ = np.array([1])
             self.age_ = 0
