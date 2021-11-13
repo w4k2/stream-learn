@@ -148,7 +148,7 @@ def balanced_accuracy_score(y_true, y_pred):
     Calculates the balanced accuracy score.
 
     The balanced accuracy for the multiclass problems is defined as the average of recall obtained on each class. For binary problems it is denoted by the average of recall and specificity (also called true negative rate).
-
+    
     .. math::
         BAC = \frac{Recall + Specificity}{2}
 
