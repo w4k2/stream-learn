@@ -28,6 +28,7 @@ Welcome to stream-learn documentation!
    evaluators_api
    ensembles_api
    classifiers_api
+   utils_api
 
 .. toctree::
    :maxdepth: 2

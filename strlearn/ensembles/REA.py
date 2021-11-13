@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from sklearn.base import clone
 from ..ensembles.base import StreamingEnsemble
 from sklearn.neighbors import NearestNeighbors
@@ -51,7 +50,7 @@ class REA(StreamingEnsemble):
         for clf in self.ensemble_:
             y_pred = clf.predict(X).astype(int)
             probas_ = clf.predict_proba(X)[np.arange(len(X)), y_pred]
-            weights.append(math.log(1/(np.sum((1-probas_)**2)/len(X))))
+            weights.append(np.log(1/(np.sum((1-probas_)**2)/len(X))))
         self.weights_ = np.array(weights)
 
         return self

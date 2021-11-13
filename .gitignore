@@ -145,5 +145,5 @@ work.py
 *.arff
 test_stream.*
 
-validator.py
-validation.npy
+validator*.py
+validation*.npy

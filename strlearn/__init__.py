@@ -1,4 +1,4 @@
-from . import classifiers, ensembles, evaluators, metrics, streams
+from . import classifiers, ensembles, evaluators, metrics, streams, utils
 from ._version import __version__
 
 __all__ = [
@@ -7,5 +7,6 @@ __all__ = [
     "evaluators",
     "metrics",
     "streams",
+    "utils",
     "__version__",
 ]
