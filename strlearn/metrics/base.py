@@ -54,6 +54,7 @@ def recall(y_true, y_pred):
     (e.g. the minority class instances) and is denoted as
 
     .. math::
+    
        Recall = \frac{tp}{tp + fn}
 
     :type y_true: array-like, shape (n_samples)
