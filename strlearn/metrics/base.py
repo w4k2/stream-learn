@@ -33,8 +33,8 @@ def specificity(y_true, y_pred):
     Calculates the specificity.
 
     .. math::
-    
-        Specificity = \frac{tn}{tn + fp}
+
+        Specificity = \\frac{tn}{tn + fp}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -58,7 +58,7 @@ def recall(y_true, y_pred):
 
     .. math::
 
-        Recall = \frac{tp}{tp + fn}
+        Recall = \\frac{tp}{tp + fn}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -86,7 +86,7 @@ def precision(y_true, y_pred):
 
     .. math::
 
-        Precision = \frac{tp}{tp + fp}
+        Precision = \\frac{tp}{tp + fp}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -108,7 +108,7 @@ def fbeta_score(y_true, y_pred, beta):
 
     .. math::
 
-        F_\beta = (1+\beta^2) * \frac{Precision * Recall}{(\beta^2 * Precision) + Recall}
+        F_\\beta = (1+\\beta^2) * \\frac{Precision * Recall}{(\\beta^2 * Precision) + Recall}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -135,7 +135,7 @@ def f1_score(y_true, y_pred):
 
     .. math::
 
-        F_1 = 2 * \frac{Precision * Recall}{Precision + Recall}
+        F_1 = 2 * \\frac{Precision * Recall}{Precision + Recall}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -156,7 +156,7 @@ def balanced_accuracy_score(y_true, y_pred):
 
     .. math::
 
-        BAC = \frac{Recall + Specificity}{2}
+        BAC = \\frac{Recall + Specificity}{2}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
