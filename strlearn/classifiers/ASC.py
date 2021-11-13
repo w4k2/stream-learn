@@ -1,5 +1,3 @@
-"""Accumulated samples classifier."""
-
 import numpy as np
 from sklearn.base import ClassifierMixin, clone
 from sklearn.ensemble import BaseEnsemble

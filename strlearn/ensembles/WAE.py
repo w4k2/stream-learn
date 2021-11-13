@@ -106,7 +106,7 @@ class WAE(StreamingEnsemble):
         super().partial_fit(X, y, classes)
         if not self.green_light:
             return self
-        
+
         if len(self.ensemble_) == 0:
             self.weights_ = np.array([1])
             self.age_ = 0
@@ -202,7 +202,6 @@ class WAE(StreamingEnsemble):
             self.iterations_[mask] -= self.rejuvenation_power * (
                 self.weights_[mask] - w
             )
-            # TODO do przemyslenia
 
     def _extinct(self):
         combination = np.array(np.where(self.weights_ > 0))[0]

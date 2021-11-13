@@ -110,7 +110,7 @@ class StreamGenerator:
             else np.ones(self.n_samples)
         )
 
-        # Szybka naprawa, żeby dało się przepuścić podzielną z resztą liczbę dryfów
+        # Ensuring that the probabilities are divisible by the number of drifts
         probabilities = np.ones(self.n_chunks * self.chunk_size) * _probabilities[-1]
         probabilities[: _probabilities.shape[0]] = _probabilities
 
@@ -118,8 +118,7 @@ class StreamGenerator:
 
     def _make_classification(self):
         np.random.seed(self.random_state)
-        # To jest dziwna koncepcja z wagami z wierszy macierzy diagonalnej ale działa.
-        # Jak coś działa to jest dobre.
+        # Using concept with weights from the rows of a diagonal matrix
         self.concepts = np.array(
             [
                 [
@@ -150,10 +149,10 @@ class StreamGenerator:
                 self.concept_sigmoid_spacing, self.n_drifts
             )
 
-            # Szum
+            # Noise
             self.concept_noise = np.random.rand(self.n_samples)
 
-            # Inkrementalny
+            # Incremental drift
             if self.incremental:
                 # Something
                 self.a_ind = np.zeros(self.concept_probabilities.shape).astype(int)
@@ -173,9 +172,9 @@ class StreamGenerator:
                 b = b * (self.concept_probabilities)
                 c = a + b
 
-            # Gradualny
+            # Gradual drift
             else:
-                # Selekcja klas
+                # Class selection
                 self.concept_selector = (
                     self.concept_probabilities < self.concept_noise
                 ).astype(int)
@@ -191,7 +190,7 @@ class StreamGenerator:
                             np.where(self.concept_selector[start:end] == 0)[0] + start
                         ] = i + (i % 2)
 
-        # Selekcja klas na potrzeby doboru balansu
+        # Class selection for balancing
         self.balance_noise = np.random.rand(self.n_samples)
 
         # Case of same size of all classes
@@ -223,7 +222,6 @@ class StreamGenerator:
                 self.class_probabilities *= self.balance_amplitude
                 self.class_probabilities += 0.5
 
-                # Will it work?
                 self.class_selector = (
                     self.class_probabilities < self.balance_noise
                 ).astype(int)
@@ -249,15 +247,15 @@ class StreamGenerator:
 
                 self.class_selector = np.ravel(self.class_selector)
 
-        # Przypisanie klas i etykiet
+        # Assigning classes and labels
         if self.n_drifts > 0:
-            # Jeśli dryfy, przypisz koncepty
+            # If there are drifts - assign concepts
             if self.incremental:
                 self.concepts = c
             else:
                 self.concepts = np.choose(self.concept_selector, self.concepts)
         else:
-            # Jeśli nie, przecież jest jeden, więc spłaszcz
+            # If not - flatten
             self.concepts = np.squeeze(self.concepts)
 
         # Assign objects to real classes

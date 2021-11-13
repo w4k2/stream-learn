@@ -4,8 +4,6 @@ import numpy as np
 from sklearn import metrics
 
 PRUNING_CRITERION = ('accuracy')
-# TODO Liczba kombinacji jest opcjonalna. Przy jej braku dokonujemy przegladu zupelnego.
-
 
 class OneOffPruner(object):
     def __init__(self, ensemble_support_matrix, y, pruning_criterion='accuracy'):
