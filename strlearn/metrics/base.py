@@ -7,6 +7,9 @@ def binary_confusion_matrix(y_true, y_pred):
     """
     Calculates the binary confusion matrics.
 
+    .. image:: plots/confusion_matrix.png
+        :align: center
+
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
     :type y_pred: array-like, shape (n_samples)
@@ -45,6 +48,13 @@ def specificity(y_true, y_pred):
 def recall(y_true, y_pred):
     """
     Calculates the recall.
+
+    Recall (also known as sensitivity or true positive rate) represents the
+    classifier's ability to find all the positive data samples in the dataset
+    (e.g. the minority class instances) and is denoted as
+
+    .. math::
+       Recall = \frac{tp}{tp + fn}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
