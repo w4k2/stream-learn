@@ -214,8 +214,6 @@ recall obtained on each class. For binary problems it is denoted by the average
 of recall and specificity (also called true negative rate).
 
 .. math::
-    Specificity = \frac{tn}{tn + fp}
-.. math::
     BAC = \frac{Recall + Specificity}{2}
 
 **Example**

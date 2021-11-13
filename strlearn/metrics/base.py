@@ -8,7 +8,6 @@ def binary_confusion_matrix(y_true, y_pred):
     Calculates the binary confusion matrics.
 
     .. image:: plots/confusion_matrix.png
-        :align: center
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -33,6 +32,9 @@ def specificity(y_true, y_pred):
     """
     Calculates the specificity.
 
+    .. math::
+        Specificity = \frac{tn}{tn + fp}
+
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
     :type y_pred: array-like, shape (n_samples)
@@ -52,6 +54,9 @@ def recall(y_true, y_pred):
     Recall (also known as sensitivity or true positive rate) represents the
     classifier's ability to find all the positive data samples in the dataset
     (e.g. the minority class instances) and is denoted as
+
+    .. math::
+        Recall = \frac{tp}{tp + fn}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -75,7 +80,10 @@ def precision(y_true, y_pred):
     Calculates the precision.
 
     Precision (also called positive predictive value) expresses the probability
-    of correct detection of positive samples.
+    of correct detection of positive samples and is denoted as
+
+    .. math::
+        Precision = \frac{tp}{tp + fp}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -93,7 +101,10 @@ def fbeta_score(y_true, y_pred, beta):
     """
     Calculates the F-beta score.
 
-    The F-beta score can be interpreted as a weighted harmonic mean of precision and recall taking both metrics into account and punishing extreme values. The ``beta`` parameter determines the recall's weight. ``beta`` < 1 gives more weight to precision, while ``beta`` > 1 prefers recall.
+    The F-beta score can be interpreted as a weighted harmonic mean of precision and recall taking both metrics into account and punishing extreme values. The ``beta`` parameter determines the recall's weight. ``beta`` < 1 gives more weight to precision, while ``beta`` > 1 prefers recall. The formula for the F-beta score is
+
+    .. math::
+        F_\beta = (1+\beta^2) * \frac{Precision * Recall}{(\beta^2 * Precision) + Recall}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -116,6 +127,10 @@ def f1_score(y_true, y_pred):
     Calculates the f1_score.
 
     The F1 score can be interpreted as a F-beta score, where :math:`\beta` parameter equals 1. It is a harmonic mean of precision and recall.
+    The formula for the F1 score is
+
+    .. math::
+        F_1 = 2 * \frac{Precision * Recall}{Precision + Recall}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -134,6 +149,9 @@ def balanced_accuracy_score(y_true, y_pred):
 
     The balanced accuracy for the multiclass problems is defined as the average of recall obtained on each class. For binary problems it is denoted by the average of recall and specificity (also called true negative rate).
 
+    .. math::
+        BAC = \frac{Recall + Specificity}{2}
+
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
     :type y_pred: array-like, shape (n_samples)
@@ -151,6 +169,9 @@ def geometric_mean_score_1(y_true, y_pred):
     Calculates the geometric mean score.
 
     The geometric mean (G-mean) tries to maximize the accuracy on each of the classes while keeping these accuracies balanced. For N-class problems it is a N root of the product of class-wise recall. For binary classification G-mean is denoted as the squared root of the product of the recall and specificity.
+
+    .. math::
+        Gmean1 = \sqrt{Recall * Specificity}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
