@@ -2,10 +2,10 @@
 
 [![Travis Status](https://travis-ci.org/w4k2/stream-learn.svg?branch=master)](https://travis-ci.org/w4k2/stream-learn)
 [![Coverage Status](https://coveralls.io/repos/github/w4k2/stream-learn/badge.svg?branch=master&service=github)](https://coveralls.io/github/w4k2/stream-learn?branch=master&service=github)
-[![Documentation Status](https://readthedocs.org/projects/stream-learn/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/stream-learn/badge/?version=latest)](http://stream-learn.readthedocs.io)
 [![PyPI version](https://badge.fury.io/py/stream-learn.svg)](https://badge.fury.io/py/stream-learn)
 
-
+![](docs/source/plots/hello.gif)
 
 The `stream-learn` module is a set of tools necessary for processing data streams using `scikit-learn` estimators. The batch processing approach is used here, where the dataset is passed to the classifier in smaller, consecutive subsets called `chunks`. The module consists of five sub-modules:
 
