@@ -14,7 +14,7 @@ The simplest variation of data streams are *stationary streams*. They contain on
   StreamGenerator()
 
 
-.. image:: _static/stationary.png
+.. image:: _static/stationary.gif
 
 The above illustration contains the series of scatter plots for a two-dimensional stationary stream with the binary problem. The ``StreamGenerator`` class in the initializer accepts almost all standard attributes of the ``make_classification()`` function, so to get exactly the distribution as above, the used call was:
 
@@ -54,9 +54,9 @@ This type of drift occurs when the concept from which the data stream is generat
 
 .. code-block:: python
 
-  StreamGenerator(n_drifts=1)
+  StreamGenerator(n_drifts=2)
 
-.. image:: _static/sudden.png
+.. image:: _static/sudden.gif
 
 Gradual drift
 -------------
@@ -69,10 +69,10 @@ comparing the concept probabilities with the generated random noise and, dependi
 .. code-block:: python
 
   StreamGenerator(
-      n_drifts=1, concept_sigmoid_spacing=5
+      n_drifts=2, concept_sigmoid_spacing=5
   )
 
-.. image:: _static/gradual.png
+.. image:: _static/gradual.gif
 
 Incremental (Stepwise) drift
 ----------------------------
@@ -82,10 +82,10 @@ The incremental drift occurs when we are dealing with a series of barely noticea
 .. code-block:: python
 
   StreamGenerator(
-      n_drifts=1, concept_sigmoid_spacing=5, incremental=True
+      n_drifts=2, concept_sigmoid_spacing=5, incremental=True
   )
 
-.. image:: _static/incremental.png
+.. image:: _static/incremental.gif
 
 Recurrent drift
 -----------------------
@@ -98,7 +98,7 @@ The cyclic repetition of class distributions is a completely different property 
       n_drifts=2, recurring=True
   )
 
-.. image:: _static/recurring.png
+.. image:: _static/recurring.gif
 
 Non-recurring drift
 ---------------------------
@@ -111,7 +111,7 @@ The default mode of consecutive concept occurences is a non-recurring drift, whe
       n_drifts=2
   )
 
-.. image:: _static/nonrecurring.png
+.. image:: _static/nonrecurring.gif
 
 Class imbalance
 ===============
@@ -122,7 +122,7 @@ Another area of data stream properties, different from the concept drift phenome
 
   StreamGenerator()
 
-.. image:: _static/stationary.png
+.. image:: _static/stationary.gif
 
 
 Stationary imbalanced stream
@@ -135,7 +135,7 @@ The basic type of problem in which we are dealing with disturbed class distribut
 
   StreamGenerator(weights=[0.3, 0.7])
 
-.. image:: _static/static-imbalanced.png
+.. image:: _static/static-imbalanced.gif
 
 Dynamically imbalanced stream
 -----------------------------
@@ -150,7 +150,7 @@ A less common type of *imbalanced data*, impossible to obtain in static datasets
 
   StreamGenerator(weights=(2, 5, 0.9))
 
-.. image:: _static/dynamic-imbalanced.png
+.. image:: _static/dynamic-imbalanced.gif
 
 Mixing drift properties
 =======================
@@ -164,4 +164,4 @@ Of course, when generating data streams, we don't have to limit ourselves to jus
       recurring=True, incremental=True
   )
 
-.. image:: _static/disco.png
+.. image:: _static/disco.gif
