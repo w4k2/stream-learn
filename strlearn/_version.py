@@ -1,3 +1,3 @@
 """``stream-learn``"""
 
-__version__ = "0.8.15"
+__version__ = "0.8.16"

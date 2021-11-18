@@ -45,7 +45,12 @@ def specificity(y_true, y_pred):
     :returns: Specificity score.
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return np.nan_to_num(tn / (tn + fp))
+    score = np.nan
+    try:
+        score = np.nan_to_num(tn / (tn + fp))
+    except:
+        warn('Recall metric could not be calculated, NaN returned')
+    return score
 
 
 def recall(y_true, y_pred):
@@ -97,7 +102,13 @@ def precision(y_true, y_pred):
     :returns: Precision score.
     """
     tn, fp, fn, tp = binary_confusion_matrix(y_true, y_pred)
-    return np.nan_to_num(tp / (tp + fp))
+
+    score = np.nan
+    try:
+        score = np.nan_to_num(tp / (tp + fp))
+    except:
+        warn('Recall metric could not be calculated, NaN returned')
+    return score
 
 
 def fbeta_score(y_true, y_pred, beta):
