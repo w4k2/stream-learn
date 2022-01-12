@@ -19,14 +19,27 @@ You can read more about each module in the [documentation page](https://w4k2.git
 
 ## Citation policy
 
-If you use stream-learn in a scientific publication, we would appreciate citations to the following paper:
+If you use stream-learn in a scientific publication, we would appreciate citation to the following paper:
 
-```
+<!-- ```
 @article{ksieniewicz2020stream,
   title={stream-learn--open-source Python library for difficult data stream batch analysis},
   author={Ksieniewicz, Pawe{\l} and Zyblewski, Pawe{\l}},
   journal={arXiv preprint arXiv:2001.11077},
   year={2020}
+}
+``` -->
+
+```
+@article{Ksieniewicz2022,
+  doi = {10.1016/j.neucom.2021.10.120},
+  url = {https://doi.org/10.1016/j.neucom.2021.10.120},
+  year = {2022},
+  month = jan,
+  publisher = {Elsevier {BV}},
+  author = {P. Ksieniewicz and P. Zyblewski},
+  title = {stream-learn {\textemdash} open-source Python library for difficult data stream batch analysis},
+  journal = {Neurocomputing}
 }
 ```
 

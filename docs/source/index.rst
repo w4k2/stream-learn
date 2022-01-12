@@ -37,6 +37,7 @@ Welcome to stream-learn documentation!
    :caption: Other informations
 
    about
+   cite
 
 .. image:: plots/hello.gif
 
