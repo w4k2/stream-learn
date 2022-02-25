@@ -15,7 +15,7 @@ The `stream-learn` module is a set of tools necessary for processing data stream
 - [`ensembles`](https://w4k2.github.io/stream-learn/ensembles.html) - containing standard team models of stream data classification,
 - [`utils`](https://w4k2.github.io/stream-learn/evaluators.html) - containing typical classification quality metrics in data streams.
 
-You can read more about each module in the [documentation page](https://w4k2.github.io/stream-learn/).
+You can read more about each module in the [documentation page](https://stream-learn.readthedocs.io/en/latest/).
 
 ## Citation policy
 
