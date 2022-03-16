@@ -31,6 +31,8 @@ class SampleWeightedMetaEstimator(BaseEstimator, ClassifierMixin):
 
         self.clf_.partial_fit(X_, y_, classes)
 
+        return self
+
     def predict_proba(self, X):
         return self.clf_.predict_proba(X)
 
