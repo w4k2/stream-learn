@@ -1,7 +1,8 @@
 import numpy as np
 from sklearn.base import clone
-from ..ensembles.base import StreamingEnsemble
-from ..classifiers import SampleWeightedMetaEstimator as SWME
+from sklearn.model_selection import KFold
+from strlearn.ensembles.base import StreamingEnsemble
+from strlearn.classifiers import SampleWeightedMetaEstimator as SWME
 from sklearn.metrics import cohen_kappa_score
 
 class KUE(StreamingEnsemble):
@@ -27,6 +28,10 @@ class KUE(StreamingEnsemble):
             # TODO: Ensure at least one feature
             self.subspaces = np.random.uniform(0,1,size=(self.n_estimators,
                                                          self.n_features)) > .5
+
+            while np.min(np.sum(self.subspaces, axis=1)) == 0:
+                self.subspaces = np.random.uniform(0,1,size=(self.n_estimators,
+                                                             self.n_features)) > .5
 
         # Train initial pool of classifiers
         if len(self.ensemble_) == 0:
@@ -54,6 +59,11 @@ class KUE(StreamingEnsemble):
             # Get candidate subspaces
             _subspaces = np.random.uniform(size=(self.n_candidates,
                                                  self.n_features))>.5
+
+            while np.min(np.sum(_subspaces, axis=1)) == 0:
+                _subspaces = np.random.uniform(size=(self.n_candidates,
+                                                     self.n_features))>.5
+
 
             # Train and evaluate candidates
             for sid, subspace in enumerate(_subspaces):
