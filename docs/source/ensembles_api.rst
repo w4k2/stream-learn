@@ -19,6 +19,7 @@ Ensembles module
 	SEA
 	UOB
 	WAE
+  KUE
 
 .. automodule:: strlearn.ensembles
   :members:

@@ -33,6 +33,10 @@ class StreamingEnsemble(ClassifierMixin, BaseEstimator):
         if self.classes_ is None:
             self.classes_, _ = np.unique(y, return_inverse=True)
 
+        # Check label consistency
+        if len(np.unique(y)) != len(np.unique(self.classes_)):
+            y[:len(np.unique(self.classes_))] = np.copy(self.classes_)
+
         # Check if it is possible to train new estimator
         if len(np.unique(y)) != len(self.classes_):
             self.green_light = False
@@ -41,7 +45,9 @@ class StreamingEnsemble(ClassifierMixin, BaseEstimator):
 
     def ensemble_support_matrix(self, X):
         """Ensemble support matrix."""
-        return np.nan_to_num(np.array([member_clf.predict_proba(X) for member_clf in self.ensemble_]))
+        # print('ESM')
+        return np.nan_to_num(np.array([member_clf.predict_proba(X)
+                                       for member_clf in self.ensemble_]))
 
     def predict_proba(self, X):
         """Predict proba."""

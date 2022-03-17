@@ -111,6 +111,11 @@ def test_DWM():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.DWM(GaussianNB(), p=stream.chunk_size))
 
+def test_KUE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.KUE(GaussianNB(), n_estimators=5))
+
 
 def test_AWE():
     stream = get_stream()

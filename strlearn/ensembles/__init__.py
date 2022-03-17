@@ -11,6 +11,7 @@ from .KMC import KMC
 from .CDS import CDS
 from .NIE import NIE
 from .OUSE import OUSE
+from .KUE import KUE
 from .base import StreamingEnsemble
 
 __all__ = [
@@ -27,5 +28,6 @@ __all__ = [
     "CDS",
     "NIE",
     "OUSE",
+    "KUE",
     "StreamingEnsemble"
 ]
