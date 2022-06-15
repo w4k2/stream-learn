@@ -25,7 +25,7 @@ class OOB(StreamingEnsemble):
         if not hasattr(self, "last_instance_sizes"):
             self.current_tdcs_ = np.zeros((1, 2))
         else:
-            self.current_ctdcs_ = self.last_instance_sizes
+            self.current_tdcs_ = self.last_instance_sizes
 
         self.chunk_tdcs = np.ones((self.X_.shape[0], self.classes_.shape[0]))
 

@@ -6,7 +6,6 @@ class UOB(StreamingEnsemble):
     """
     Undersampling-Based Online Bagging.
     """
-
     def __init__(self, base_estimator=None, n_estimators=5, time_decay_factor=0.9):
         """Initialization."""
         super().__init__(base_estimator, n_estimators)
@@ -26,7 +25,7 @@ class UOB(StreamingEnsemble):
         if not hasattr(self, "last_instance_sizes"):
             self.current_tdcs_ = np.zeros((1, 2))
         else:
-            self.current_ctdcs_ = self.last_instance_sizes
+            self.current_tdcs_ = self.last_instance_sizes
 
         self.chunk_tdcs = np.ones((self.X_.shape[0], self.classes_.shape[0]))
 
