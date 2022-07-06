@@ -6,6 +6,7 @@ import pytest
 import strlearn as sl
 import os
 from sklearn.naive_bayes import GaussianNB
+from strlearn.streams.StreamGenerator import StreamGenerator
 
 def test_generator_same():
     n_chunks = 10
@@ -233,3 +234,10 @@ def test_arff_parser():
         assert np.array_equal(X_a, X_b)
         assert np.array_equal(y_a, y_b)
 """
+
+def test_can_iterate():
+    stream = StreamGenerator(chunk_size=100, n_features=50)
+    for X, y in stream:
+        assert X.shape[0] == 100
+        assert X.shape[1] == 50
+        assert y.shape[0] == 100
