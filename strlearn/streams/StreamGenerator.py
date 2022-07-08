@@ -398,6 +398,13 @@ class StreamGenerator:
                 int(self.chunk_size * self.n_chunks)
             )
 
+    def __next__(self):
+        while not self.is_dry():
+            yield self.get_chunk()
+
+    def __iter__(self):
+        return next(self)
+
     def save_to_arff(self, filepath):
         """
         Save generated stream to the ARFF format file.
