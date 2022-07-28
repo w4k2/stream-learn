@@ -11,3 +11,4 @@ sphinx_gallery
 pillow
 tqdm
 sphinxcontrib-bibtex
+problexity
