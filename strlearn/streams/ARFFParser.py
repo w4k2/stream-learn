@@ -107,6 +107,13 @@ class ARFFParser:
     def __str__(self):
         return self.name
 
+    def __next__(self):
+        while not self.is_dry():
+            yield self.get_chunk()
+
+    def __iter__(self):
+        return next(self)
+
     def is_dry(self):
         """
         Checking if we have reached the end of the stream.

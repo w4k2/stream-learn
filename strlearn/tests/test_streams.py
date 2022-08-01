@@ -289,8 +289,35 @@ def test_can_iterate():
         assert y.shape[0] == 100
 
 
-# def test_can_iterate_arf():
-#     raise NotImplementedError
+def test_can_iterate_arf(stream_filepath_arff):
+    stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=20, n_chunks=10)
+    for X, y in stream:
+        assert X.shape[0] == 20
+        assert X.shape[1] == 20
+        assert y.shape[0] == 20
 
-# def test_can_iterate_csv():
-#     raise NotImplementedError
+
+def test_can_iterate_csv(stream_filepath_csv):
+    n_chunks = 10
+    chunk_size = 20
+    stream = sl.streams.CSVParser(
+        stream_filepath_csv, chunk_size=chunk_size, n_chunks=n_chunks
+    )
+
+    for X, y in stream:
+        assert X.shape[0] == chunk_size
+        assert X.shape[1] == 20
+        assert y.shape[0] == chunk_size
+
+
+def test_can_iterate_npy(stream_filepath_npy):
+    n_chunks = 10
+    chunk_size = 20
+    stream = sl.streams.NPYParser(
+        stream_filepath_npy, chunk_size=chunk_size, n_chunks=n_chunks
+    )
+
+    for X, y in stream:
+        assert X.shape[0] == chunk_size
+        assert X.shape[1] == 20
+        assert y.shape[0] == chunk_size
