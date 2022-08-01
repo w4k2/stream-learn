@@ -206,16 +206,16 @@ def test_arffparser(stream_filepath):
     stream_one = sl.streams.StreamGenerator(
         random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
     )
-    # stream_two = sl.streams.ARFFParser(
-    #    stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
-    # )
+    stream_two = sl.streams.ARFFParser(
+        stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
+    )
 
-    # for i in range(n_chunks):
-    #    X_one, y_one = stream_one.get_chunk()
-    #    X_two, y_two = stream_two.get_chunk()
+    for i in range(n_chunks):
+        X_one, y_one = stream_one.get_chunk()
+        X_two, y_two = stream_two.get_chunk()
 
-    #    assert np.allclose(X_one, X_two)
-    #    assert np.array_equal(y_one, y_two)
+        assert np.allclose(X_one, X_two)
+        assert np.array_equal(y_one, y_two)
 
 
 """

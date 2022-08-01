@@ -32,10 +32,10 @@ class ARFFParser:
     [0.895      0.86935764 0.86452058 0.86935764 0.92134831]
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
+
     def __init__(self, path, chunk_size=200, n_chunks=250):
         # Read file.
         self.name = path
-        self.path = path
         self._f = open(path, "r")
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
@@ -92,6 +92,9 @@ class ARFFParser:
 
         # Read first line
         self.a_line = self._f.readline()
+
+    def __del__(self):
+        self._f.close()
 
     def __str__(self):
         return self.name
