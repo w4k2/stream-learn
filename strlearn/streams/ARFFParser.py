@@ -33,7 +33,7 @@ class ARFFParser:
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size=200, n_chunks=250):
+    def __init__(self, path, chunk_size=200, n_chunks=250):  # TODO mayby compute n_chunks based on chunk_size and length of arff file?
         # Read file.
         self.name = path
         self._f = open(path, "r")
@@ -141,6 +141,9 @@ class ARFFParser:
             if not self.a_line[-1] == "\n":
                 self.is_dry_ = True
                 line = self.a_line
+            elif self.a_line == "\n":  # test arff files have two empty lines at the end
+                self.is_dry_ = True   # in this when we try to get classes for this lines we get IndexError
+                break                 # so we break loop instead
             else:
                 line = self.a_line[:-1]
             elements = line.split(",")

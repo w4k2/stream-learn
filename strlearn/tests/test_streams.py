@@ -1,4 +1,5 @@
 """Basic tests."""
+import chunk
 import sys
 import numpy as np
 import requests
@@ -170,7 +171,7 @@ def test_csvparser(stream_filepath_csv):
         assert np.array_equal(y_one, y_two)
 
 
-def test_train_with_csvparser(stream_filepath_csv):
+def test_can_train_with_csvparser(stream_filepath_csv):
     n_chunks = 10
     chunk_size = 20
     stream = sl.streams.CSVParser(
@@ -180,6 +181,8 @@ def test_train_with_csvparser(stream_filepath_csv):
     clf = GaussianNB()
     ttt = sl.evaluators.TestThenTrain([accuracy_score])
     ttt.process(stream, clf)
+    acc = ttt.scores
+    assert acc[0, 0, -1] > 0.5
 
 
 def test_npyparser(stream_filepath_npy):
@@ -255,14 +258,16 @@ def test_arff_parser_different_stream():
         assert np.array_equal(X_a, X_b)
         assert np.array_equal(y_a, y_b)
 
-# not working, some new bug found
-# def test_arff_parser_can_train_with_arff_stream():
-#     filename = "stream.arff"
-#     stream = sl.streams.ARFFParser(filename)
 
-#     clf = GaussianNB()
-#     ttt = sl.evaluators.TestThenTrain([accuracy_score])
-#     ttt.process(stream, clf)
+def test_can_train_with_arff_stream():
+    filename = "stream.arff"
+    stream = sl.streams.ARFFParser(filename, chunk_size=100, n_chunks=40)
+
+    clf = GaussianNB()
+    ttt = sl.evaluators.TestThenTrain([accuracy_score])
+    ttt.process(stream, clf)
+    acc = ttt.scores
+    assert acc[0, 0, -1] > 0.5
 
 
 def test_arff_parser_can_parse_real_feature():
@@ -272,6 +277,8 @@ def test_arff_parser_can_parse_real_feature():
     clf = GaussianNB()
     ttt = sl.evaluators.TestThenTrain([accuracy_score])
     ttt.process(stream, clf)
+    acc = ttt.scores
+    assert acc[0, 0, -1] > 0.5
 
 
 def test_can_iterate():
