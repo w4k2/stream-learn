@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn import preprocessing
 
+
 class CSVParser:
     """ Stream-aware parser of datasets in CSV format.
 
@@ -30,6 +31,7 @@ class CSVParser:
     [0.895      0.86935764 0.86452058 0.86935764 0.92134831]
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
+
     def __init__(self, path, chunk_size=200, n_chunks=250):
         # Read file.
         self.name = path
@@ -45,14 +47,20 @@ class CSVParser:
         self.chunk_id = 0
         self.starting_chunk = False
 
-
     def _make_classification(self):
         # Read CSV
         ds = pd.read_csv(self.path, header=None)
-        return ds.iloc[:,:-1].to_numpy(), ds.iloc[:,-1].to_numpy()
+        return ds.iloc[:, :-1].to_numpy(), ds.iloc[:, -1].to_numpy()
 
     def __str__(self):
         return self.name
+
+    def __next__(self):
+        while not self.is_dry():
+            yield self.get_chunk()
+
+    def __iter__(self):
+        return next(self)
 
     def is_dry(self):
         """
@@ -78,6 +86,8 @@ class CSVParser:
             self.previous_chunk = self.current_chunk
         else:
             self.X, self.y = self._make_classification()
+            self.label_encoder = preprocessing.LabelEncoder()
+            self.classes_ = np.unique(self.label_encoder.fit_transform(self.y))
             self.reset()
 
         self.chunk_id += 1
