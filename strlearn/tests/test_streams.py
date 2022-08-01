@@ -106,7 +106,7 @@ def test_generator_str():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def stream_filepath():
+def stream_filepath_arff():
     filepath = "test_stream.arff"
     yield filepath
 
@@ -143,13 +143,13 @@ def test_generator_save_to_npy(stream_filepath_npy):
     stream_one.save_to_npy(stream_filepath_npy)
 
 
-def test_generator_save_to_arff(stream_filepath):
+def test_generator_save_to_arff(stream_filepath_arff):
     n_chunks = 10
     chunk_size = 20
     stream_one = sl.streams.StreamGenerator(
         random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
     )
-    stream_one.save_to_arff(stream_filepath)
+    stream_one.save_to_arff(stream_filepath_arff)
 
 
 def test_csvparser(stream_filepath_csv):
@@ -200,14 +200,14 @@ def test_npyparser(stream_filepath_npy):
         assert np.array_equal(y_one, y_two)
 
 
-def test_arffparser(stream_filepath):
+def test_arffparser(stream_filepath_arff):
     n_chunks = 10
     chunk_size = 20
     stream_one = sl.streams.StreamGenerator(
         random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
     )
     stream_two = sl.streams.ARFFParser(
-        stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
+        stream_filepath_arff, chunk_size=chunk_size, n_chunks=n_chunks
     )
 
     for i in range(n_chunks):
@@ -218,28 +218,28 @@ def test_arffparser(stream_filepath):
         assert np.array_equal(y_one, y_two)
 
 
-def test_arffparser_str(stream_filepath):
-    stream = sl.streams.ARFFParser(stream_filepath)
-    assert str(stream) == stream_filepath
+def test_arffparser_str(stream_filepath_arff):
+    stream = sl.streams.ARFFParser(stream_filepath_arff)
+    assert str(stream) == stream_filepath_arff
 
 
-def test_arffparser_is_dry(stream_filepath):
+def test_arffparser_is_dry(stream_filepath_arff):
     n_chunks = 10
     chunk_size = 20
     stream = sl.streams.ARFFParser(
-        stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
+        stream_filepath_arff, chunk_size=chunk_size, n_chunks=n_chunks
     )
     assert not stream.is_dry()
 
 
-def test_arffparser_reset(stream_filepath):
-    stream = sl.streams.ARFFParser(stream_filepath)
+def test_arffparser_reset(stream_filepath_arff):
+    stream = sl.streams.ARFFParser(stream_filepath_arff)
     stream.reset()
     assert stream.chunk_id == 0
     assert not stream.is_dry()
 
 
-def test_arff_parser():
+def test_arff_parser_different_stream():
     filename = "stream.arff"
     n_chunks = 20
     stream_original = sl.streams.StreamGenerator(
@@ -255,6 +255,24 @@ def test_arff_parser():
         assert np.array_equal(X_a, X_b)
         assert np.array_equal(y_a, y_b)
 
+# not working, some new bug found
+# def test_arff_parser_can_train_with_arff_stream():
+#     filename = "stream.arff"
+#     stream = sl.streams.ARFFParser(filename)
+
+#     clf = GaussianNB()
+#     ttt = sl.evaluators.TestThenTrain([accuracy_score])
+#     ttt.process(stream, clf)
+
+
+def test_arff_parser_can_parse_real_feature():
+    filename = "stream_real_feature.arff"
+    stream = sl.streams.ARFFParser(filename)
+
+    clf = GaussianNB()
+    ttt = sl.evaluators.TestThenTrain([accuracy_score])
+    ttt.process(stream, clf)
+
 
 def test_can_iterate():
     stream = sl.streams.StreamGenerator(chunk_size=100, n_features=50)
@@ -262,3 +280,10 @@ def test_can_iterate():
         assert X.shape[0] == 100
         assert X.shape[1] == 50
         assert y.shape[0] == 100
+
+
+# def test_can_iterate_arf():
+#     raise NotImplementedError
+
+# def test_can_iterate_csv():
+#     raise NotImplementedError
