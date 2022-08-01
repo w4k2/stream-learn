@@ -3,9 +3,11 @@ import sys
 import numpy as np
 import requests
 import pytest
+from sklearn.metrics import accuracy_score
 import strlearn as sl
 import os
 from sklearn.naive_bayes import GaussianNB
+
 
 def test_generator_same():
     n_chunks = 10
@@ -95,22 +97,25 @@ def test_generator_str():
     print(evaluator.scores)
     assert str(stream) == "gr_n_css999_rs1410_nd0_ln1_d50_50000"
 
-    stream = sl.streams.StreamGenerator(y_flip=(0.5, 0.5),random_state=1410)
+    stream = sl.streams.StreamGenerator(y_flip=(0.5, 0.5), random_state=1410)
     clf = GaussianNB()
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
     print(evaluator.scores)
     assert str(stream) == "gr_n_css999_rs1410_nd0_ln50_50_d50_50000"
 
+
 @pytest.fixture(scope="session", autouse=True)
 def stream_filepath():
     filepath = "test_stream.arff"
     yield filepath
 
+
 @pytest.fixture(scope="session", autouse=True)
 def stream_filepath_csv():
     filepath = "test_stream.csv"
     yield filepath
+
 
 @pytest.fixture(scope="session", autouse=True)
 def stream_filepath_npy():
@@ -118,6 +123,7 @@ def stream_filepath_npy():
     yield filepath
 
 # os.remove(filepath)
+
 
 def test_generator_save_to_csv(stream_filepath_csv):
     n_chunks = 10
@@ -127,6 +133,7 @@ def test_generator_save_to_csv(stream_filepath_csv):
     )
     stream_one.save_to_csv(stream_filepath_csv)
 
+
 def test_generator_save_to_npy(stream_filepath_npy):
     n_chunks = 10
     chunk_size = 20
@@ -135,6 +142,7 @@ def test_generator_save_to_npy(stream_filepath_npy):
     )
     stream_one.save_to_npy(stream_filepath_npy)
 
+
 def test_generator_save_to_arff(stream_filepath):
     n_chunks = 10
     chunk_size = 20
@@ -142,6 +150,7 @@ def test_generator_save_to_arff(stream_filepath):
         random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
     )
     stream_one.save_to_arff(stream_filepath)
+
 
 def test_csvparser(stream_filepath_csv):
     n_chunks = 10
@@ -161,6 +170,18 @@ def test_csvparser(stream_filepath_csv):
         assert np.array_equal(y_one, y_two)
 
 
+def test_train_with_csvparser(stream_filepath_csv):
+    n_chunks = 10
+    chunk_size = 20
+    stream = sl.streams.CSVParser(
+        stream_filepath_csv, chunk_size=chunk_size, n_chunks=n_chunks
+    )
+
+    clf = GaussianNB()
+    ttt = sl.evaluators.TestThenTrain([accuracy_score])
+    ttt.process(stream, clf)
+
+
 def test_npyparser(stream_filepath_npy):
     n_chunks = 10
     chunk_size = 20
@@ -178,22 +199,24 @@ def test_npyparser(stream_filepath_npy):
         assert np.allclose(X_one, X_two)
         assert np.array_equal(y_one, y_two)
 
+
 def test_arffparser(stream_filepath):
     n_chunks = 10
     chunk_size = 20
     stream_one = sl.streams.StreamGenerator(
         random_state=5, chunk_size=chunk_size, n_chunks=n_chunks
     )
-    #stream_two = sl.streams.ARFFParser(
+    # stream_two = sl.streams.ARFFParser(
     #    stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
-    #)
+    # )
 
-    #for i in range(n_chunks):
+    # for i in range(n_chunks):
     #    X_one, y_one = stream_one.get_chunk()
     #    X_two, y_two = stream_two.get_chunk()
 
     #    assert np.allclose(X_one, X_two)
     #    assert np.array_equal(y_one, y_two)
+
 
 """
 def test_arffparser_str(stream_filepath):
@@ -210,11 +233,13 @@ def test_arffparser_is_dry(stream_filepath):
     assert not stream.is_dry()
 """
 
+
 def test_arffparser_reset(stream_filepath):
     stream = sl.streams.ARFFParser(stream_filepath)
     stream.reset()
     assert stream.chunk_id == 0
     assert not stream.is_dry()
+
 
 """
 def test_arff_parser():
@@ -233,6 +258,7 @@ def test_arff_parser():
         assert np.array_equal(X_a, X_b)
         assert np.array_equal(y_a, y_b)
 """
+
 
 def test_can_iterate():
     stream = sl.streams.StreamGenerator(chunk_size=100, n_features=50)
