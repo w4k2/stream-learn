@@ -218,7 +218,6 @@ def test_arffparser(stream_filepath):
         assert np.array_equal(y_one, y_two)
 
 
-"""
 def test_arffparser_str(stream_filepath):
     stream = sl.streams.ARFFParser(stream_filepath)
     assert str(stream) == stream_filepath
@@ -231,7 +230,6 @@ def test_arffparser_is_dry(stream_filepath):
         stream_filepath, chunk_size=chunk_size, n_chunks=n_chunks
     )
     assert not stream.is_dry()
-"""
 
 
 def test_arffparser_reset(stream_filepath):
@@ -241,7 +239,6 @@ def test_arffparser_reset(stream_filepath):
     assert not stream.is_dry()
 
 
-"""
 def test_arff_parser():
     filename = "stream.arff"
     n_chunks = 20
@@ -257,7 +254,6 @@ def test_arff_parser():
 
         assert np.array_equal(X_a, X_b)
         assert np.array_equal(y_a, y_b)
-"""
 
 
 def test_can_iterate():
