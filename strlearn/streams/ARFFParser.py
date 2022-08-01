@@ -149,8 +149,8 @@ class ARFFParser:
                 self.is_dry_ = True
                 line = self.a_line
             elif self.a_line == "\n":  # test arff files have two empty lines at the end
-                self.is_dry_ = True   # in this when we try to get classes for this lines we get IndexError
-                break                 # so we break loop instead
+                self.is_dry_ = True
+                continue
             else:
                 line = self.a_line[:-1]
             elements = line.split(",")
