@@ -33,7 +33,7 @@ class ARFFParser:
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size=200, n_chunks=250):  # TODO mayby compute n_chunks based on chunk_size and length of arff file?
+    def __init__(self, path, chunk_size=200, n_chunks=250):
         # Read file.
         self.name = path
         self._f = open(path, "r")
