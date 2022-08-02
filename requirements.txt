@@ -1,6 +1,5 @@
 numpy
 scipy
-pandas
 scikit-learn
 numpydoc
 matplotlib
@@ -11,3 +10,4 @@ sphinx_gallery
 pillow
 tqdm
 sphinxcontrib-bibtex
+requests

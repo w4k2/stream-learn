@@ -1,5 +1,5 @@
 import numpy as np
-import pandas as pd
+import csv
 from sklearn import preprocessing
 
 
@@ -49,8 +49,14 @@ class CSVParser:
 
     def _make_classification(self):
         # Read CSV
-        ds = pd.read_csv(self.path, header=None)
-        return ds.iloc[:, :-1].to_numpy(), ds.iloc[:, -1].to_numpy()
+        csv_content = self._read_csv()
+        csv_np = np.array(csv_content).astype(float)
+        return csv_np[:, :-1], csv_np[:, -1]
+
+    def _read_csv(self):
+        with open(self.path, 'r') as f:
+            reader = csv.reader(f)
+            return [line for line in reader]
 
     def __str__(self):
         return self.name

@@ -1,8 +1,8 @@
 import numpy as np
-import pandas as pd
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
-import pandas as pd
+import csv
+
 
 class StreamGenerator:
     """ Data streams generator for both stationary and drifting data streams.
@@ -241,9 +241,9 @@ class StreamGenerator:
                                                               self.chunk_size))
 
                 self.class_selector[:, 0] = 0
-                self.class_selector[:,-1] = 1
+                self.class_selector[:, -1] = 1
 
-                self.class_selector = (self.class_selector > self.class_probabilities[:,np.newaxis]).astype(int)
+                self.class_selector = (self.class_selector > self.class_probabilities[:, np.newaxis]).astype(int)
 
                 self.class_selector = np.ravel(self.class_selector)
 
@@ -354,7 +354,7 @@ class StreamGenerator:
                 self.n_drifts,
                 int(self.y_flip[0] * 100),
                 int(self.y_flip[1] * 100),
-                ("%i_%i_%.0f" % (self.weights[0],self.weights[1],self.weights[2]*100)),
+                ("%i_%i_%.0f" % (self.weights[0], self.weights[1], self.weights[2]*100)),
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) != tuple and type(self.weights) == tuple and len(self.weights) == 3:
@@ -367,7 +367,7 @@ class StreamGenerator:
                 self.random_state,
                 self.n_drifts,
                 int(self.y_flip * 100),
-                ("%i_%i_%.0f" % (self.weights[0],self.weights[1],self.weights[2]*100)),
+                ("%i_%i_%.0f" % (self.weights[0], self.weights[1], self.weights[2]*100)),
                 int(self.chunk_size * self.n_chunks)
             )
         elif type(self.y_flip) == tuple and type(self.weights) == tuple and len(self.weights) == 2:
@@ -381,7 +381,7 @@ class StreamGenerator:
                 self.n_drifts,
                 int(self.y_flip[0] * 100),
                 int(self.y_flip[1] * 100),
-                ("%.0f_%.0f" % (self.weights[0]*100,self.weights[1]*100)),
+                ("%.0f_%.0f" % (self.weights[0]*100, self.weights[1]*100)),
                 int(self.chunk_size * self.n_chunks),
             )
         elif type(self.y_flip) != tuple and type(self.weights) == tuple and len(self.weights) == 2:
@@ -394,7 +394,7 @@ class StreamGenerator:
                 self.random_state,
                 self.n_drifts,
                 int(self.y_flip * 100),
-                ("%.0f_%.0f" % (self.weights[0]*100,self.weights[1]*100)),
+                ("%.0f_%.0f" % (self.weights[0]*100, self.weights[1]*100)),
                 int(self.chunk_size * self.n_chunks)
             )
 
@@ -454,7 +454,6 @@ class StreamGenerator:
         ds = np.concatenate([X, y[:, np.newaxis]], axis=1)
         np.save(filepath, ds)
 
-
     def save_to_csv(self, filepath):
         """
         Save generated stream to the csv format file.
@@ -464,9 +463,10 @@ class StreamGenerator:
         """
         X, y = self._make_classification()
 
-        ds = np.concatenate([X, y[:, np.newaxis]], axis=1)
-
-        pdds = pd.DataFrame(ds)
-        pdds.infer_objects()
-        pdds.iloc[: , -1] = pdds.iloc[: , -1].astype(int)
-        pdds.to_csv(filepath, header=None,index=None)
+        with open(filepath, 'w+') as f:
+            writer = csv.writer(f)
+            for row_x, row_y in zip(X, y):
+                row = list()
+                row.extend(row_x)
+                row.append(int(row_y))
+                writer.writerow(row)

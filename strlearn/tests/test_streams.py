@@ -134,6 +134,11 @@ def test_generator_save_to_csv(stream_filepath_csv):
     )
     stream_one.save_to_csv(stream_filepath_csv)
 
+    stream_read = sl.streams.CSVParser(stream_filepath_csv, chunk_size=chunk_size, n_chunks=n_chunks)
+    for (X_original, y_original), (X_read, y_read) in zip(stream_one, stream_read):
+        assert np.isclose(X_original, X_read).all()
+        assert np.isclose(y_original, y_read).all()
+
 
 def test_generator_save_to_npy(stream_filepath_npy):
     n_chunks = 10
