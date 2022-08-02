@@ -1,6 +1,5 @@
 # stream-learn
 
-[![Travis Status](https://travis-ci.org/w4k2/stream-learn.svg?branch=master)](https://travis-ci.org/w4k2/stream-learn)
 [![CircleCI](https://circleci.com/gh/w4k2/stream-learn.svg?style=svg)](https://app.circleci.com/pipelines/github/w4k2/stream-learn)
 [![Coverage Status](https://coveralls.io/repos/github/w4k2/stream-learn/badge.svg?branch=master&service=github)](https://coveralls.io/github/w4k2/stream-learn?branch=master&service=github)
 [![Documentation Status](https://readthedocs.org/projects/stream-learn/badge/?version=latest)](http://stream-learn.readthedocs.io)
