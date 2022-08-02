@@ -1,7 +1,6 @@
 # stream-learn
 
 [![CircleCI](https://circleci.com/gh/w4k2/stream-learn.svg?style=svg)](https://app.circleci.com/pipelines/github/w4k2/stream-learn)
-[![Coverage Status](https://coveralls.io/repos/github/w4k2/stream-learn/badge.svg?branch=master&service=github)](https://coveralls.io/github/w4k2/stream-learn?branch=master&service=github)
 [![codecov](https://codecov.io/gh/w4k2/stream-learn/branch/master/graph/badge.svg?token=B0CecEoaFi)](https://codecov.io/gh/w4k2/stream-learn)
 [![Documentation Status](https://readthedocs.org/projects/stream-learn/badge/?version=latest)](http://stream-learn.readthedocs.io)
 [![PyPI version](https://badge.fury.io/py/stream-learn.svg)](https://badge.fury.io/py/stream-learn)
