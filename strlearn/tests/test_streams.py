@@ -270,8 +270,29 @@ def test_can_train_with_arff_stream():
     assert acc[0, 0, -1] > 0.5
 
 
-def test_arff_parser_can_parse_real_feature():
+@pytest.fixture(scope="session", autouse=True)
+def arff_content():
+    stream_real_file_content = \
+        """@relation test
+@attribute feature_1 real
+@attribute feature_2 real
+@attribute feature_3 real
+@attribute feature_4 real
+@attribute class {True, False}
+@data
+0.324, -0.7654, 1.3456, 0.98765, True
+0.324, -0.456, 1.3456, 0.345, False
+0.324, -0.8765, 1.3456, 0.765, True
+0.234, -0.2, 1.3456, 0.34, False
+0.098, -0.98, 1.345, 0.98765, False
+0.324, -0.7654, 1.67, 0.23, True"""
+    yield stream_real_file_content
+
+
+def test_arff_parser_can_parse_real_feature(arff_content):
     filename = "stream_real_feature.arff"
+    with open(filename, 'w+') as f:
+        f.write(arff_content)
     stream = sl.streams.ARFFParser(filename)
 
     clf = GaussianNB()
