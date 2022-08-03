@@ -53,6 +53,12 @@ To use the `stream-learn` package, it will be absolutely useful to install it. F
 pip3 install -U stream-learn
 ```
 
+`stream-learn` is also avaliable with `conda`:
+
+```shell
+conda install stream-learn -c w4k2 -c conda-forge
+```
+
 You can also install the module cloned from Github using the setup.py file if you have a strange, but perhaps legitimate need:
 
 ```shell
