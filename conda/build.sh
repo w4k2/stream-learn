@@ -23,7 +23,6 @@ if [ "$CURRENT_ANACONDA_USER" = "Anonymous User" ]; then
     anaconda login
 fi
 CONDA_INSTALLATION_DIR=`which conda | xargs dirname | xargs dirname`
-CONDA_INSTALLATION_DIR=${CONDA_INSTALLATION_DIR%%"anaconda"*}"anaconda3"
 LATEST_PACKAGE=`ls -t $CONDA_INSTALLATION_DIR/conda-bld/noarch/stream-learn-* | head -1`
 anaconda upload -u w4k2 $LATEST_PACKAGE
 
