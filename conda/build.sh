@@ -7,7 +7,8 @@ rm -rf stream-learn/
 
 # create temporary environment (current user env can cause conflits with packages we want to install)
 conda create -y -n tmp-stream-learn-upload python=3.8
-source activate tmp-stream-learn-upload
+eval "$(conda shell.bash hook)"
+conda activate tmp-stream-learn-upload
 conda install -y conda-build anaconda-client grayskull -c conda-forge
 
 # build conda package from the latest pypi release
@@ -16,9 +17,14 @@ conda-build stream-learn -c conda-forge
 
 # upload package to anaconda
 echo "login to anaconda"
-anaconda login
+anaconda whoami &> /tmp/conda_user.txt
+CURRENT_ANACONDA_USER=`cat /tmp/conda_user.txt | cut -d$'\n' -f2`
+if [ "$CURRENT_ANACONDA_USER" = "Anonymous User" ]; then
+    anaconda login
+fi
 CONDA_INSTALLATION_DIR=`which conda | xargs dirname | xargs dirname`
-LATEST_PACKAGE=`ls -t $CONDA_INSTALLATION_DIR/conda-bld/linux-64/stream-learn-* | head -1`
+CONDA_INSTALLATION_DIR=${CONDA_INSTALLATION_DIR%%"anaconda"*}"anaconda3"
+LATEST_PACKAGE=`ls -t $CONDA_INSTALLATION_DIR/conda-bld/noarch/stream-learn-* | head -1`
 anaconda upload -u w4k2 $LATEST_PACKAGE
 
 # cleanup
