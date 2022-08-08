@@ -315,69 +315,19 @@ def test_can_iterate():
         assert X.shape[1] == 50
         assert y.shape[0] == 100
 
-def test_semi_synthetic_generator():
-    X, y = load_iris(return_X_y=True)
-    stream = sl.streams.SemiSynthetic_StreamGenerator(X, y)
-    while stream.get_chunk():
-        pass
-
-def test_semi_synthetic_generator_empty_measures():
-    X, y = load_iris(return_X_y=True)
-    stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, evaluation_measures=[])
-    while stream.get_chunk():
-        pass
-
-def test_semi_synthetic_generator_binarize_false():
-    X, y = load_iris(return_X_y=True)
-    stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, binarize=False)
-    while stream.get_chunk():
-        pass
-
-def test_semi_synthetic_generator_save_to_arff(stream_filepath):
-    X, y = load_iris(return_X_y=True)
-    n_chunks = 10
-    chunk_size = 20
-    stream_one = sl.streams.SemiSynthetic_StreamGenerator(X, y, chunk_size=chunk_size, n_chunks=n_chunks)
-    stream_one.save_to_arff(stream_filepath)
-
-def test_semi_synthetic_generator_can_iterate():
-    X, y = load_iris(return_X_y=True)
-    stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, chunk_size=100, n_features=50)
-    for X, y in stream:
-        assert X.shape[0] == 100
-        assert X.shape[1] == 50
-        assert y.shape[0] == 100
 
 def test_less_density_than_drifts():
     X, y = load_iris(return_X_y=True)
     with pytest.raises(Exception):
-        stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, n_drifts=100, density=50)
+        stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=100, density=50)
         stream.get_chunk()
 
 def test_smaller_pool_than_drifts():
     X, y = load_iris(return_X_y=True)
     with pytest.raises(Exception):
-        stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, n_drifts=100, base_projection_pool_size=50)
-        stream.get_chunk()
-    
-
-def test_semi_synthetic_generator_no_drifts():
-    X, y = load_iris(return_X_y=True)
-    with pytest.raises(Exception):
-        stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, n_drifts=0)
+        stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=100, base_projection_pool_size=50)
         stream.get_chunk()
 
-def test_semi_synthetic_generator_equality():
-    X, y = load_iris(return_X_y=True)
-    n_chunks = 10
-    stream_one = sl.streams.SemiSynthetic_StreamGenerator(X, y, random_state=5, n_chunks=n_chunks, chunk_size=10)
-    stream_two = sl.streams.SemiSynthetic_StreamGenerator(X, y, random_state=5, n_chunks=n_chunks, chunk_size=10)
-    for i in range(n_chunks):
-        X_one, y_one = stream_one.get_chunk()
-        X_two, y_two = stream_two.get_chunk()
-
-        assert np.array_equal(X_one, X_two)
-        assert np.array_equal(y_one, y_two)
 
 def test_can_iterate_arf(stream_filepath_arff):
     stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=20, n_chunks=10)
@@ -410,4 +360,56 @@ def test_can_iterate_npy(stream_filepath_npy):
     for X, y in stream:
         assert X.shape[0] == chunk_size
         assert X.shape[1] == 20
-        assert y.shape[0] == chunk_size
+        assert y.shape[0] == chunk_size    
+
+
+def test_semi_synthetic_generator():
+    X, y = load_iris(return_X_y=True)
+    stream = sl.streams.SemiSyntheticStreamGenerator(X, y)
+    while stream.get_chunk():
+        pass
+
+def test_semi_synthetic_generator_empty_measures():
+    X, y = load_iris(return_X_y=True)
+    stream = sl.streams.SemiSyntheticStreamGenerator(X, y, evaluation_measures=[])
+    while stream.get_chunk():
+        pass
+
+def test_semi_synthetic_generator_binarize_false():
+    X, y = load_iris(return_X_y=True)
+    stream = sl.streams.SemiSyntheticStreamGenerator(X, y, binarize=False)
+    while stream.get_chunk():
+        pass
+
+def test_semi_synthetic_generator_save_to_arff(stream_filepath_arff):
+    X, y = load_iris(return_X_y=True)
+    n_chunks = 10
+    chunk_size = 20
+    stream_one = sl.streams.SemiSyntheticStreamGenerator(X, y, chunk_size=chunk_size, n_chunks=n_chunks)
+    stream_one.save_to_arff(stream_filepath_arff)
+
+def test_semi_synthetic_generator_can_iterate():
+    X, y = load_iris(return_X_y=True)
+    stream = sl.streams.SemiSyntheticStreamGenerator(X, y, chunk_size=100, n_features=50)
+    for X, y in stream:
+        assert X.shape[0] == 100
+        assert X.shape[1] == 50
+        assert y.shape[0] == 100
+
+def test_semi_synthetic_generator_no_drifts():
+    X, y = load_iris(return_X_y=True)
+    with pytest.raises(Exception):
+        stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=0)
+        stream.get_chunk()
+
+def test_semi_synthetic_generator_equality():
+    X, y = load_iris(return_X_y=True)
+    n_chunks = 10
+    stream_one = sl.streams.SemiSyntheticStreamGenerator(X, y, random_state=5, n_chunks=n_chunks, chunk_size=10)
+    stream_two = sl.streams.SemiSyntheticStreamGenerator(X, y, random_state=5, n_chunks=n_chunks, chunk_size=10)
+    for i in range(n_chunks):
+        X_one, y_one = stream_one.get_chunk()
+        X_two, y_two = stream_two.get_chunk()
+
+        assert np.array_equal(X_one, X_two)
+        assert np.array_equal(y_one, y_two)

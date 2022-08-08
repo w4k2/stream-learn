@@ -4,7 +4,7 @@ from scipy.interpolate import interp1d
 import problexity as px
 from scipy.spatial.distance import euclidean
 
-class SemiSynthetic_StreamGenerator:
+class SemiSyntheticStreamGenerator:
     """ Semi-Synthetic Data streams generator for drifting data streams.
 
     A generator that allows preparing a replicable classification dataset based on real-world input data. The generator uses one-dimensional interpolation to generate the drifting projections, based on which the final data stream is generated. 

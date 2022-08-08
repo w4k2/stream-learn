@@ -26,7 +26,7 @@ URL = "https://w4k2.github.io/stream-learn/"
 LICENSE = "GPL-3.0"
 DOWNLOAD_URL = "https://github.com/w4k2/stream-learn"
 VERSION = __version__
-INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn", "scikit-learn", "imbalanced-learn", "tqdm"]
+INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn", "scikit-learn", "imbalanced-learn", "tqdm", "problexity"]
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
