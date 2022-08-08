@@ -32,10 +32,10 @@ class ARFFParser:
     [0.895      0.86935764 0.86452058 0.86935764 0.92134831]
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
+
     def __init__(self, path, chunk_size=200, n_chunks=250):
         # Read file.
         self.name = path
-        self.path = path
         self._f = open(path, "r")
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
@@ -61,8 +61,16 @@ class ARFFParser:
             if elements[0] == "@attribute":
                 if elements[1] == "class":
                     # Analyze classes
+                    if elements[-1] == '':
+                        elements.pop()
+                    if len(elements) > 3:
+                        _, _, class_names = line.split(" ", maxsplit=2)
+                        class_names = class_names[1:-1].replace(" ", "").split(",")
+                    else:
+                        class_names = elements[2][1:-1].split(",")
+
                     self.le = preprocessing.LabelEncoder()
-                    self.le.fit(np.array(elements[2][1:-1].split(",")))
+                    self.le.fit(np.array(class_names))
                     self.classes_ = self.le.transform(self.le.classes_)
                     self.n_classes = len(self.classes_)
                 else:
@@ -79,7 +87,7 @@ class ARFFParser:
                         temporary = np.array([element[1:-1] for element in temporary])
                         le.fit(temporary)
                         self.lencs.update({len(self.names) - 1: le})
-                    elif elements[2] == "numeric":
+                    elif elements[2] in ["numeric", "real"]:
                         self.types.append("numeric")
             elif elements[0] == "@relation":
                 self.relation = " ".join(elements[1:])
@@ -93,8 +101,18 @@ class ARFFParser:
         # Read first line
         self.a_line = self._f.readline()
 
+    def __del__(self):
+        self._f.close()
+
     def __str__(self):
         return self.name
+
+    def __next__(self):
+        while not self.is_dry():
+            yield self.get_chunk()
+
+    def __iter__(self):
+        return next(self)
 
     def is_dry(self):
         """
@@ -130,6 +148,9 @@ class ARFFParser:
             if not self.a_line[-1] == "\n":
                 self.is_dry_ = True
                 line = self.a_line
+            elif self.a_line == "\n":  # test arff files have two empty lines at the end
+                self.is_dry_ = True
+                continue
             else:
                 line = self.a_line[:-1]
             elements = line.split(",")

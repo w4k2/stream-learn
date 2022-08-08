@@ -1,6 +1,5 @@
 numpy
 scipy
-pandas
 scikit-learn
 numpydoc
 matplotlib
@@ -12,3 +11,4 @@ pillow
 tqdm
 sphinxcontrib-bibtex
 problexity
+requests

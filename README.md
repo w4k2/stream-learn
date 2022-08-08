@@ -1,7 +1,7 @@
 # stream-learn
 
-[![Travis Status](https://travis-ci.org/w4k2/stream-learn.svg?branch=master)](https://travis-ci.org/w4k2/stream-learn)
-[![Coverage Status](https://coveralls.io/repos/github/w4k2/stream-learn/badge.svg?branch=master&service=github)](https://coveralls.io/github/w4k2/stream-learn?branch=master&service=github)
+[![CircleCI](https://circleci.com/gh/w4k2/stream-learn.svg?style=svg)](https://app.circleci.com/pipelines/github/w4k2/stream-learn)
+[![codecov](https://codecov.io/gh/w4k2/stream-learn/branch/master/graph/badge.svg?token=B0CecEoaFi)](https://codecov.io/gh/w4k2/stream-learn)
 [![Documentation Status](https://readthedocs.org/projects/stream-learn/badge/?version=latest)](http://stream-learn.readthedocs.io)
 [![PyPI version](https://badge.fury.io/py/stream-learn.svg)](https://badge.fury.io/py/stream-learn)
 
@@ -51,6 +51,12 @@ To use the `stream-learn` package, it will be absolutely useful to install it. F
 
 ```shell
 pip3 install -U stream-learn
+```
+
+`stream-learn` is also avaliable with `conda`:
+
+```shell
+conda install stream-learn -c w4k2 -c conda-forge
 ```
 
 You can also install the module cloned from Github using the setup.py file if you have a strange, but perhaps legitimate need:
