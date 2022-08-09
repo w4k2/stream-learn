@@ -42,7 +42,7 @@ class SemiSyntheticStreamGenerator:
     >>> from sklearn.datasets import load_breast_cancer
     >>> from sklearn.naive_bayes import GaussianNB
     >>> X, y =  load_breast_cancer(return_X_y=True)
-    >>> stream = sl.streams.SemiSynthetic_StreamGenerator(X, y, n_drifts=4, interpolation='cubic')
+    >>> stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=4, interpolation='cubic')
     >>> clf = GaussianNB()
     >>> evaluator = sl.evaluators.TestThenTrain()
     >>> evaluator.process(stream, clf)
@@ -146,11 +146,15 @@ class SemiSyntheticStreamGenerator:
                                               n_concept_features,
                                               self.n_features))
 
-        base = [m(self.X_base, self.y_base) for m in self.evaluation_measures]
+        base = np.array([m(self.X_base, self.y_base) for m in self.evaluation_measures])
+        base[np.isnan(base)] = 1
         projection_scores = []
         for bp in base_projection_pool:
             X_temp = np.sum(self.X_base[:, :, np.newaxis] * bp, axis=1)
             projection_scores.append([m(X_temp, self.y_base) for m in self.evaluation_measures])
+
+        projection_scores = np.array(projection_scores)
+        projection_scores[np.isnan(projection_scores)] = 1
         
         dist = [euclidean(projection_scores[i], base) for i in range(self.base_projection_pool_size)]
         proba = -np.array(dist)
