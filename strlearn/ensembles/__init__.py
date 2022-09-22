@@ -12,6 +12,7 @@ from .CDS import CDS
 from .NIE import NIE
 from .OUSE import OUSE
 from .KUE import KUE
+from .ROSE import ROSE
 from .base import StreamingEnsemble
 
 __all__ = [
@@ -29,5 +30,6 @@ __all__ = [
     "NIE",
     "OUSE",
     "KUE",
+    "ROSE",
     "StreamingEnsemble"
 ]

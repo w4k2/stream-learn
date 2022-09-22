@@ -116,6 +116,10 @@ def test_KUE():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, sl.ensembles.KUE(GaussianNB(), n_estimators=5))
 
+def test_ROSE():
+    stream = get_stream()
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, sl.ensembles.ROSE(GaussianNB(), n_estimators=5))
 
 def test_AWE():
     stream = get_stream()
