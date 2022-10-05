@@ -64,7 +64,7 @@ class SemiSyntheticStreamGenerator:
         binarize=True,
         density=150,
         base_projection_pool_size=50,
-        evaluation_measures=[px.f1, px.n2]
+        evaluation_measures=[px.classification.f1, px.classification.n2]
     ):
         self.n_chunks = n_chunks
         self.chunk_size = chunk_size
