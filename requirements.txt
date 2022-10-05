@@ -10,5 +10,5 @@ sphinx_gallery
 pillow
 tqdm
 sphinxcontrib-bibtex
-problexity
+problexity>=0.5.1
 requests
