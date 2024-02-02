@@ -34,6 +34,12 @@ def test_MetaEstimator_TestThanTrain():
     evaluator = sl.evaluators.TestThenTrain()
     evaluator.process(stream, clf)
 
+def test_Skipper_TestThanTrain():
+    "Skipper for TTT"
+    stream = get_stream()
+    clf = sl.classifiers.Skipper(GaussianNB())
+    evaluator = sl.evaluators.TestThenTrain()
+    evaluator.process(stream, clf)
 
 def test_MetaEstimator_fit():
     "Bare ACS for TTT"
