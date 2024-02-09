@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
-from scipy.spatial.distance import euclidean
 
 class SemiSyntheticStreamGenerator:
     """ Semi-Synthetic Data streams generator for drifting data streams.
@@ -18,10 +17,6 @@ class SemiSyntheticStreamGenerator:
     :param interpolation: Interpolation type.
     :param stabilize_factor: The factor describing the stability of a concept.
     :param binarize: Flag describing if the data should be binarized.
-    :param density: The number of possible drift points from which the generated drifts are randomly selected.
-    :param base_projection_pool_size: Number of initial projections from which the final ones are selected.
-    :param evaluation_measures: Measures based on which the projections are selected.
-    
     :type X: array-like, shape (n_samples, n_features)
     :type y: array-like, shape (n_samples, )
     :type n_chunks: integer, optional (default=200)
@@ -32,9 +27,6 @@ class SemiSyntheticStreamGenerator:
     :type interpolation: string, optional (default='nearest')
     :type stabilize_factor: float, optional (default=0.2)
     :type binarize: boolean, optional (default=True)
-    :type density: integer, optional (default=None)
-    :type base_projection_pool_size: integer, optional (default=50)
-    :type evaluation_measures: list, optional (default=[])
 
     :Example:
     >>> import strlearn as sl
@@ -60,10 +52,7 @@ class SemiSyntheticStreamGenerator:
         n_features=10,
         interpolation='nearest',
         stabilize_factor=0.2,
-        binarize=True,
-        density=None,
-        base_projection_pool_size=50,
-        evaluation_measures=[]
+        binarize=True
     ):
         self.n_chunks = n_chunks
         self.chunk_size = chunk_size
@@ -74,9 +63,6 @@ class SemiSyntheticStreamGenerator:
         self.interpolation = interpolation
         self.stabilize_factor = stabilize_factor
         self.binarize = binarize
-        self.density = n_drifts+1 if density is None else density
-        self.base_projection_pool_size = base_projection_pool_size
-        self.evaluation_measures=evaluation_measures
 
         self.X_base = np.copy(X)
         self.y_base = np.copy(y)
@@ -133,51 +119,22 @@ class SemiSyntheticStreamGenerator:
         self.y = self.y[p]
 
         # Generate basepoints
-        possible_basepoints = np.linspace(0,self.n_samples,self.density)
-
-        self.drift_basepoints = np.sort(np.random.choice(possible_basepoints, self.n_drifts+1, replace=False).astype(int))
+        self.drift_basepoints = np.linspace(0,self.n_samples,self.n_drifts+1)
         self.drift_basepoints[0] = 0
         self.drift_basepoints[-1] = self.n_samples
 
         # Select best projections
         n_concept_features = self.X.shape[1]
-        base_projection_pool = np.random.normal(size=(self.base_projection_pool_size,
+        base_projections = np.random.normal(size=(self.n_drifts+1,
                                               n_concept_features,
                                               self.n_features))
 
-        base = np.array([m(self.X_base, self.y_base) for m in self.evaluation_measures])
-        base[np.isnan(base)] = 1
-        projection_scores = []
-        for bp in base_projection_pool:
-            X_temp = np.sum(self.X_base[:, :, np.newaxis] * bp, axis=1)
-            projection_scores.append([m(X_temp, self.y_base) for m in self.evaluation_measures])
-
-        projection_scores = np.array(projection_scores)
-        projection_scores[np.isnan(projection_scores)] = 1
-        
-        dist = [euclidean(projection_scores[i], base) for i in range(self.base_projection_pool_size)]
-        proba = -np.array(dist)
-        proba -= np.min(proba)
-        proba /=np.sum(proba)
-
-        try:
-            base_projections_idx = np.random.choice(range(self.base_projection_pool_size), 
-                                                p=proba, 
-                                                replace=False, 
-                                                size=self.n_drifts+1)
-        except:
-            base_projections_idx = np.random.choice(range(self.base_projection_pool_size), 
-                                                replace=False, 
-                                                size=self.n_drifts+1)
-
-        base_projections = base_projection_pool[base_projections_idx]
 
         # Add auxiliary points     
         distances = self._get_distances()
 
         _drift_basepoints = []
         _base_projections = []
-        _base_projections_gt = []
         for p_id, p in enumerate(self.drift_basepoints):
             sep_neg = int(distances[p_id-1]*self.stabilize_factor)
             try:
@@ -190,13 +147,10 @@ class SemiSyntheticStreamGenerator:
             _drift_basepoints.append(p + sep_pos)
             
             [_base_projections.append(base_projections[p_id]) for i in range(3)]
-            [_base_projections_gt.append(p_id) for i in range(3)]
-        
 
         # Remove first and last - out of range
-        self.drift_basepoints_aux = np.array(_drift_basepoints)[1:-1]
-        self.base_projections_aux = np.array(_base_projections)[1:-1]
-        self.base_projections_gt_aux = np.array(_base_projections_gt)[1:-1]
+        drift_basepoints_aux = np.array(_drift_basepoints)[1:-1]
+        base_projections_aux = np.array(_base_projections)[1:-1]
 
         # Generate stream
         continous_projections = np.zeros((self.n_samples, n_concept_features, self.n_features))
@@ -204,18 +158,14 @@ class SemiSyntheticStreamGenerator:
 
         for d_s in range(self.n_features): 
             for d_c in range(n_concept_features):
-                original_values = self.base_projections_aux[:, d_c, d_s]
-                f = interp1d(self.drift_basepoints_aux, original_values, kind=self.interpolation)
+                original_values = base_projections_aux[:, d_c, d_s]
+                f = interp1d(drift_basepoints_aux, original_values, kind=self.interpolation)
                 continous_projections[:, d_c, d_s] = f(stream_basepoints)
                 
         X_s = np.sum(self.X[:, :, np.newaxis] * continous_projections, axis=1)
 
         return X_s, np.copy(self.y)
 
-    def _concept_proba(self):
-        f = interp1d(self.drift_basepoints_aux, (self.base_projections_gt_aux%2), kind=self.interpolation)
-        proba = f(np.linspace(0, self.n_samples-1, self.n_samples).astype(int))
-        return proba
 
     def is_dry(self):
         return (
