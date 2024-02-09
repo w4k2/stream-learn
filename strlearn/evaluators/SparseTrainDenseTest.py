@@ -54,8 +54,9 @@ class SparseTrainDenseTest:
         self.stream_ = stream
 
         # Prepare scores table
-        self.scores = np.zeros(
-            (len(self.clfs_), ((self.stream_.n_chunks - 1)), len(self.metrics))
+        self.scores = np.full(
+            (len(self.clfs_), ((self.stream_.n_chunks - 1)), len(self.metrics)),
+            np.nan
         )
 
         if self.verbose:
@@ -76,4 +77,4 @@ class SparseTrainDenseTest:
 
             # Train
             if stream.chunk_id % self.n_repeats == 0:
-                [clf.partial_fit(X, y, self.stream_.classes_) for clf in self.clfs_]
+                [clf.partial_fit(X, y, self.stream_.classes_.astype(int)) for clf in self.clfs_]
