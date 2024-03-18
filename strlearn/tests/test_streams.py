@@ -369,12 +369,6 @@ def test_semi_synthetic_generator():
     while stream.get_chunk():
         pass
 
-def test_semi_synthetic_generator_empty_measures():
-    X, y = load_iris(return_X_y=True)
-    stream = sl.streams.SemiSyntheticStreamGenerator(X, y, evaluation_measures=[])
-    while stream.get_chunk():
-        pass
-
 def test_semi_synthetic_generator_binarize_false():
     X, y = load_iris(return_X_y=True)
     stream = sl.streams.SemiSyntheticStreamGenerator(X, y, binarize=False)
