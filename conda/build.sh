@@ -6,7 +6,7 @@
 rm -rf stream-learn/
 
 # create temporary environment (current user env can cause conflits with packages we want to install)
-conda create -y -n tmp-conda-upload python=3.8
+conda create -y -n tmp-conda-upload python">=3.10"
 eval "$(conda shell.bash hook)"
 conda activate tmp-conda-upload
 conda install -y conda-build anaconda-client grayskull -c conda-forge
@@ -28,4 +28,4 @@ anaconda upload -u w4k2 $LATEST_PACKAGE
 
 # cleanup
 conda deactivate
-conda env remove -n tmp-conda-upload
+conda env remove -y -n tmp-conda-upload
