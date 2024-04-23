@@ -42,17 +42,18 @@ class DDM(BaseEstimator, ClassifierMixin):
             chunk_p_mins.append(self.p_min)
             chunk_s_mins.append(self.s_min)
 
-        if self.cnt > self.skip and self.p_i + self.s_i > self.p_min + self.drift_lvl*self.s_min:
-            self.drift.append(2)
-            # reset
-            self.p_min = np.inf
-            self.s_min = np.inf
-            self.p_i = 1
-            self.s_i = 0
-            self.cnt = 1
-        elif self.cnt > self.skip and self.p_i + self.s_i >= self.p_min + self.warning_lvl*self.s_min:
-            self.drift.append(1)
-        else:
-            self.drift.append(0)
+            if self.cnt > self.skip and self.p_i + self.s_i > self.p_min + self.drift_lvl*self.s_min:
+                self.drift.append(2)
+                # reset
+                self.p_min = np.inf
+                self.s_min = np.inf
+                self.p_i = 1
+                self.s_i = 0
+                self.cnt = 1
+                break
+            elif self.cnt > self.skip and self.p_i + self.s_i >= self.p_min + self.warning_lvl*self.s_min:
+                self.drift.append(1)
+            else:
+                self.drift.append(0)
 
         return self

@@ -47,15 +47,16 @@ class EDDM(BaseEstimator, ClassifierMixin):
             chunk_m_max.append(self.mean_dist_max)
             chunk_s_max.append(self.std_dist_max)
 
-        if (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.drift_lvl:
-            self.drift.append(2)
-            #reset            
-            self.mean_dist_max = 0
-            self.std_dist_max = 0
-            self.distances_since_drift=[]
-        elif (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.warning_lvl:
-            self.drift.append(1)
-        else:
-            self.drift.append(0)
-    
+            if (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.drift_lvl:
+                self.drift.append(2)
+                #reset            
+                self.mean_dist_max = 0
+                self.std_dist_max = 0
+                self.distances_since_drift=[]
+                break
+            elif (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.warning_lvl:
+                self.drift.append(1)
+            else:
+                self.drift.append(0)
+        
         return self
