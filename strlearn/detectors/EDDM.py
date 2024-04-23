@@ -3,7 +3,6 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 class EDDM(BaseEstimator, ClassifierMixin):
     def __init__(self, warning_lvl = 0.95, drift_lvl = 0.9):
-        self.warning_lvl = warning_lvl
         self.drift_lvl = drift_lvl
         self.drift = []
 
@@ -15,11 +14,16 @@ class EDDM(BaseEstimator, ClassifierMixin):
         self.std_dist = 0
         self.mean_dist_max = 0
         self.std_dist_max = 0
+        
+        self._is_drift = False
+
 
     def feed(self, X, real, pred):
 
         if len(pred) != len(real):
             self.drift.append(0)
+            self._is_drift = False
+
             return self
         
         chunk_m_i=[]
@@ -48,15 +52,18 @@ class EDDM(BaseEstimator, ClassifierMixin):
             chunk_s_max.append(self.std_dist_max)
 
             if (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.drift_lvl:
-                self.drift.append(2)
                 #reset            
                 self.mean_dist_max = 0
                 self.std_dist_max = 0
                 self.distances_since_drift=[]
+                self._is_drift = True
                 break
-            elif (m_i + 2*s_i)/(self.mean_dist_max + 2* self.std_dist_max)<self.warning_lvl:
-                self.drift.append(1)
             else:
-                self.drift.append(0)
+                self._is_drift = False
         
+        if self._is_drift:
+            self.drift.append(2)
+        else:
+            self.drift.append(0)
+                    
         return self

@@ -3,7 +3,6 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 class DDM(BaseEstimator, ClassifierMixin):
     def __init__(self, warning_lvl=2, drift_lvl=3, skip=30):
-        self.warning_lvl = warning_lvl
         self.drift_lvl = drift_lvl
         self.skip = skip
 
@@ -14,11 +13,15 @@ class DDM(BaseEstimator, ClassifierMixin):
         self.cnt = 1
 
         self.drift = []
+        self._is_drift = False
+
 
     def feed(self, X, real, pred):
 
         if len(pred) != len(real):
             self.drift.append(0)
+            self._is_drift = False
+
             return self
 
         chunk_p_i = []
@@ -43,17 +46,21 @@ class DDM(BaseEstimator, ClassifierMixin):
             chunk_s_mins.append(self.s_min)
 
             if self.cnt > self.skip and self.p_i + self.s_i > self.p_min + self.drift_lvl*self.s_min:
-                self.drift.append(2)
                 # reset
                 self.p_min = np.inf
                 self.s_min = np.inf
                 self.p_i = 1
                 self.s_i = 0
                 self.cnt = 1
+                self._is_drift = True
                 break
-            elif self.cnt > self.skip and self.p_i + self.s_i >= self.p_min + self.warning_lvl*self.s_min:
-                self.drift.append(1)
             else:
-                self.drift.append(0)
+                self._is_drift = False
+
+        
+        if self._is_drift:
+            self.drift.append(2)
+        else:
+            self.drift.append(0)
 
         return self
