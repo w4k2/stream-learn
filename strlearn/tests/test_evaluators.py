@@ -21,7 +21,16 @@ def test_TTT_single_clf():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
+    
+    cscores = sl.utils.scores_to_cummean(evaluator.scores)
 
+def test_STDT_single_clf():
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = sl.evaluators.SparseTrainDenseTest(verbose=True)
+    evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
 
 def test_TTT_custom_metrics():
     stream = get_stream()
