@@ -2,9 +2,10 @@ import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
 import csv
+from .stream import Stream
 
 
-class StreamGenerator:
+class StreamGenerator(Stream):
     """ Data streams generator for both stationary and drifting data streams.
 
     A key element of the ``stream-learn`` package is a generator that allows to prepare a replicable (according to the given ``random_state`` value) classification dataset with class distribution changing over the course of stream, with base concepts build on a default class distributions for the ``scikit-learn`` package from the ``make_classification()`` function. These types of distributions try to reproduce the rules for generating the ``Madelon`` set. The ``StreamGenerator`` is capable of preparing any variation of the data stream known in the general taxonomy of data streams.
@@ -397,13 +398,6 @@ class StreamGenerator:
                 ("%.0f_%.0f" % (self.weights[0]*100, self.weights[1]*100)),
                 int(self.chunk_size * self.n_chunks)
             )
-
-    def __next__(self):
-        while not self.is_dry():
-            yield self.get_chunk()
-
-    def __iter__(self):
-        return next(self)
 
     def save_to_arff(self, filepath):
         """

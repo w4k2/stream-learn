@@ -12,3 +12,4 @@ tqdm
 sphinxcontrib-bibtex
 problexity>=0.5.1
 requests
+wget

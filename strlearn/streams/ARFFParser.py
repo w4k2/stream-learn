@@ -1,10 +1,11 @@
 import numpy as np
 from sklearn import preprocessing
+from .stream import Stream
 
 ATYPES = ("nominal", "numeric")
 
 
-class ARFFParser:
+class ARFFParser(Stream):
     """ Stream-aware parser of datasets in ARFF format.
 
     :type path: string
@@ -106,13 +107,6 @@ class ARFFParser:
 
     def __str__(self):
         return self.name
-
-    def __next__(self):
-        while not self.is_dry():
-            yield self.get_chunk()
-
-    def __iter__(self):
-        return next(self)
 
     def is_dry(self):
         """

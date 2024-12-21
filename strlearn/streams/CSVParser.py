@@ -1,9 +1,10 @@
 import numpy as np
 import csv
 from sklearn import preprocessing
+from .stream import Stream
 
 
-class CSVParser:
+class CSVParser(Stream):
     """ Stream-aware parser of datasets in CSV format.
 
     :type path: string
@@ -60,13 +61,6 @@ class CSVParser:
 
     def __str__(self):
         return self.name
-
-    def __next__(self):
-        while not self.is_dry():
-            yield self.get_chunk()
-
-    def __iter__(self):
-        return next(self)
 
     def is_dry(self):
         """
