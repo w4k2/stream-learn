@@ -5,6 +5,7 @@ from .StreamGenerator import StreamGenerator
 from .SemiSyntheticStreamGenerator import SemiSyntheticStreamGenerator
 from .benchmarks.eletricity import Eletricity
 from .benchmarks.poker import Poker
+from .benchmarks.insects import Insects
 
 __all__ = [
     "ARFFParser",
@@ -14,4 +15,5 @@ __all__ = [
     "SemiSyntheticStreamGenerator",
     "Eletricity",
     "Poker",
+    "Insects",
 ]
