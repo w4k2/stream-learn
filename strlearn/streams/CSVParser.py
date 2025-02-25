@@ -39,6 +39,9 @@ class CSVParser(DataStream):
         self.path = path
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
+        n_lines = self.num_lines()
+        if self.chunk_size * self.n_chunks > n_lines:
+            raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines}')
 
         # Prepare header storage
         self.types = []
@@ -48,7 +51,15 @@ class CSVParser(DataStream):
         self.chunk_id = 0
         self.starting_chunk = False
 
-    def _make_classification(self):
+    def num_lines(self) -> int:
+        with open(self.path, 'r') as f:
+            csv_reader = csv.reader(f)
+            for _ in csv_reader:
+                pass
+            num_lines = csv_reader.line_num
+        return num_lines
+
+    def _make_classification(self):  # TODO instead of counting lines and than lazy intiliazation we can read all the lines first and count lines at the same time
         # Read CSV
         csv_content = self._read_csv()
         csv_np = np.array(csv_content).astype(float)
