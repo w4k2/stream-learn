@@ -1,5 +1,5 @@
-from .CSVParser import CSVParser
-from .utils import download_dataset, get_data_path
+from ..CSVParser import CSVParser
+from ..utils import download_dataset, get_data_path
 
 
 class Eletricity(CSVParser):

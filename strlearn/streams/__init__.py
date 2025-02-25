@@ -3,7 +3,8 @@ from .CSVParser import CSVParser
 from .NPYParser import NPYParser
 from .StreamGenerator import StreamGenerator
 from .SemiSyntheticStreamGenerator import SemiSyntheticStreamGenerator
-from .eletricity import Eletricity
+from .benchmarks.eletricity import Eletricity
+from .benchmarks.poker import Poker
 
 __all__ = [
     "ARFFParser",
@@ -12,4 +13,5 @@ __all__ = [
     "NPYParser",
     "SemiSyntheticStreamGenerator",
     "Eletricity",
+    "Poker",
 ]

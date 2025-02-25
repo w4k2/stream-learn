@@ -106,7 +106,7 @@ class ARFFParser(DataStream):
         self._f.close()
 
     def __str__(self):
-        return self.name
+        return f'ARFFParser({self.name}, chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """

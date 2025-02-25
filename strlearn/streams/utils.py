@@ -8,7 +8,9 @@ def download_dataset(url: str, output_path: str):
     if type(output_path) != str:
         output_path = str(output_path)
 
+    print(f'downloading dataset to {output_path}')
     wget.download(url, str(output_path))
+    print(f'\ndownload finished')
 
 
 def get_data_path() -> pathlib.Path:
