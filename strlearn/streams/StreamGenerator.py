@@ -2,10 +2,10 @@ import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
 import csv
-from .stream import Stream
+from .stream import DataStream
 
 
-class StreamGenerator(Stream):
+class StreamGenerator(DataStream):
     """ Data streams generator for both stationary and drifting data streams.
 
     A key element of the ``stream-learn`` package is a generator that allows to prepare a replicable (according to the given ``random_state`` value) classification dataset with class distribution changing over the course of stream, with base concepts build on a default class distributions for the ``scikit-learn`` package from the ``make_classification()`` function. These types of distributions try to reproduce the rules for generating the ``Madelon`` set. The ``StreamGenerator`` is capable of preparing any variation of the data stream known in the general taxonomy of data streams.

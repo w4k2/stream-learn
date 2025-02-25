@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn import preprocessing
-from .stream import Stream
+from .stream import DataStream
 
 
-class NPYParser(Stream):
+class NPYParser(DataStream):
     """ Stream-aware parser of datasets in numpy format.
 
     :type path: string

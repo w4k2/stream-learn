@@ -1,10 +1,10 @@
 import numpy as np
 import csv
 from sklearn import preprocessing
-from .stream import Stream
+from .stream import DataStream
 
 
-class CSVParser(Stream):
+class CSVParser(DataStream):
     """ Stream-aware parser of datasets in CSV format.
 
     :type path: string
@@ -60,7 +60,7 @@ class CSVParser(Stream):
             return [line for line in reader]
 
     def __str__(self):
-        return self.name
+        return f'CSVParser(self.name, chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """
