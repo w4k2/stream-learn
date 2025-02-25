@@ -56,8 +56,8 @@ class CSVParser(DataStream):
             csv_reader = csv.reader(f)
             for _ in csv_reader:
                 pass
-            num_lines = csv_reader.line_num
-        return num_lines
+            n_lines = csv_reader.line_num
+        return n_lines
 
     def _make_classification(self):  # TODO instead of counting lines and than lazy intiliazation we can read all the lines first and count lines at the same time
         # Read CSV

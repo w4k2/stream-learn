@@ -48,10 +48,26 @@ class ARFFParser(DataStream):
 
         self.chunk_id = 0
         self.starting_chunk = False
-        # Analyze its header
+        n_header_lines = self.analyze_header()
+        n_lines = self.num_lines()
+        if self.chunk_size * self.n_chunks > n_lines - n_header_lines:
+            raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines - n_header_lines}')
+
+        self.types = np.array(self.types)
+        self.nominal_atts = np.where(self.types == "nominal")[0]
+        self.numeric_atts = np.where(self.types == "numeric")[0]
+        self.n_attributes = self.types.shape[0]
+        self.is_dry_ = False
+
+        # Read first line
+        self.a_line = self._f.readline()
+
+    def analyze_header(self):
+        header_lines = 0
         while True:
             line = self._f.readline()[:-1]
             pos = self._f.tell()
+            header_lines += 1
             if line == "@data":
                 line = self._f.readline()
                 if line not in ["\n", "\r\n"]:
@@ -92,15 +108,11 @@ class ARFFParser(DataStream):
                         self.types.append("numeric")
             elif elements[0] == "@relation":
                 self.relation = " ".join(elements[1:])
+        return header_lines
 
-        self.types = np.array(self.types)
-        self.nominal_atts = np.where(self.types == "nominal")[0]
-        self.numeric_atts = np.where(self.types == "numeric")[0]
-        self.n_attributes = self.types.shape[0]
-        self.is_dry_ = False
-
-        # Read first line
-        self.a_line = self._f.readline()
+    def num_lines(self) -> int:
+        n_lines = sum(1 for _ in open(self.name, 'r'))
+        return n_lines
 
     def __del__(self):
         self._f.close()
