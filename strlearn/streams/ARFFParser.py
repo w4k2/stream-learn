@@ -111,7 +111,8 @@ class ARFFParser(DataStream):
         return header_lines
 
     def num_lines(self) -> int:
-        n_lines = sum(1 for _ in open(self.name, 'r'))
+        with open(self.name, 'r') as f:
+            n_lines = sum(1 for _ in f)
         return n_lines
 
     def __del__(self):
