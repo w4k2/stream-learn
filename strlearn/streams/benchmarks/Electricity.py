@@ -2,11 +2,10 @@ import pandas
 import numpy as np
 
 from ..CSVParser import CSVParser
-from ..stream import DataStream
 from ..utils import download_dataset, get_data_path
 
 
-class Eletricity(CSVParser):
+class Electricity(CSVParser):
     def __init__(self, chunk_size: int = 200, n_chunks: int = 100):
         data_path = get_data_path()
         download_dataset("https://raw.githubusercontent.com/w4k2/stream-datasets/refs/heads/main/electricity.csv", data_path / "electricity.csv")

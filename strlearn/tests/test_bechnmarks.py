@@ -3,17 +3,17 @@ import strlearn as sl
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
-from strlearn.streams import Covtype, Eletricity, Insects, Poker  # LED, SEA, SineGenerator, WaveformGenerator
+from strlearn.streams import Covtype, Electricity, Insects, Poker  # LED, SEA, SineGenerator, WaveformGenerator
 
 
-@pytest.mark.parametrize("benchmark_class", [Covtype, Eletricity, Poker])
+@pytest.mark.parametrize("benchmark_class", [Covtype, Electricity, Poker])
 def test_can_iterate(benchmark_class):
     stream = benchmark_class()
     for _ in stream:
         pass
 
 
-@pytest.mark.parametrize("benchmark_class", [Covtype, Eletricity, Poker])
+@pytest.mark.parametrize("benchmark_class", [Covtype, Electricity, Poker])
 def test_can_train(benchmark_class):
     stream = benchmark_class()
     clf = GaussianNB()

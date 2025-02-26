@@ -3,10 +3,11 @@ from .CSVParser import CSVParser
 from .NPYParser import NPYParser
 from .StreamGenerator import StreamGenerator
 from .SemiSyntheticStreamGenerator import SemiSyntheticStreamGenerator
-from .benchmarks.eletricity import Eletricity
-from .benchmarks.poker import Poker
-from .benchmarks.insects import Insects
-from .benchmarks.covtype import Covtype
+from .DataStream import DataStream
+from .benchmarks.Electricity import Electricity
+from .benchmarks.Poker import Poker
+from .benchmarks.Insects import Insects
+from .benchmarks.Covtype import Covtype
 
 __all__ = [
     "ARFFParser",
@@ -14,8 +15,9 @@ __all__ = [
     "CSVParser",
     "NPYParser",
     "SemiSyntheticStreamGenerator",
-    "Eletricity",
+    "Electricity",
     "Poker",
     "Insects",
     "Covtype",
+    "DataStream",
 ]
