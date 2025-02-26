@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn import preprocessing
-from .stream import DataStream
+from .DataStream import DataStream
 
 
 class NPYParser(DataStream):
@@ -38,6 +38,9 @@ class NPYParser(DataStream):
         self.path = path
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
+        n_samples = np.load(self.path).shape[0]
+        if self.chunk_size * self.n_chunks > n_samples:
+            raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_samples}')
 
         # Prepare header storage
         self.types = []
@@ -48,7 +51,6 @@ class NPYParser(DataStream):
         self.starting_chunk = False
 
     def _make_classification(self):
-        # Read CSV
         ds = np.load(self.path)
         self.classes_ = np.unique(ds[:, -1]).astype(int)
         return ds[:, :-1], ds[:, -1]

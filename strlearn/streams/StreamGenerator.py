@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import logistic
 from sklearn.datasets import make_classification
 import csv
-from .stream import DataStream
+from .DataStream import DataStream
 
 
 class StreamGenerator(DataStream):

@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn import preprocessing
-from .stream import DataStream
+from .DataStream import DataStream
 
 ATYPES = ("nominal", "numeric")
 

@@ -1,7 +1,7 @@
 import numpy as np
 import csv
 from sklearn import preprocessing
-from .stream import DataStream
+from .DataStream import DataStream
 
 
 class CSVParser(DataStream):
