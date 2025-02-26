@@ -8,6 +8,7 @@ from .benchmarks.Electricity import Electricity
 from .benchmarks.Poker import Poker
 from .benchmarks.Insects import Insects
 from .benchmarks.Covtype import Covtype
+from .utils import download_dataset, get_data_path
 
 __all__ = [
     "ARFFParser",
@@ -20,4 +21,6 @@ __all__ = [
     "Insects",
     "Covtype",
     "DataStream",
+    "download_dataset",
+    "get_data_path",
 ]

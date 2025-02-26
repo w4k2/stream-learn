@@ -56,7 +56,7 @@ class NPYParser(DataStream):
         return ds[:, :-1], ds[:, -1]
 
     def __str__(self):
-        return self.name
+        return f'NPYParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """
@@ -94,8 +94,6 @@ class NPYParser(DataStream):
 
             self.current_chunk = (self.X[start:end], self.y[start:end])
             return self.current_chunk
-        else:
-            return None
 
     def reset(self):
         """Reset stream to the beginning."""

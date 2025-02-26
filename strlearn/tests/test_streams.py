@@ -177,6 +177,16 @@ def test_csvparser(stream_filepath_csv):
         assert np.array_equal(y_one, y_two)
 
 
+def test_csvparser_too_large_n_chunks(stream_filepath_csv):
+    with pytest.raises(ValueError):
+        sl.streams.CSVParser(stream_filepath_csv, chunk_size=200, n_chunks=100)
+
+
+def test_csvparser_str(stream_filepath_csv):
+    stream = sl.streams.CSVParser(stream_filepath_csv, chunk_size=20, n_chunks=10)
+    assert str(stream) == 'CSVParser("test_stream.csv", chunk_size=20, n_chunks=10)'
+
+
 def test_can_train_with_csvparser(stream_filepath_csv):
     n_chunks = 10
     chunk_size = 20
@@ -209,6 +219,16 @@ def test_npyparser(stream_filepath_npy):
         assert np.array_equal(y_one, y_two)
 
 
+def test_npyparser_too_large_n_chunks(stream_filepath_npy):
+    with pytest.raises(ValueError):
+        sl.streams.NPYParser(stream_filepath_npy, chunk_size=200, n_chunks=100)
+
+
+def test_npyparser_str(stream_filepath_npy):
+    stream = sl.streams.NPYParser(stream_filepath_npy, chunk_size=20, n_chunks=10)
+    assert str(stream) == 'NPYParser("test_stream.npy", chunk_size=20, n_chunks=10)'
+
+
 def test_arffparser(stream_filepath_arff):
     n_chunks = 10
     chunk_size = 20
@@ -229,12 +249,12 @@ def test_arffparser(stream_filepath_arff):
 
 def test_arffparser_str(stream_filepath_arff):
     stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=20, n_chunks=10)
-    assert str(stream) == 'ARFFParser(test_stream.arff, chunk_size=20, n_chunks=10)'
+    assert str(stream) == 'ARFFParser("test_stream.arff", chunk_size=20, n_chunks=10)'
 
 
 def test_arffparser_too_large_n_chunks(stream_filepath_arff):
     with pytest.raises(ValueError):
-        stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=200, n_chunks=100)
+        sl.streams.ARFFParser(stream_filepath_arff, chunk_size=200, n_chunks=100)
 
 
 def test_arffparser_is_dry(stream_filepath_arff):

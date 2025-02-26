@@ -29,4 +29,4 @@ class Insects(ARFFParser):
         super().__init__(data_path / filename, chunk_size, n_chunks)
 
     def __str__(self):
-        return f'Insects(drift_mode={self.subsample}, subsample={self.subsample} chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
+        return f'Insects(drift_mode={self.drift_mode}, subsample={self.subsample}, chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'

@@ -116,10 +116,11 @@ class ARFFParser(DataStream):
         return n_lines
 
     def __del__(self):
-        self._f.close()
+        if hasattr(self, "_f"):
+            self._f.close()
 
     def __str__(self):
-        return f'ARFFParser({self.name}, chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
+        return f'ARFFParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """

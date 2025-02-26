@@ -1,5 +1,4 @@
 import pandas
-import numpy as np
 
 from ..CSVParser import CSVParser
 from ..utils import download_dataset, get_data_path
@@ -18,4 +17,4 @@ class Electricity(CSVParser):
         return csv_np[:, :-1], csv_np[:, -1]
 
     def __str__(self):
-        return f'Eletricity(chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
+        return f'Electricity(chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'

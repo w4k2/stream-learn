@@ -71,7 +71,7 @@ class CSVParser(DataStream):
             return [line for line in reader]
 
     def __str__(self):
-        return f'CSVParser(self.name, chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """
@@ -111,8 +111,6 @@ class CSVParser(DataStream):
 
             self.current_chunk = (self.X[start:end], self.y[start:end])
             return self.current_chunk
-        else:
-            return None
 
     def reset(self):
         """Reset stream to the beginning."""
