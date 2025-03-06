@@ -1,9 +1,10 @@
 import numpy as np
 import csv
 from sklearn import preprocessing
+from .DataStream import DataStream
 
 
-class CSVParser:
+class CSVParser(DataStream):
     """ Stream-aware parser of datasets in CSV format.
 
     :type path: string
@@ -38,6 +39,9 @@ class CSVParser:
         self.path = path
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
+        n_lines = self.num_lines()
+        if self.chunk_size * self.n_chunks > n_lines:
+            raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines}')
 
         # Prepare header storage
         self.types = []
@@ -47,7 +51,15 @@ class CSVParser:
         self.chunk_id = 0
         self.starting_chunk = False
 
-    def _make_classification(self):
+    def num_lines(self) -> int:
+        with open(self.path, 'r') as f:
+            csv_reader = csv.reader(f)
+            for _ in csv_reader:
+                pass
+            n_lines = csv_reader.line_num
+        return n_lines
+
+    def _make_classification(self):  # TODO instead of counting lines and than lazy intiliazation we can read all the lines first and count lines at the same time
         # Read CSV
         csv_content = self._read_csv()
         csv_np = np.array(csv_content).astype(float)
@@ -59,14 +71,7 @@ class CSVParser:
             return [line for line in reader]
 
     def __str__(self):
-        return self.name
-
-    def __next__(self):
-        while not self.is_dry():
-            yield self.get_chunk()
-
-    def __iter__(self):
-        return next(self)
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """
@@ -106,8 +111,6 @@ class CSVParser:
 
             self.current_chunk = (self.X[start:end], self.y[start:end])
             return self.current_chunk
-        else:
-            return None
 
     def reset(self):
         """Reset stream to the beginning."""

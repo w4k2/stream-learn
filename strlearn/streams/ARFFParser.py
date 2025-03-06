@@ -1,10 +1,11 @@
 import numpy as np
 from sklearn import preprocessing
+from .DataStream import DataStream
 
 ATYPES = ("nominal", "numeric")
 
 
-class ARFFParser:
+class ARFFParser(DataStream):
     """ Stream-aware parser of datasets in ARFF format.
 
     :type path: string
@@ -47,10 +48,26 @@ class ARFFParser:
 
         self.chunk_id = 0
         self.starting_chunk = False
-        # Analyze its header
+        n_header_lines = self.analyze_header()
+        n_lines = self.num_lines()
+        if self.chunk_size * self.n_chunks > n_lines - n_header_lines:
+            raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines - n_header_lines}')
+
+        self.types = np.array(self.types)
+        self.nominal_atts = np.where(self.types == "nominal")[0]
+        self.numeric_atts = np.where(self.types == "numeric")[0]
+        self.n_attributes = self.types.shape[0]
+        self.is_dry_ = False
+
+        # Read first line
+        self.a_line = self._f.readline()
+
+    def analyze_header(self):
+        header_lines = 0
         while True:
             line = self._f.readline()[:-1]
             pos = self._f.tell()
+            header_lines += 1
             if line == "@data":
                 line = self._f.readline()
                 if line not in ["\n", "\r\n"]:
@@ -91,28 +108,19 @@ class ARFFParser:
                         self.types.append("numeric")
             elif elements[0] == "@relation":
                 self.relation = " ".join(elements[1:])
+        return header_lines
 
-        self.types = np.array(self.types)
-        self.nominal_atts = np.where(self.types == "nominal")[0]
-        self.numeric_atts = np.where(self.types == "numeric")[0]
-        self.n_attributes = self.types.shape[0]
-        self.is_dry_ = False
-
-        # Read first line
-        self.a_line = self._f.readline()
+    def num_lines(self) -> int:
+        with open(self.name, 'r') as f:
+            n_lines = sum(1 for _ in f)
+        return n_lines
 
     def __del__(self):
-        self._f.close()
+        if hasattr(self, "_f"):
+            self._f.close()
 
     def __str__(self):
-        return self.name
-
-    def __next__(self):
-        while not self.is_dry():
-            yield self.get_chunk()
-
-    def __iter__(self):
-        return next(self)
+        return f'ARFFParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks})'
 
     def is_dry(self):
         """

@@ -177,6 +177,16 @@ def test_csvparser(stream_filepath_csv):
         assert np.array_equal(y_one, y_two)
 
 
+def test_csvparser_too_large_n_chunks(stream_filepath_csv):
+    with pytest.raises(ValueError):
+        sl.streams.CSVParser(stream_filepath_csv, chunk_size=200, n_chunks=100)
+
+
+def test_csvparser_str(stream_filepath_csv):
+    stream = sl.streams.CSVParser(stream_filepath_csv, chunk_size=20, n_chunks=10)
+    assert str(stream) == 'CSVParser("test_stream.csv", chunk_size=20, n_chunks=10)'
+
+
 def test_can_train_with_csvparser(stream_filepath_csv):
     n_chunks = 10
     chunk_size = 20
@@ -209,6 +219,16 @@ def test_npyparser(stream_filepath_npy):
         assert np.array_equal(y_one, y_two)
 
 
+def test_npyparser_too_large_n_chunks(stream_filepath_npy):
+    with pytest.raises(ValueError):
+        sl.streams.NPYParser(stream_filepath_npy, chunk_size=200, n_chunks=100)
+
+
+def test_npyparser_str(stream_filepath_npy):
+    stream = sl.streams.NPYParser(stream_filepath_npy, chunk_size=20, n_chunks=10)
+    assert str(stream) == 'NPYParser("test_stream.npy", chunk_size=20, n_chunks=10)'
+
+
 def test_arffparser(stream_filepath_arff):
     n_chunks = 10
     chunk_size = 20
@@ -228,8 +248,13 @@ def test_arffparser(stream_filepath_arff):
 
 
 def test_arffparser_str(stream_filepath_arff):
-    stream = sl.streams.ARFFParser(stream_filepath_arff)
-    assert str(stream) == stream_filepath_arff
+    stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=20, n_chunks=10)
+    assert str(stream) == 'ARFFParser("test_stream.arff", chunk_size=20, n_chunks=10)'
+
+
+def test_arffparser_too_large_n_chunks(stream_filepath_arff):
+    with pytest.raises(ValueError):
+        sl.streams.ARFFParser(stream_filepath_arff, chunk_size=200, n_chunks=100)
 
 
 def test_arffparser_is_dry(stream_filepath_arff):
@@ -242,7 +267,7 @@ def test_arffparser_is_dry(stream_filepath_arff):
 
 
 def test_arffparser_reset(stream_filepath_arff):
-    stream = sl.streams.ARFFParser(stream_filepath_arff)
+    stream = sl.streams.ARFFParser(stream_filepath_arff, chunk_size=20, n_chunks=10)
     stream.reset()
     assert stream.chunk_id == 0
     assert not stream.is_dry()
@@ -255,7 +280,7 @@ def test_arff_parser_different_stream():
         n_drifts=1, incremental=True, n_chunks=n_chunks
     )
     stream_original.save_to_arff(filename)
-    stream_parsed = sl.streams.ARFFParser(filename)
+    stream_parsed = sl.streams.ARFFParser(filename, chunk_size=200, n_chunks=20)
 
     for i in range(n_chunks):
         X_a, y_a = stream_original.get_chunk()
@@ -299,7 +324,7 @@ def test_arff_parser_can_parse_real_feature(arff_content):
     filename = "stream_real_feature.arff"
     with open(filename, 'w+') as f:
         f.write(arff_content)
-    stream = sl.streams.ARFFParser(filename)
+    stream = sl.streams.ARFFParser(filename, chunk_size=1, n_chunks=6)
 
     clf = GaussianNB()
     ttt = sl.evaluators.TestThenTrain([accuracy_score])
@@ -321,6 +346,7 @@ def test_less_density_than_drifts():
     with pytest.raises(Exception):
         stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=100, density=50)
         stream.get_chunk()
+
 
 def test_smaller_pool_than_drifts():
     X, y = load_iris(return_X_y=True)
@@ -360,7 +386,7 @@ def test_can_iterate_npy(stream_filepath_npy):
     for X, y in stream:
         assert X.shape[0] == chunk_size
         assert X.shape[1] == 20
-        assert y.shape[0] == chunk_size    
+        assert y.shape[0] == chunk_size
 
 
 def test_semi_synthetic_generator():
@@ -369,11 +395,13 @@ def test_semi_synthetic_generator():
     while stream.get_chunk():
         pass
 
+
 def test_semi_synthetic_generator_binarize_false():
     X, y = load_iris(return_X_y=True)
     stream = sl.streams.SemiSyntheticStreamGenerator(X, y, binarize=False)
     while stream.get_chunk():
         pass
+
 
 def test_semi_synthetic_generator_save_to_arff(stream_filepath_arff):
     X, y = load_iris(return_X_y=True)
@@ -381,6 +409,7 @@ def test_semi_synthetic_generator_save_to_arff(stream_filepath_arff):
     chunk_size = 20
     stream_one = sl.streams.SemiSyntheticStreamGenerator(X, y, chunk_size=chunk_size, n_chunks=n_chunks)
     stream_one.save_to_arff(stream_filepath_arff)
+
 
 def test_semi_synthetic_generator_can_iterate():
     X, y = load_iris(return_X_y=True)
@@ -390,11 +419,13 @@ def test_semi_synthetic_generator_can_iterate():
         assert X.shape[1] == 50
         assert y.shape[0] == 100
 
+
 def test_semi_synthetic_generator_no_drifts():
     X, y = load_iris(return_X_y=True)
     with pytest.raises(Exception):
         stream = sl.streams.SemiSyntheticStreamGenerator(X, y, n_drifts=0)
         stream.get_chunk()
+
 
 def test_semi_synthetic_generator_equality():
     X, y = load_iris(return_X_y=True)
