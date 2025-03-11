@@ -5,7 +5,7 @@ from ..utils import download_dataset, get_data_path
 
 
 class Electricity(CSVParser):
-    def __init__(self, chunk_size: int = 200, n_chunks: int = 100):
+    def __init__(self, chunk_size: int = 'auto', n_chunks: int = 100):
         data_path = get_data_path()
         download_dataset("https://raw.githubusercontent.com/w4k2/stream-datasets/refs/heads/main/electricity.csv", data_path / "electricity.csv")
         super().__init__(data_path / "electricity.csv", chunk_size, n_chunks)

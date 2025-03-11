@@ -53,7 +53,7 @@ def test_insects_can_train(drift_mode, subsample):
 
 @pytest.mark.parametrize("drift_mode,subsample", [("abrupt", True), ("abrupt", False), ("gradual", True), ("gradual", False), ("incremental", True), ("incremental", False)])
 def test_insects_str(drift_mode, subsample):
-    stream = Insects(drift_mode, subsample)
+    stream = Insects(drift_mode, subsample, chunk_size=200, n_chunks=250)
     assert str(stream) == f'Insects(drift_mode={drift_mode}, subsample={subsample}, chunk_size=200, n_chunks=250)'
 
 
