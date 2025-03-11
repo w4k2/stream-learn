@@ -9,7 +9,7 @@ class CSVParser(DataStream):
 
     :type path: string
     :param path: Path to the csv file.
-    :type chunk_size: integer, optional (default=200)
+    :type chunk_size: integer or 'auto', optional (default='auto'). 'auto' computes the chunk size automatically based on number of samples in the stream.
     :param chunk_size: The number of instances in each data chunk.
     :type n_chunks: integer, optional (default=250)
     :param n_chunks: The number of data chunks, that the stream is composed of.
@@ -33,13 +33,15 @@ class CSVParser(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size=200, n_chunks=250):
+    def __init__(self, path, chunk_size='auto', n_chunks=250):
         # Read file.
         self.name = path
         self.path = path
+        n_lines = self.num_lines()
+        if chunk_size == 'auto':
+            chunk_size = n_lines // n_chunks
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
-        n_lines = self.num_lines()
         if self.chunk_size * self.n_chunks > n_lines:
             raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines}')
 

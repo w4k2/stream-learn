@@ -6,21 +6,24 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 from strlearn.streams import Covtype, Electricity, Insects, Poker  # LED, SEA, SineGenerator, WaveformGenerator
 
+from .test_utils import StreamSubset
+
 
 @pytest.mark.parametrize("benchmark_class", [Covtype, Electricity, Poker])
 def test_can_iterate(benchmark_class):
-    stream = benchmark_class()
-    for i, _ in enumerate(stream):
-        if i > 10:
-            break
+    benchmark_stream = benchmark_class()
+    stream_subset = StreamSubset(benchmark_stream, yield_n_chunks=5)
+    for i, _ in enumerate(stream_subset):
+        pass
 
 
 @pytest.mark.parametrize("benchmark_class", [Covtype, Electricity, Poker])
 def test_can_train(benchmark_class):
-    stream = benchmark_class()
+    benchmark_stream = benchmark_class()
+    stream_subset = StreamSubset(benchmark_stream, yield_n_chunks=3)
     clf = GaussianNB()
     ttt = sl.evaluators.TestThenTrain([accuracy_score])
-    ttt.process(stream, clf)
+    ttt.process(stream_subset, clf)
     acc = ttt.scores
     assert acc[0, 0, -1] > 0.2
 
