@@ -35,10 +35,10 @@ class CSVParser(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False):
+    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False, delimiter=','):
         self.name = path
         self.path = path
-        n_lines = self.num_lines(skip_firstline)
+        n_lines = self.num_lines(skip_firstline, delimiter)
         if chunk_size == 'auto':
             chunk_size = n_lines // n_chunks
         self.chunk_size = chunk_size
@@ -48,10 +48,11 @@ class CSVParser(DataStream):
 
         self.chunk_id = 0
         self.skip_firstline = skip_firstline
+        self.delimiter = delimiter
 
-    def num_lines(self, skip_firstline) -> int:
+    def num_lines(self, skip_firstline, delimiter) -> int:
         with open(self.path, 'r') as f:
-            csv_reader = csv.reader(f, delimiter=';')
+            csv_reader = csv.reader(f, delimiter=delimiter)
             for _ in csv_reader:
                 pass
             n_lines = csv_reader.line_num
@@ -66,14 +67,14 @@ class CSVParser(DataStream):
 
     def _read_csv(self):
         with open(self.path, 'r') as f:
-            reader = csv.reader(f, delimiter=';')
+            reader = csv.reader(f, delimiter=self.delimiter)
             lines = [line for line in reader]
             if self.skip_firstline:
                 lines.pop(0)
             return lines
 
     def __str__(self):
-        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline})'
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline}, delimiter={self.delimiter})'
 
     def is_dry(self):
         """
@@ -149,10 +150,10 @@ class IncrementalCSVParser(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False):
+    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False, delimiter=','):
         self.name = path
         self.path = path
-        n_lines = self.num_lines(skip_firstline)
+        n_lines = self.num_lines(skip_firstline, delimiter)
         if chunk_size == 'auto':
             chunk_size = n_lines // n_chunks
         self.chunk_size = chunk_size
@@ -163,13 +164,14 @@ class IncrementalCSVParser(DataStream):
         self.chunk_id = 0
         self.starting_chunk = False
 
+        self.skip_firstline = skip_firstline
+        self.delimiter = delimiter
         self.csv_iterator = iter(self.line_iter())
         self.label_encoder = preprocessing.LabelEncoder()
-        self.skip_firstline = skip_firstline
 
-    def num_lines(self, skip_firstline) -> int:
+    def num_lines(self, skip_firstline, delimiter) -> int:
         with open(self.path, 'r') as f:
-            csv_reader = csv.reader(f, delimiter=';')
+            csv_reader = csv.reader(f, delimiter=delimiter)
             for _ in csv_reader:
                 pass
             n_lines = csv_reader.line_num
@@ -178,7 +180,7 @@ class IncrementalCSVParser(DataStream):
         return n_lines
 
     def __str__(self):
-        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline})'
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline}, delimiter={self.delimiter})'
 
     def is_dry(self):
         """
@@ -222,7 +224,7 @@ class IncrementalCSVParser(DataStream):
 
     def line_iter(self):
         with open(self.path, 'r') as f:
-            reader = csv.reader(f, delimiter=';')
+            reader = csv.reader(f, delimiter=self.delimiter)
             first_line = True
             for line in reader:
                 if self.skip_firstline and first_line:
@@ -267,10 +269,10 @@ class IncrementalCSVParser1(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False):
+    def __init__(self, path, chunk_size='auto', n_chunks=250, skip_firstline=False, delimiter=','):
         self.name = path
         self.path = path
-        n_lines = self.num_lines(skip_firstline)
+        n_lines = self.num_lines(skip_firstline, delimiter)
         if chunk_size == 'auto':
             chunk_size = n_lines // n_chunks
         self.chunk_size = chunk_size
@@ -281,13 +283,14 @@ class IncrementalCSVParser1(DataStream):
         self.chunk_id = 0
         self.starting_chunk = False
 
+        self.skip_firstline = skip_firstline
+        self.delimiter = delimiter
         self.csv_iterator = iter(self.chunk_iter())
         self.label_encoder = preprocessing.LabelEncoder()
-        self.skip_firstline = skip_firstline
 
-    def num_lines(self, skip_firstline) -> int:
+    def num_lines(self, skip_firstline, delimiter) -> int:
         with open(self.path, 'r') as f:
-            csv_reader = csv.reader(f, delimiter=';')
+            csv_reader = csv.reader(f, delimiter=delimiter)
             for _ in csv_reader:
                 pass
             n_lines = csv_reader.line_num
@@ -296,7 +299,7 @@ class IncrementalCSVParser1(DataStream):
         return n_lines
 
     def __str__(self):
-        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline})'
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, skip_firstline={self.skip_firstline}, delimiter={self.delimiter})'
 
     def is_dry(self):
         """
@@ -341,7 +344,7 @@ class IncrementalCSVParser1(DataStream):
             return self.current_chunk
 
     def chunk_iter(self):
-        for chunk in pd.read_csv(self.path, chunksize=self.chunk_size, delimiter=';'):
+        for chunk in pd.read_csv(self.path, chunksize=self.chunk_size, delimiter=self.delimiter):
             chunk = chunk.to_numpy().astype(float)
             X, y = chunk[:, :-1], chunk[:, -1]
             yield X, y
@@ -360,7 +363,7 @@ if __name__ == '__main__':
     filepath = '/home/jkozal/Documents/PWr/active-learning-data-streams/data/wine/winequality-red.csv'
 
     start = time.time()
-    csv_parser = CSVParser(filepath, skip_firstline=True, n_chunks=10)
+    csv_parser = CSVParser(filepath, skip_firstline=True, delimiter=';', n_chunks=10)
     all_X1 = []
     for X, y in csv_parser:
         all_X1.append(X)
@@ -374,7 +377,7 @@ if __name__ == '__main__':
     print(len(pickle.dumps(csv_parser.X)))
 
     start = time.time()
-    csv_parser = IncrementalCSVParser(filepath, skip_firstline=True, n_chunks=10)
+    csv_parser = IncrementalCSVParser(filepath, skip_firstline=True, delimiter=';', n_chunks=10)
     all_X2 = []
     for X, y in csv_parser:
         all_X2.append(X)
@@ -388,7 +391,7 @@ if __name__ == '__main__':
     print(f'object size {len(pickle.dumps(csv_parser))}')
 
     start = time.time()
-    csv_parser = IncrementalCSVParser1(filepath, skip_firstline=True, n_chunks=10)
+    csv_parser = IncrementalCSVParser1(filepath, skip_firstline=True, delimiter=';', n_chunks=10)
     all_X3 = []
     for X, y in csv_parser:
         all_X3.append(X)
