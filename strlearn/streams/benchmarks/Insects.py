@@ -12,7 +12,7 @@ class Insects(ARFFParser):
         'INSECTS-incremental_imbalanced_norm_5prc.arff': 'https://raw.githubusercontent.com/w4k2/stream-datasets/refs/heads/main/INSECTS-incremental_imbalanced_norm_5prc.arff',
     }
 
-    def __init__(self, drift_mode: str, subsample: bool = False, chunk_size: int = 200, n_chunks: int = 250):
+    def __init__(self, drift_mode: str, subsample: bool = False, chunk_size: int = 'auto', n_chunks: int = 250):
         if drift_mode not in ['abrupt', 'gradual', 'incremental']:
             raise ValueError(f'drift mode should be abrupt, gradual or incremental, not {drift_mode}')
         self.drift_mode = drift_mode

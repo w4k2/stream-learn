@@ -183,8 +183,8 @@ def test_csvparser_too_large_n_chunks(stream_filepath_csv):
 
 
 def test_csvparser_str(stream_filepath_csv):
-    stream = sl.streams.CSVParser(stream_filepath_csv, chunk_size=20, n_chunks=10)
-    assert str(stream) == 'CSVParser("test_stream.csv", chunk_size=20, n_chunks=10)'
+    stream = sl.streams.CSVParser(stream_filepath_csv, chunk_size=20, n_chunks=10, classes=[0, 1])
+    assert str(stream) == 'CSVParser("test_stream.csv", chunk_size=20, n_chunks=10, classes=[0, 1], delimiter=",")'
 
 
 def test_can_train_with_csvparser(stream_filepath_csv):

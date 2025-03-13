@@ -32,13 +32,15 @@ class NPYParser(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size=200, n_chunks=250):
+    def __init__(self, path, chunk_size='auto', n_chunks=250):
         # Read file.
         self.name = path
         self.path = path
+        n_samples = np.load(self.path).shape[0]
+        if chunk_size == 'auto':
+            chunk_size = n_samples // n_chunks
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
-        n_samples = np.load(self.path).shape[0]
         if self.chunk_size * self.n_chunks > n_samples:
             raise ValueError(f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_samples}')
 
