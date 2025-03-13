@@ -57,7 +57,6 @@ class CSVParser(DataStream):
             logging.warning('CSVParser: classes argument passed to constructor is None, it will be deduced based on first chunk')
 
         self.chunk_id = 0
-        self.starting_chunk = False
 
         self.delimiter = delimiter
         self.read_header = read_header

@@ -16,10 +16,6 @@ class StreamSubset(DataStream):
         return self.chunks_used == self.yield_n_chunks or self.base_stream.is_dry()
 
     @property
-    def chunk_size(self):
-        return self.base_stream.chunk_size
-
-    @property
     def n_chunks(self):
         return self.base_stream.n_chunks
 
