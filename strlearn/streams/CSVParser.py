@@ -19,6 +19,8 @@ class CSVParser(DataStream):
     :param classes: list of classes in the datastream.
     :type delimiter: str, optional (default=',')
     :param delimiter: delimeter used to separate values in csv file.
+    :type read_header: bool, optional (default=False)
+    :param read_header: if True use first line of file as names for columns.
 
     :Example:
 
@@ -39,33 +41,36 @@ class CSVParser(DataStream):
     [0.87       0.85104088 0.84813907 0.85104088 0.9       ]]
     """
 
-    def __init__(self, path, chunk_size='auto', n_chunks=250, classes=None, delimiter=','):
+    def __init__(self, path, chunk_size='auto', n_chunks=250, classes=None, delimiter=',', read_header=False):
         self.name = path
         self.path = path
-        n_lines = self.num_lines()
+        n_samples = self.num_samples(read_header)
         if chunk_size == 'auto':
-            chunk_size = n_lines // n_chunks
+            chunk_size = n_samples // n_chunks
         self.chunk_size = chunk_size
         self.n_chunks = n_chunks
-        if self.chunk_size * self.n_chunks > n_lines:
+        if self.chunk_size * self.n_chunks > n_samples:
             raise ValueError(
-                f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_lines}')
+                f'Cannot create stream, chunk_size * n_chunks should be smaller or equal to number of all samples, got {self.chunk_size * self.n_chunks} > {n_samples}')
         self.classes_ = classes
         if classes is None:
-            logging.warning('CSVParser: classes passed to constructor is None, it will be deduced based on first chunk')
+            logging.warning('CSVParser: classes argument passed to constructor is None, it will be deduced based on first chunk')
 
         self.chunk_id = 0
         self.starting_chunk = False
 
         self.delimiter = delimiter
+        self.read_header = read_header
         self.csv_iterator = iter(self.chunk_iter())
 
-    def num_lines(self) -> int:
+    def num_samples(self, read_header) -> int:
         n_lines = int(subprocess.check_output(f'wc -l {self.path}', shell=True).split()[0])
+        if read_header:
+            n_lines -= 1
         return n_lines
 
     def __str__(self):
-        return f'CSVParser("{self.name} ", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, delimiter={self.delimiter}) '
+        return f'CSVParser("{self.name}", chunk_size={self.chunk_size}, n_chunks={self.n_chunks}, classes={self.classes_}, delimiter="{self.delimiter}")'
 
     def is_dry(self):
         """
@@ -103,12 +108,15 @@ class CSVParser(DataStream):
             return self.current_chunk
 
     def chunk_iter(self):
-        for chunk in pd.read_csv(self.path, chunksize=self.chunk_size, delimiter=self.delimiter):
-            chunk = chunk.to_numpy().astype(float)
-            X, y = chunk[:, :-1], chunk[:, -1]
-            yield X, y
+        with open(self.path, 'r') as f:
+            header = 0 if self.read_header else None
+            for chunk in pd.read_csv(f, chunksize=self.chunk_size, delimiter=self.delimiter, header=header):
+                chunk = chunk.to_numpy().astype(float)
+                X, y = chunk[:, :-1], chunk[:, -1]
+                yield X, y
 
     def reset(self):
         """Reset stream to the beginning."""
         self.previous_chunk = None
         self.chunk_id = -1
+        self.csv_iterator = iter(self.chunk_iter())
