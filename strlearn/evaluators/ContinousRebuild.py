@@ -37,7 +37,7 @@ class ContinousRebuild:
                 pbar.update(1)
 
             if chunk_id == 0:
-                if self.partial == True:
+                if self.partial:
                     clf.partial_fit(X, y, np.unique(y))
                 else:
                     clf.fit(X, y)
@@ -62,4 +62,6 @@ class ContinousRebuild:
             self.label_request_chunks.append(chunk_id)
 
             preds = clf.predict(X)
-            self.scores.append(metric(y, preds) for metric in self.metrics)
+            self.scores.append([metric(y, preds) for metric in self.metrics])
+
+        self.scores = np.array(self.scores)

@@ -8,6 +8,7 @@ import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
 
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
+from .test_utils import StreamSubset
 
 
 def get_stream():
@@ -21,8 +22,9 @@ def test_TTT_single_clf():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
-    
+
     cscores = sl.utils.scores_to_cummean(evaluator.scores)
+
 
 def test_STDT_single_clf():
     stream = get_stream()
@@ -31,6 +33,7 @@ def test_STDT_single_clf():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
+
 
 def test_TTT_custom_metrics():
     stream = get_stream()
@@ -106,3 +109,24 @@ def test_P_one_metric():
     evaluator.process(stream, clf, interval=100)
 
     assert evaluator.scores.shape == (1, (stream.n_chunks - 1) * 2, 1,)
+
+
+def test_ContinousRebuild():
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = sl.evaluators.ContinousRebuild(verbose=True)
+    evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+# def test_ContinousRebuild_poker_benchmark():
+#     stream = sl.streams.Poker()
+#     # stream = StreamSubset(benchmark, yield_n_chunks=5)
+#     clf = sl.classifiers.ASC(base_clf=GaussianNB())
+#     evaluator = sl.evaluators.ContinousRebuild(verbose=True)
+#     evaluator.process(stream, clf)
+
+#     assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+#     print(evaluator.scores)
