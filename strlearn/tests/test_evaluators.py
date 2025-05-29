@@ -121,12 +121,16 @@ def test_ContinousRebuild():
     print(evaluator.scores)
 
 
-# def test_ContinousRebuild_poker_benchmark():
-#     stream = sl.streams.Poker()
-#     # stream = StreamSubset(benchmark, yield_n_chunks=5)
-#     clf = sl.classifiers.ASC(base_clf=GaussianNB())
-#     evaluator = sl.evaluators.ContinousRebuild(verbose=True)
-#     evaluator.process(stream, clf)
+def test_ContinousRebuild_poker_benchmark():
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = sl.evaluators.ContinousRebuild(verbose=True)
+    evaluator.process(stream, clf)
 
-#     assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
-#     print(evaluator.scores)
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
+
+
+# TODO: labeling delay 0
+# TODO: partial True and False
