@@ -46,6 +46,7 @@ class Evaluator(abc.ABC):
     def __init__(self, metrics=(balanced_accuracy_score,), labeling_delay=10, partial=True, verbose=False):
         self.metrics = metrics
         self.labeling_delay = labeling_delay
+        assert labeling_delay > 0
         self.labeling_process = LabelingProcess(labeling_delay)
         self.partial = partial
         self.verbose = verbose
@@ -77,8 +78,6 @@ class ContinousRebuild(Evaluator):
 
     def process(self, stream, clf):
         self.scores = []
-        # self.label_request_chunks = []
-        # self.training_chunks = []
 
         if self.verbose:
             pbar = tqdm(total=stream.n_chunks)
@@ -94,10 +93,8 @@ class ContinousRebuild(Evaluator):
             if self.labeling_process.labels_avaliable():
                 past_X, past_y = self.labeling_process.retrive_annotated()
                 self.train_model(clf, past_X, past_y)
-                # self.training_chunks.append(chunk_id)
 
             self.labeling_process.request_annotation(X, y)
-            # self.label_request_chunks.append(chunk_id)
 
             preds = clf.predict(X)
             self.scores.append([metric(y, preds) for metric in self.metrics])

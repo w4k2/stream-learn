@@ -54,6 +54,7 @@ class TriggeredRebuildPartiallyUnsupervised:
 
             else:
                 det.process(X)  # det.process(X, np.zeros(X.shape[0]))  <- why this was with np.zeros instead of no labels like in unsupervised?
+                # TODO: MD3 zmienić w process y=None
                 if det._is_drift:
                     pending_label_requests.append(chunk_id)
                     self.label_request_chunks.append(chunk_id)
