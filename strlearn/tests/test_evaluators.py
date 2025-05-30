@@ -7,10 +7,10 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 
 import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
-from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised
+from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised, TriggeredRebuildUnsupervised
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 from .test_utils import StreamSubset
-from ..detectors import ADWIN, DDM
+from ..detectors import DDM, CentroidDistanceDriftDetector
 
 
 def get_stream():
@@ -134,7 +134,7 @@ def test_ContinousRebuild_poker_benchmark():
     print(evaluator.scores)
 
 
-@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised, ])
+@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised])
 def test_labeling_delay(evaluator_class):
     stream = get_stream()
     clf = sl.classifiers.ASC(base_clf=GaussianNB())
@@ -146,7 +146,18 @@ def test_labeling_delay(evaluator_class):
     print(evaluator.scores)
 
 
-@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised, ])
+def test_labeling_delay_unsupervised():
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = TriggeredRebuildUnsupervised(verbose=True)
+    detector = CentroidDistanceDriftDetector()
+    evaluator.process(stream, clf, detector)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised])
 def test_labeling_delay_poker_benchmark(evaluator_class):
     benchmark = sl.streams.Poker(n_chunks=500)
     stream = StreamSubset(benchmark, yield_n_chunks=15)
@@ -158,6 +169,17 @@ def test_labeling_delay_poker_benchmark(evaluator_class):
     assert evaluator.scores.shape == (15 - 1, 1)
     print(evaluator.scores)
 
+
+def test_labeling_delay_unsupervised_poker_benchmark():
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = TriggeredRebuildUnsupervised(verbose=True)
+    detector = CentroidDistanceDriftDetector()
+    evaluator.process(stream, clf, detector)
+
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
 
 # TODO: labeling delay 0
 # TODO: partial True and False

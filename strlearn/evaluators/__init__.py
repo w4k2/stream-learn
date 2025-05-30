@@ -4,7 +4,7 @@ from .SparseTrainDenseTest import SparseTrainDenseTest
 from .labeling_delay.ContinousRebuild import ContinousRebuild
 from .labeling_delay.TriggeredRebuildSupervised import TriggeredRebuildSupervised
 from .labeling_delay.TriggeredRebuildPartiallyUnsupervised import TriggeredRebuildPartiallyUnsupervised
-from .labeling_delay.TriggeredRebuildPartiallyUnsupervised import TriggeredRebuildPartiallyUnsupervised
+from .labeling_delay.TriggeredRebuildUnsupervised import TriggeredRebuildUnsupervised
 
 __all__ = [
     "Prequential",
@@ -13,5 +13,5 @@ __all__ = [
     "ContinousRebuild",
     "TriggeredRebuildSupervised",
     "TriggeredRebuildPartiallyUnsupervised",
-    "TriggeredRebuildPartiallyUnsupervised"
+    "TriggeredRebuildUnsupervised"
 ]
