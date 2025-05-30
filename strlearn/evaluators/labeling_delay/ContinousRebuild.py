@@ -1,65 +1,7 @@
 import numpy as np
-from sklearn.metrics import balanced_accuracy_score
 from tqdm import tqdm
 
-import abc
-
-from collections import deque
-
-
-class LabelingProcess:
-    """Class that simulates the delay in labeling process with priority queue"""
-
-    def __init__(self, delay):
-        self.delay = delay
-        self.current_counter = -1
-        self.buffer = deque([], maxlen=delay)
-
-    def request_annotation(self, X, y):
-        if self.current_counter <= 0 and len(self.buffer) == 0:
-            self.current_counter = self.delay
-
-        if len(self.buffer) == self.delay:
-            raise OverflowError
-
-        self.buffer.append((X, y))
-
-    def update_time(self):
-        self.current_counter = max(self.current_counter - 1, -1)
-
-    def retrive_annotated(self):
-        if len(self.buffer) == 0:
-            return
-
-        if self.current_counter <= 0:
-            X, y = self.buffer.popleft()
-            return X, y
-
-    def labels_avaliable(self):
-        return len(self.buffer) > 0 and self.current_counter <= 0
-
-    def peding_labeling(self):
-        return len(self.buffer) > 0
-
-
-class Evaluator(abc.ABC):
-    def __init__(self, metrics=(balanced_accuracy_score,), labeling_delay=10, partial=True, verbose=False):
-        self.metrics = metrics
-        self.labeling_delay = labeling_delay
-        assert labeling_delay > 0
-        self.labeling_process = LabelingProcess(labeling_delay)
-        self.partial = partial
-        self.verbose = verbose
-
-    @abc.abstractmethod
-    def process(self):
-        raise NotImplementedError
-
-    def train_model(self, clf, X, y):
-        if self.partial:
-            clf.partial_fit(X, y, np.unique(y))
-        else:
-            clf.fit(X, y)
+from .Evaluator import Evaluator
 
 
 class ContinousRebuild(Evaluator):
