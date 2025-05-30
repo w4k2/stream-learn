@@ -2,8 +2,10 @@ import numpy as np
 from sklearn.metrics import balanced_accuracy_score
 from tqdm import tqdm
 
+from .Evaluator import Evaluator
 
-class TriggeredRebuildSupervised:
+
+class TriggeredRebuildSupervised(Evaluator):
     """
     Triggered Rebuild with Supervised Drift Detection
 
@@ -17,18 +19,8 @@ class TriggeredRebuildSupervised:
     :type verbose: boolean
     """
 
-    def __init__(self, metrics=(balanced_accuracy_score,), labeling_delay=10, partial=True, verbose=False):
-        self.metrics = metrics
-        self.labeling_delay = labeling_delay
-        self.partial = partial
-        self.verbose = verbose
-
-    def process(self, stream, drift_detector, clf):
+    def process(self, stream, clf, drift_detector):
         self.scores = []
-        self.label_request_chunks = []
-        self.training_chunks = []
-
-        pending_label_requests = []
         past_preds = []
 
         if self.verbose:
@@ -38,35 +30,22 @@ class TriggeredRebuildSupervised:
                 pbar.update(1)
 
             if chunk_id == 0:
-                if self.partial:
-                    clf.partial_fit(X, y, np.unique(y))
-                else:
-                    clf.fit(X, y)
+                self.train_model(clf, X, y)
                 continue
 
-            if chunk_id-self.labeling_delay in pending_label_requests:
-                start = stream.chunk_size * (chunk_id-self.labeling_delay)
-                end = stream.chunk_size * (chunk_id-self.labeling_delay) + stream.chunk_size
-
-                past_X = stream.X[start:end]
-                past_y = stream.y[start:end]
-
+            self.labeling_process.update_time()
+            if self.labeling_process.labels_avaliable():
+                past_X, past_y = self.labeling_process.retrive_annotated()
                 pp = past_preds.pop(0)
-                drift_detector.process(past_X, past_y, pp)
+                drift_detector.feed(past_X, past_y, pp)
 
                 if drift_detector._is_drift:
-                    if self.partial:
-                        clf.partial_fit(past_X, past_y, np.unique(past_y))
-                    else:
-                        clf.fit(past_X, past_y)
-
-                    self.training_chunks.append(chunk_id)
-
-                pending_label_requests.remove(chunk_id-self.labeling_delay)
+                    self.train_model(clf, X, y)
 
             preds = clf.predict(X)
-            self.scores.append(metric(y, preds) for metric in self.metrics)
+            self.scores.append([metric(y, preds) for metric in self.metrics])
 
-            pending_label_requests.append(chunk_id)
-            self.label_request_chunks.append(chunk_id)
+            self.labeling_process.request_annotation(X, y)
             past_preds.append(preds)
+
+        self.scores = np.array(self.scores)

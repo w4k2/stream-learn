@@ -1,14 +1,16 @@
 """Classifier tests."""
 
 import sys
+import pytest
 
 from sklearn.metrics import accuracy_score, roc_auc_score
 
 import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
-
+from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 from .test_utils import StreamSubset
+from ..detectors import ADWIN, DDM
 
 
 def get_stream():
@@ -125,8 +127,33 @@ def test_ContinousRebuild_poker_benchmark():
     benchmark = sl.streams.Poker(n_chunks=500)
     stream = StreamSubset(benchmark, yield_n_chunks=15)
     clf = sl.classifiers.ASC(base_clf=GaussianNB())
-    evaluator = sl.evaluators.ContinousRebuild(verbose=True)
+    evaluator = ContinousRebuild(verbose=True)
     evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised, ])
+def test_labeling_delay(evaluator_class):
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    detector = DDM()
+    evaluator.process(stream, clf, detector)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class", [TriggeredRebuildSupervised, ])
+def test_labeling_delay_poker_benchmark(evaluator_class):
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    detector = DDM()
+    evaluator.process(stream, clf, detector)
 
     assert evaluator.scores.shape == (15 - 1, 1)
     print(evaluator.scores)

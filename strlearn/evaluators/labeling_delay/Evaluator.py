@@ -15,7 +15,7 @@ class Evaluator(abc.ABC):
         self.verbose = verbose
 
     @abc.abstractmethod
-    def process(self):
+    def process(self, stream, clf, detector=None):
         raise NotImplementedError
 
     def train_model(self, clf, X, y):
