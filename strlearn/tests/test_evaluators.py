@@ -13,6 +13,18 @@ from .test_utils import StreamSubset
 from ..detectors import DDM, CentroidDistanceDriftDetector, MD3
 
 
+class DetectorMock:
+    def __init__(self, detect_at=[50]):
+        self.i = 0
+        self.detect_at = detect_at
+        self._is_drift = False
+
+    def feed(self, X, y=None, pp=None):
+        self.i += 1
+        if self.i == self.detect_at:
+            self._is_drift = True
+
+
 def get_stream():
     return sl.streams.StreamGenerator(n_chunks=10)
 
@@ -132,6 +144,24 @@ def test_labeling_delay(evaluator_class, detector):
 
 
 @pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DetectorMock(detect_at=25)),
+                                                      (TriggeredRebuildUnsupervised, DetectorMock(detect_at=25)),
+                                                      (TriggeredRebuildPartiallyUnsupervised, DetectorMock(detect_at=25))
+                                                      ])
+def test_labeling_delay_drift(evaluator_class, detector):
+    stream = sl.streams.StreamGenerator(n_chunks=50, n_drifts=1, random_state=1410)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
                                                       (TriggeredRebuildSupervised, DDM()),
                                                       (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
@@ -150,5 +180,38 @@ def test_labeling_delay_poker_benchmark(evaluator_class, detector):
     print(evaluator.scores)
 
 
-# TODO: labeling delay 0
-# TODO: partial True and False
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay_delay_1(evaluator_class, detector):
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(labeling_delay=1, verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay_partial_False(evaluator_class, detector):
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(partial=False, verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
