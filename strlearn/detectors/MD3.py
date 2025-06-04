@@ -18,13 +18,8 @@ class MD3:
             self.rho_max = -np.inf
 
         else:
-            # Merginal density calculated as in :
-            # https://github.com/candice-fraisse/octo_workshop_drift/blob/main/drift_detector_multivariate_md3.py
-            w = self.model.coef_
-            w = w.T
-            b = self.model.intercept_
-            dp = abs(np.dot(X, w) + b)
-            self.rho = np.array(dp < 1).sum() / X.shape[0]
+            decision_scores = self.model.decision_function(X)
+            self.rho = np.array(np.abs(decision_scores) < 1).sum() / X.shape[0]
 
             if self.rho < self.rho_min:
                 self.rho_min = self.rho

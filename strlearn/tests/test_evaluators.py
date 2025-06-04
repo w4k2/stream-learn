@@ -10,7 +10,7 @@ from sklearn.naive_bayes import GaussianNB
 from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised, TriggeredRebuildUnsupervised, TriggeredRebuildPartiallyUnsupervised
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 from .test_utils import StreamSubset
-from ..detectors import DDM, CentroidDistanceDriftDetector, MD3
+from ..detectors import DDM, CDDD, MD3
 
 
 class DetectorMock:
@@ -127,7 +127,7 @@ def test_P_one_metric():
 
 @pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
                                                       (TriggeredRebuildSupervised, DDM()),
-                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay(evaluator_class, detector):
@@ -163,7 +163,7 @@ def test_labeling_delay_drift(evaluator_class, detector):
 
 @pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
                                                       (TriggeredRebuildSupervised, DDM()),
-                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay_poker_benchmark(evaluator_class, detector):
@@ -182,7 +182,7 @@ def test_labeling_delay_poker_benchmark(evaluator_class, detector):
 
 @pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
                                                       (TriggeredRebuildSupervised, DDM()),
-                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay_delay_1(evaluator_class, detector):
@@ -201,7 +201,7 @@ def test_labeling_delay_delay_1(evaluator_class, detector):
 
 @pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
                                                       (TriggeredRebuildSupervised, DDM()),
-                                                      (TriggeredRebuildUnsupervised, CentroidDistanceDriftDetector()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay_partial_False(evaluator_class, detector):

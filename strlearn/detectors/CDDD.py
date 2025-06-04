@@ -1,18 +1,13 @@
-# https://github.com/w4k2/cddd/blob/main/methods/cddd.py
-
 import numpy as np
 from scipy.spatial.distance import cdist
 from scipy.ndimage import median_filter
 from math import e
 
 
-class CentroidDistanceDriftDetector:
-
-    def __init__(self, sensitive=0.2, distance_p=2, filter_size=(3)):
-
+class CDDD:
+    def __init__(self, distance_p=2, filter_size=(3)):
         self.distance_p = distance_p
         self.filter_size = filter_size
-        self.sensitive = sensitive
 
         self.iterator = 0
         self.centroids = None
