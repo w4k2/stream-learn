@@ -1,13 +1,28 @@
 """Classifier tests."""
 
 import sys
+import pytest
 
 from sklearn.metrics import accuracy_score, roc_auc_score
 
 import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
-
+from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised, TriggeredRebuildUnsupervised, TriggeredRebuildPartiallyUnsupervised
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
+from .test_utils import StreamSubset
+from ..detectors import DDM, CDDD, MD3
+
+
+class DetectorMock:
+    def __init__(self, detect_at=[50]):
+        self.i = 0
+        self.detect_at = detect_at
+        self._is_drift = False
+
+    def feed(self, X, y=None, pp=None):
+        self.i += 1
+        if self.i == self.detect_at:
+            self._is_drift = True
 
 
 def get_stream():
@@ -21,8 +36,9 @@ def test_TTT_single_clf():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
-    
+
     cscores = sl.utils.scores_to_cummean(evaluator.scores)
+
 
 def test_STDT_single_clf():
     stream = get_stream()
@@ -31,6 +47,7 @@ def test_STDT_single_clf():
     evaluator.process(stream, clf)
 
     assert evaluator.scores.shape == (1, stream.n_chunks - 1, 2)
+
 
 def test_TTT_custom_metrics():
     stream = get_stream()
@@ -106,3 +123,95 @@ def test_P_one_metric():
     evaluator.process(stream, clf, interval=100)
 
     assert evaluator.scores.shape == (1, (stream.n_chunks - 1) * 2, 1,)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay(evaluator_class, detector):
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DetectorMock(detect_at=25)),
+                                                      (TriggeredRebuildUnsupervised, DetectorMock(detect_at=25)),
+                                                      (TriggeredRebuildPartiallyUnsupervised, DetectorMock(detect_at=25))
+                                                      ])
+def test_labeling_delay_drift(evaluator_class, detector):
+    stream = sl.streams.StreamGenerator(n_chunks=50, n_drifts=1, random_state=1410)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay_poker_benchmark(evaluator_class, detector):
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay_delay_1(evaluator_class, detector):
+    benchmark = sl.streams.Poker(n_chunks=500)
+    stream = StreamSubset(benchmark, yield_n_chunks=15)
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(labeling_delay=1, verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (15 - 1, 1)
+    print(evaluator.scores)
+
+
+@pytest.mark.parametrize("evaluator_class,detector", [(ContinousRebuild, None),
+                                                      (TriggeredRebuildSupervised, DDM()),
+                                                      (TriggeredRebuildUnsupervised, CDDD()),
+                                                      (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
+                                                      ])
+def test_labeling_delay_partial_False(evaluator_class, detector):
+    stream = get_stream()
+    clf = sl.classifiers.ASC(base_clf=GaussianNB())
+    evaluator = evaluator_class(partial=False, verbose=True)
+    if detector is not None:
+        evaluator.process(stream, clf, detector)
+    else:
+        evaluator.process(stream, clf)
+
+    assert evaluator.scores.shape == (stream.n_chunks - 1, 1)
+    print(evaluator.scores)
