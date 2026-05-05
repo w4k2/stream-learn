@@ -1,5 +1,4 @@
 """Classifier tests."""
-
 import sys
 import pytest
 
@@ -7,7 +6,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 
 import strlearn as sl
 from sklearn.naive_bayes import GaussianNB
-from strlearn.evaluators import ContinousRebuild, TriggeredRebuildSupervised, TriggeredRebuildUnsupervised, TriggeredRebuildPartiallyUnsupervised
+from strlearn.evaluators.labeling_delay import ContinousRebuild, TriggeredRebuildSupervised, TriggeredRebuildUnsupervised, TriggeredRebuildPartiallyUnsupervised
 from ..metrics import balanced_accuracy_score, f1_score, geometric_mean_score_1
 from .test_utils import StreamSubset
 from ..detectors import DDM, CDDD, MD3
@@ -167,7 +166,7 @@ def test_labeling_delay_drift(evaluator_class, detector):
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay_poker_benchmark(evaluator_class, detector):
-    benchmark = sl.streams.Poker(n_chunks=500)
+    benchmark = sl.streams.benchmarks.Poker(n_chunks=500)
     stream = StreamSubset(benchmark, yield_n_chunks=15)
     clf = sl.classifiers.ASC(base_clf=GaussianNB())
     evaluator = evaluator_class(verbose=True)
@@ -186,7 +185,7 @@ def test_labeling_delay_poker_benchmark(evaluator_class, detector):
                                                       (TriggeredRebuildPartiallyUnsupervised, MD3(svc_max_iter=50000))
                                                       ])
 def test_labeling_delay_delay_1(evaluator_class, detector):
-    benchmark = sl.streams.Poker(n_chunks=500)
+    benchmark = sl.streams.benchmarks.Poker(n_chunks=500)
     stream = StreamSubset(benchmark, yield_n_chunks=15)
     clf = sl.classifiers.ASC(base_clf=GaussianNB())
     evaluator = evaluator_class(labeling_delay=1, verbose=True)

@@ -189,7 +189,7 @@ def geometric_mean_score_1(y_true, y_pred):
 
     .. math::
 
-        Gmean1 = \sqrt{Recall * Specificity}
+        Gmean1 = \\sqrt{Recall * Specificity}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.
@@ -210,7 +210,7 @@ def geometric_mean_score_2(y_true, y_pred):
     The alternative definition of G-mean measure. For binary classification G-mean is denoted as the squared root of the product of the recall and precision.
 
     .. math::
-        Gmean2 = \sqrt{Recall * Precision}
+        Gmean2 = \\sqrt{Recall * Precision}
 
     :type y_true: array-like, shape (n_samples)
     :param y_true: True labels.

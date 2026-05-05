@@ -4,7 +4,7 @@ import strlearn as sl
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
-from strlearn.streams import Covtype, Electricity, Insects, Poker  # LED, SEA, SineGenerator, WaveformGenerator
+from strlearn.streams.benchmarks import Covtype, Electricity, Insects, Poker  # LED, SEA, SineGenerator, WaveformGenerator
 
 from .test_utils import StreamSubset
 
