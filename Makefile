@@ -44,4 +44,4 @@ upload:
 
 install: clean
 	python -m build
-	cd dist; pip install stream_learn-0.9.1-py3-none-any.whl --force-reinstall
+	cd dist; pip install stream_learn-0.9.2-py3-none-any.whl --force-reinstall
