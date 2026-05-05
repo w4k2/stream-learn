@@ -19,7 +19,7 @@ with open(ver_file) as f:
     exec(f.read())
 
 DISTNAME = "stream-learn"
-DESCRIPTION = "The stream-learn module is a set of tools necessary for processing data streams using scikit-learn estimators."
+DESCRIPTION = "Data streams with scikit-learn."
 MAINTAINER = "P. Ksieniewicz"
 MAINTAINER_EMAIL = "pawel.ksieniewicz@pwr.edu.pl"
 URL = "https://w4k2.github.io/stream-learn/"

@@ -1,0 +1,6 @@
+[project]
+name = "stream-learn"
+version = "0.9.1"
+description = "Data streams with scikit-learn"
+readme = "README.md"
+requires-python = ">=3.8"

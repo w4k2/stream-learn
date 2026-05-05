@@ -4,10 +4,7 @@ from .NPYParser import NPYParser
 from .StreamGenerator import StreamGenerator
 from .SemiSyntheticStreamGenerator import SemiSyntheticStreamGenerator
 from .DataStream import DataStream
-from .benchmarks.Electricity import Electricity
-from .benchmarks.Poker import Poker
-from .benchmarks.Insects import Insects
-from .benchmarks.Covtype import Covtype
+from . import benchmarks
 from .utils import download_dataset, get_data_path
 
 __all__ = [
@@ -16,10 +13,7 @@ __all__ = [
     "CSVParser",
     "NPYParser",
     "SemiSyntheticStreamGenerator",
-    "Electricity",
-    "Poker",
-    "Insects",
-    "Covtype",
+    "benchmarks",
     "DataStream",
     "download_dataset",
     "get_data_path",
